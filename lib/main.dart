@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:kj_tracker/fabBottomAppBar.dart';
 
 void main() => runApp(MyApp());
 
@@ -28,104 +29,60 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _index = 0;
 
-  void _pushSaved() {
+  final List<Widget> _children = [
+    Center(child: Text("Numba 1"),),
+    Center(child: Text("Numba 2"),),
+    Center(child: Text("Numba 3"),),
+    Center(child: new MyCustomForm()),
+  ];
 
-    Navigator.of(context).push(
-        MaterialPageRoute<void>(
-            builder: (BuildContext context){
-              return Scaffold(
-                appBar: AppBar(
-                  title: Text('Add KJ Intake'),
-                ),
-                body: MyCustomForm(),
-              );
-            }
-        )
-    );
+  void onTabTapped(int index) {
+    setState(() {
+      _index = index;
+    });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: _pushSaved,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
-      body: new IntakeList(),
-      // TODO Insert floating action button here?
-    );
-  }
-}
-
-class IntakeList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new StreamBuilder(
       stream: Firestore.instance.collection('kj-intakes').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) return new Text('Loading...');
-        return new Scaffold(
-          backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
-          bottomNavigationBar: makeBottom,
-          body: overviewBody,
-        );
-        return new ListView(
-          children: snapshot.data.documents.map((document) {
-            return new Card(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: 6.0, left: 6.0, right: 6.0, bottom: 6.0,
-                ),
-                child: ExpansionTile(
-                  title: Text('TOTAL KJ FOR \$DAY'),
-                  children: <Widget>[
-                    Text('KJ VALUE 1'),
-                    Text('KJ VALUE 2'),
-                    Text('KJ VALUE 3'),
-                  ],
-                ),
-              ),
-            );
-            return new ListTile(
-            title: new Text(document['kj'].toString() + "kj"),
-        subtitle: new Text(document['date'].toString()),
-            );
-        }).toList(),
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('AppBar Title')
+          ),
+          body: Center(
+            child: (_children[_index]),
+          ),
+          bottomNavigationBar: FABBottomAppBar(
+            centerItemText: 'Add KJ',
+            color: Colors.grey,
+            selectedColor: Colors.red,
+            notchedShape: CircularNotchedRectangle(),
+            onTabSelected: onTabTapped,
+            items: [
+              FABBottomAppBarItem(iconData: Icons.dashboard, text: 'Overview'),
+              FABBottomAppBarItem(iconData: Icons.history, text: 'History'),
+              FABBottomAppBarItem(iconData: Icons.trending_up, text: 'Graph'),
+              FABBottomAppBarItem(iconData: Icons.settings, text: 'Settings'),
+            ]
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {},
+            tooltip: '🥒', // Gherkin
+            child: Icon(Icons.add),
+            elevation: 2.0,
+          ),
+          //body: overviewBody,
         );
       },
     );
   }
 }
-
-final makeBottom = Container(
-  height: 55.0,
-  child: BottomAppBar(
-    color: Color.fromRGBO(58, 66, 86, 1.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        IconButton(
-          icon: Icon(Icons.home, color: Colors.white),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: Icon(Icons.blur_on, color: Colors.white),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: Icon(Icons.hotel, color: Colors.white),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: Icon(Icons.account_box, color: Colors.white),
-          onPressed: () {},
-        )
-      ],
-    ),
-  ),
-);
 
 final overviewBody = Column(
   mainAxisAlignment: MainAxisAlignment.center,
