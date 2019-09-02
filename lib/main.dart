@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_sparkline/flutter_sparkline.dart';
-
+import 'package:fl_chart/fl_chart.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/services.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 void main() => runApp(MyApp());
 
@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
   double _panelHeightClosed = 95.0;
 
   final List<Widget> _widgetOptions = [
-    Center(child: MyCustomForm()),
+    Center(child: OverviewMenu()),
     Center(child: Text("Numba 2"),),
     Center(child: Text("Numba 3"),),
     Center(child: Text("Numba 4"),),
@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> {
           ),
 
           //the SlidingUpPanel Titel
-          Positioned(
+          /*Positioned(
             top: 42.0,
             child: Container(
               padding: const EdgeInsets.fromLTRB(24.0, 18.0, 24.0, 18.0),
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                 )],
               ),
             ),
-          ),
+          ),*/
         ],
       ),
     );
@@ -274,14 +274,22 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class MyCustomForm extends StatefulWidget {
+class OverviewMenu extends StatefulWidget {
   @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
+  OverviewMenuState createState() {
+    return OverviewMenuState();
   }
 }
 
-class MyCustomFormState extends State<MyCustomForm> {
+class OverviewMenuState extends State<OverviewMenu> {
+
+  final List<List<double>> charts =
+  [
+    [0.0, 0.3, 0.7, 0.6, 0.55, 0.8, 1.2, 1.3, 1.35, 0.9, 1.5, 1.7, 1.8, 1.7, 1.2, 0.8, 1.9, 2.0, 2.2, 1.9, 2.2, 2.1, 2.0, 2.3, 2.4, 2.45, 2.6, 3.6, 2.6, 2.7, 2.9, 2.8, 3.4],
+    [0.0, 0.3, 0.7, 0.6, 0.55, 0.8, 1.2, 1.3, 1.35, 0.9, 1.5, 1.7, 1.8, 1.7, 1.2, 0.8, 1.9, 2.0, 2.2, 1.9, 2.2, 2.1, 2.0, 2.3, 2.4, 2.45, 2.6, 3.6, 2.6, 2.7, 2.9, 2.8, 3.4, 0.0, 0.3, 0.7, 0.6, 0.55, 0.8, 1.2, 1.3, 1.35, 0.9, 1.5, 1.7, 1.8, 1.7, 1.2, 0.8, 1.9, 2.0, 2.2, 1.9, 2.2, 2.1, 2.0, 2.3, 2.4, 2.45, 2.6, 3.6, 2.6, 2.7, 2.9, 2.8, 3.4,],
+    [0.0, 0.3, 0.7, 0.6, 0.55, 0.8, 1.2, 1.3, 1.35, 0.9, 1.5, 1.7, 1.8, 1.7, 1.2, 0.8, 1.9, 2.0, 2.2, 1.9, 2.2, 2.1, 2.0, 2.3, 2.4, 2.45, 2.6, 3.6, 2.6, 2.7, 2.9, 2.8, 3.4, 0.0, 0.3, 0.7, 0.6, 0.55, 0.8, 1.2, 1.3, 1.35, 0.9, 1.5, 1.7, 1.8, 1.7, 1.2, 0.8, 1.9, 2.0, 2.2, 1.9, 2.2, 2.1, 2.0, 2.3, 2.4, 2.45, 2.6, 3.6, 2.6, 2.7, 2.9, 2.8, 3.4, 0.0, 0.3, 0.7, 0.6, 0.55, 0.8, 1.2, 1.3, 1.35, 0.9, 1.5, 1.7, 1.8, 1.7, 1.2, 0.8, 1.9, 2.0, 2.2, 1.9, 2.2, 2.1, 2.0, 2.3, 2.4, 2.45, 2.6, 3.6, 2.6, 2.7, 2.9, 2.8, 3.4]
+  ];
+  int actualChart = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -289,10 +297,62 @@ class MyCustomFormState extends State<MyCustomForm> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Text("Test 1"),
-        Text("Test 2"),
-        Text("Test 3"),
-        Text("Test 4"),
+        CircularPercentIndicator(
+          radius: 200.0,
+          lineWidth: 6.0,
+          percent: 0.5,
+          progressColor: Colors.blueAccent,
+          animation: true,
+          animationDuration: 1000,
+          circularStrokeCap: CircularStrokeCap.round,
+          center: Card(
+            child: CircleAvatar(
+              radius: 80,
+              backgroundImage: NetworkImage('https://i.kinja-img.com/gawker-media/image/upload/c_lfill,w_768,q_90/txthbfekk2a1garzhu0j.jpg'),
+            ),
+            elevation: 20.0,
+            shape: CircleBorder(),
+            clipBehavior: Clip.antiAlias,
+          ),
+        ),
+        Card(
+          elevation: 0.0,
+          color: Colors.transparent,
+          margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+          child: Container(
+            child: ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+              title: Text("7000 KJ"),
+              subtitle: Text("Intake for today"),
+            ),
+          ),
+        ),
+        Card(
+            elevation: 8.0,
+            margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+          child: Container(
+            height: 200.0,
+            child: FlChart(
+              chart: LineChart(
+                LineChartData(
+
+                )
+              )
+            )
+          )
+        ),
+        Card(
+          elevation: 0.0,
+          color: Colors.transparent,
+          margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+          child: Container(
+            child: ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+              title: Text("7000 KJ"),
+              subtitle: Text("Intake for today"),
+            ),
+          ),
+        ),
       ],
     );
   }
