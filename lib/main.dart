@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:kj_tracker/fabBottomAppBar.dart';
+import 'package:flutter_sparkline/flutter_sparkline.dart';
+
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,99 +13,266 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.grey[200],
+      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarDividerColor: Colors.black,
+    ));
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: HomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
+class HomePage extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _index = 0;
+class _HomePageState extends State<HomePage> {
 
-  final List<Widget> _children = [
-    Center(child: Text("Numba 1"),),
+  final double _initFabHeight = 120.0;
+  double _fabHeight;
+  double _panelHeightOpen = 575.0;
+  double _panelHeightClosed = 95.0;
+
+  final List<Widget> _widgetOptions = [
+    Center(child: MyCustomForm()),
     Center(child: Text("Numba 2"),),
     Center(child: Text("Numba 3"),),
-    Center(child: new MyCustomForm()),
+    Center(child: Text("Numba 4"),),
+    Center(child: Text("Numba 5")),
   ];
 
-  void onTabTapped(int index) {
+  int _selectedIndex = 0;
+  void _onTabTapped(int index) {
     setState(() {
-      _index = index;
+      _selectedIndex = index;
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    return new StreamBuilder(
-      stream: Firestore.instance.collection('kj-intakes').snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) return new Text('Loading...');
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('AppBar Title')
+  void initState(){
+    super.initState();
+    _fabHeight = _initFabHeight;
+  }
+
+  @override
+  Widget build(BuildContext context){
+    return Material(
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: <Widget>[
+
+          SlidingUpPanel(
+            maxHeight: _panelHeightOpen,
+            minHeight: _panelHeightClosed,
+            parallaxEnabled: true,
+            parallaxOffset: .5,
+            body: _body(),
+            panel: _panel(),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
+            onPanelSlide: (double pos) => setState((){
+              _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) + _initFabHeight;
+            }),
           ),
-          body: Center(
-            child: (_children[_index]),
+
+          // the fab
+          Positioned(
+            right: 20.0,
+            bottom: _fabHeight,
+            child: FloatingActionButton(
+              child: Icon(
+                Icons.gps_fixed,
+                color: Theme.of(context).primaryColor,
+              ),
+              onPressed: (){},
+              backgroundColor: Colors.white,
+            ),
           ),
-          bottomNavigationBar: FABBottomAppBar(
-            centerItemText: 'Add KJ',
-            color: Colors.grey,
-            selectedColor: Colors.red,
-            notchedShape: CircularNotchedRectangle(),
-            onTabSelected: onTabTapped,
-            items: [
-              FABBottomAppBarItem(iconData: Icons.dashboard, text: 'Overview'),
-              FABBottomAppBarItem(iconData: Icons.history, text: 'History'),
-              FABBottomAppBarItem(iconData: Icons.trending_up, text: 'Graph'),
-              FABBottomAppBarItem(iconData: Icons.settings, text: 'Settings'),
-            ]
+
+          //the SlidingUpPanel Titel
+          Positioned(
+            top: 42.0,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(24.0, 18.0, 24.0, 18.0),
+              child: Text(
+                "SlidingUpPanel Example",
+                style: TextStyle(
+                    fontWeight: FontWeight.w500
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24.0),
+                boxShadow: [BoxShadow(
+                    color: Color.fromRGBO(0, 0, 0, .25),
+                    blurRadius: 16.0
+                )],
+              ),
+            ),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {},
-            tooltip: '🥒', // Gherkin
-            child: Icon(Icons.add),
-            elevation: 2.0,
+        ],
+      ),
+    );
+  }
+
+  Widget _panel(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(height: 12.0,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              width: 30,
+              height: 5,
+              decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.all(Radius.circular(12.0))
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 18.0,),
+        BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          elevation: 0.0,
+          backgroundColor: Colors.white,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard),
+              title: Text("Overview"),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.history),
+              title: Text("History"),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.trending_up),
+              title: Text("Graph"),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              title: Text("Settings"),
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.red[800],
+          onTap: _onTabTapped,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+          ],
+        ),
+        SizedBox(height: 36.0,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            _button("Popular", Icons.favorite, Colors.blue),
+            _button("Food", Icons.restaurant, Colors.red),
+            _button("Events", Icons.event, Colors.amber),
+            _button("More", Icons.more_horiz, Colors.green),
+          ],
+        ),
+        SizedBox(height: 36.0,),
+        Container(
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+
+              Text("Images", style: TextStyle(fontWeight: FontWeight.w600,)),
+
+              SizedBox(height: 12.0,),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                ],
+              ),
+            ],
           ),
-          //body: overviewBody,
-        );
-      },
+        ),
+
+        SizedBox(height: 36.0,),
+        Container(
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text("About", style: TextStyle(fontWeight: FontWeight.w600,)),
+              SizedBox(height: 12.0,),
+              Text(
+                "Pittsburgh is a city in the Commonwealth of Pennsylvania "
+                    "in the United States, and is the county seat of Allegheny County. "
+                    "As of 2017, a population of 305,704 lives within the city limits, "
+                    "making it the 63rd-largest city in the U.S. The metropolitan population "
+                    "of 2,353,045 is the largest in both the Ohio Valley and Appalachia, "
+                    "the second-largest in Pennsylvania (behind Philadelphia), "
+                    "and the 26th-largest in the U.S.  Pittsburgh is located in the "
+                    "south west of the state, at the confluence of the Allegheny, "
+                    "Monongahela, and Ohio rivers, Pittsburgh is known both as 'the Steel City' "
+                    "for its more than 300 steel-related businesses and as the 'City of Bridges' "
+                    "for its 446 bridges. The city features 30 skyscrapers, two inclined railways, "
+                    "a pre-revolutionary fortification and the Point State Park at the "
+                    "confluence of the rivers. The city developed as a vital link of "
+                    "the Atlantic coast and Midwest, as the mineral-rich Allegheny "
+                    "Mountains made the area coveted by the French and British "
+                    "empires, Virginians, Whiskey Rebels, and Civil War raiders. ",
+                maxLines: 7,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+  Widget _button(String label, IconData icon, Color color){
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Icon(
+            icon,
+            color: Colors.white,
+          ),
+          decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+              boxShadow: [BoxShadow(
+                color: Color.fromRGBO(0, 0, 0, 0.15),
+                blurRadius: 8.0,
+              )]
+          ),
+        ),
+
+        SizedBox(height: 12.0,),
+
+        Text(label),
+      ],
+
+    );
+  }
+
+  Widget _body(){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        (_widgetOptions.elementAt(_selectedIndex)),
+      ],
     );
   }
 }
-
-final overviewBody = Column(
-  mainAxisAlignment: MainAxisAlignment.center,
-  crossAxisAlignment: CrossAxisAlignment.center,
-  children: <Widget>[
-    Align(
-      alignment: Alignment.center,
-      child: Container(
-        child: Text(
-            "5800 KJ",
-          style: new TextStyle(
-            fontSize: 60.0,
-            color: Colors.white,
-            fontFamily: 'Open Sans',
-          )
-        ),
-      )
-    )
-  ]
-);
 
 class MyCustomForm extends StatefulWidget {
   @override
@@ -112,61 +282,18 @@ class MyCustomForm extends StatefulWidget {
 }
 
 class MyCustomFormState extends State<MyCustomForm> {
-  final _formKey = GlobalKey<FormState>();
-  DateTime selectedDate = DateTime.now();
-
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2019, 1),
-        lastDate: DateTime(2099));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
-  }
-
-  TextEditingController kjController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TextFormField(
-              controller: kjController,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Enter KJ intake';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 20.0),
-            RaisedButton(
-              onPressed: () {
-                _selectDate(context);
-              },
-              child: Text(new DateFormat('EEEE, dd MMMM yy').format(selectedDate)),
-            ),
-            Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: RaisedButton(
-                  onPressed: () {
-                    Firestore.instance.collection('kj-intakes').document().setData({'date': selectedDate, 'kj': kjController.text}); // Add data
-                    if (_formKey.currentState.validate()) {
-                      Scaffold.of(context)
-                          .showSnackBar(SnackBar(content: Text('Processing Data')));
-                    }
-                  },
-                  child: Text('Submit'),
-                )
-            )
-          ],
-        )
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text("Test 1"),
+        Text("Test 2"),
+        Text("Test 3"),
+        Text("Test 4"),
+      ],
     );
   }
 }

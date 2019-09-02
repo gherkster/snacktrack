@@ -19,7 +19,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.16.0
+  intl: ^0.15.2
+  flutter_sparkline: ^0.1.0
+  sliding_up_panel: ^0.3.5
   #firebase_core: ^0.4.0+1
   # Desired Firebase products:
   cloud_firestore: ^0.12.9+1
