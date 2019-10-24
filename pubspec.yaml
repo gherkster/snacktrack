@@ -20,7 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.15.2
-  fl_chart: ^0.2.0
+  charts_flutter: ^0.8.1
   sliding_up_panel: ^0.3.5
   percent_indicator: ^2.1.1+1
   #firebase_core: ^0.4.0+1

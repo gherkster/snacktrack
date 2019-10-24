@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fl_chart/fl_chart.dart';
+import 'package:charts_flutter/flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/services.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -81,42 +81,6 @@ class _HomePageState extends State<HomePage> {
               _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) + _initFabHeight;
             }),
           ),
-
-          // the fab
-          Positioned(
-            right: 20.0,
-            bottom: _fabHeight,
-            child: FloatingActionButton(
-              child: Icon(
-                Icons.gps_fixed,
-                color: Theme.of(context).primaryColor,
-              ),
-              onPressed: (){},
-              backgroundColor: Colors.white,
-            ),
-          ),
-
-          //the SlidingUpPanel Titel
-          /*Positioned(
-            top: 42.0,
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(24.0, 18.0, 24.0, 18.0),
-              child: Text(
-                "SlidingUpPanel Example",
-                style: TextStyle(
-                    fontWeight: FontWeight.w500
-                ),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24.0),
-                boxShadow: [BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, .25),
-                    blurRadius: 16.0
-                )],
-              ),
-            ),
-          ),*/
         ],
       ),
     );
@@ -176,10 +140,7 @@ class _HomePageState extends State<HomePage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            _button("Popular", Icons.favorite, Colors.blue),
-            _button("Food", Icons.restaurant, Colors.red),
-            _button("Events", Icons.event, Colors.amber),
-            _button("More", Icons.more_horiz, Colors.green),
+
           ],
         ),
         SizedBox(height: 36.0,),
@@ -236,32 +197,6 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-  Widget _button(String label, IconData icon, Color color){
-    return Column(
-      children: <Widget>[
-        Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Icon(
-            icon,
-            color: Colors.white,
-          ),
-          decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-              boxShadow: [BoxShadow(
-                color: Color.fromRGBO(0, 0, 0, 0.15),
-                blurRadius: 8.0,
-              )]
-          ),
-        ),
-
-        SizedBox(height: 12.0,),
-
-        Text(label),
-      ],
-
-    );
-  }
 
   Widget _body(){
     return Column(
@@ -274,22 +209,44 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+class Weight {
+  final int year;
+  final int clicks;
+
+  Weight(this.year, this.clicks);
+}
+var data = [
+  new Weight(0, 70),
+  new Weight(1, 68),
+  new Weight(2, 65),
+];
+var series = [
+  new Series(
+    id: 'Clicks',
+    colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
+    domainFn: (Weight clickData, _) => clickData.year,
+    measureFn: (Weight clickData, _) => clickData.clicks,
+    data: data,
+  ),
+];
+var chart = new LineChart(
+  series,
+  animate: true,
+  primaryMeasureAxis: new NumericAxisSpec(
+    viewport: NumericExtents(50.0, 80.0),
+  ),
+  domainAxis: new NumericAxisSpec( // TODO DateTimeAxisSpec
+    viewport: NumericExtents(0.0, 5.0),
+  ),
+);
+
 class OverviewMenu extends StatefulWidget {
   @override
   OverviewMenuState createState() {
     return OverviewMenuState();
   }
 }
-
 class OverviewMenuState extends State<OverviewMenu> {
-
-  final List<List<double>> charts =
-  [
-    [0.0, 0.3, 0.7, 0.6, 0.55, 0.8, 1.2, 1.3, 1.35, 0.9, 1.5, 1.7, 1.8, 1.7, 1.2, 0.8, 1.9, 2.0, 2.2, 1.9, 2.2, 2.1, 2.0, 2.3, 2.4, 2.45, 2.6, 3.6, 2.6, 2.7, 2.9, 2.8, 3.4],
-    [0.0, 0.3, 0.7, 0.6, 0.55, 0.8, 1.2, 1.3, 1.35, 0.9, 1.5, 1.7, 1.8, 1.7, 1.2, 0.8, 1.9, 2.0, 2.2, 1.9, 2.2, 2.1, 2.0, 2.3, 2.4, 2.45, 2.6, 3.6, 2.6, 2.7, 2.9, 2.8, 3.4, 0.0, 0.3, 0.7, 0.6, 0.55, 0.8, 1.2, 1.3, 1.35, 0.9, 1.5, 1.7, 1.8, 1.7, 1.2, 0.8, 1.9, 2.0, 2.2, 1.9, 2.2, 2.1, 2.0, 2.3, 2.4, 2.45, 2.6, 3.6, 2.6, 2.7, 2.9, 2.8, 3.4,],
-    [0.0, 0.3, 0.7, 0.6, 0.55, 0.8, 1.2, 1.3, 1.35, 0.9, 1.5, 1.7, 1.8, 1.7, 1.2, 0.8, 1.9, 2.0, 2.2, 1.9, 2.2, 2.1, 2.0, 2.3, 2.4, 2.45, 2.6, 3.6, 2.6, 2.7, 2.9, 2.8, 3.4, 0.0, 0.3, 0.7, 0.6, 0.55, 0.8, 1.2, 1.3, 1.35, 0.9, 1.5, 1.7, 1.8, 1.7, 1.2, 0.8, 1.9, 2.0, 2.2, 1.9, 2.2, 2.1, 2.0, 2.3, 2.4, 2.45, 2.6, 3.6, 2.6, 2.7, 2.9, 2.8, 3.4, 0.0, 0.3, 0.7, 0.6, 0.55, 0.8, 1.2, 1.3, 1.35, 0.9, 1.5, 1.7, 1.8, 1.7, 1.2, 0.8, 1.9, 2.0, 2.2, 1.9, 2.2, 2.1, 2.0, 2.3, 2.4, 2.45, 2.6, 3.6, 2.6, 2.7, 2.9, 2.8, 3.4]
-  ];
-  int actualChart = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -315,43 +272,23 @@ class OverviewMenuState extends State<OverviewMenu> {
             clipBehavior: Clip.antiAlias,
           ),
         ),
-        Card(
-          elevation: 0.0,
-          color: Colors.transparent,
-          margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+        Center(
           child: Container(
             child: ListTile(
               contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-              title: Text("7000 KJ"),
-              subtitle: Text("Intake for today"),
+              title: new Center(child: Text("7000 KJ")),
+              subtitle: new Center(child: Text("Intake for today")),
             ),
           ),
         ),
-        Card(
-            elevation: 8.0,
+        Card( // TODO Remove card if possible
+            elevation: 0.0,
+            color: Colors.transparent,
             margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
           child: Container(
             height: 200.0,
-            child: FlChart(
-              chart: LineChart(
-                LineChartData(
-
-                )
-              )
-            )
+            child: chart
           )
-        ),
-        Card(
-          elevation: 0.0,
-          color: Colors.transparent,
-          margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-          child: Container(
-            child: ListTile(
-              contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-              title: Text("7000 KJ"),
-              subtitle: Text("Intake for today"),
-            ),
-          ),
         ),
       ],
     );
