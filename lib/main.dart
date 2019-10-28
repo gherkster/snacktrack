@@ -34,6 +34,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
+FocusNode textFocus = new FocusNode();
+
 class _HomePageState extends State<HomePage> {
 
   final double _initFabHeight = 120.0;
@@ -72,6 +74,9 @@ class _HomePageState extends State<HomePage> {
           SlidingUpPanel(
             maxHeight: _panelHeightOpen,
             minHeight: _panelHeightClosed,
+            onPanelOpened: () => setState((){
+              FocusScope.of(context).requestFocus(textFocus);
+            }),
             parallaxEnabled: true,
             parallaxOffset: .5,
             body: _body(),
@@ -79,6 +84,9 @@ class _HomePageState extends State<HomePage> {
             borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
             onPanelSlide: (double pos) => setState((){
               _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) + _initFabHeight;
+              if (pos < 0.9) {
+                FocusScope.of(context).requestFocus(FocusNode());
+              }
             }),
           ),
         ],
@@ -131,66 +139,41 @@ class _HomePageState extends State<HomePage> {
           selectedItemColor: Colors.red[800],
           onTap: _onTabTapped,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-          ],
-        ),
-        SizedBox(height: 36.0,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-
-          ],
-        ),
         SizedBox(height: 36.0,),
         Container(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              TextFormField(
+                focusNode: textFocus,
+                style: TextStyle(
+                  fontSize: 28,
+                ),
+                textInputAction: TextInputAction.send,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey, width: 0.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
 
-              Text("Images", style: TextStyle(fontWeight: FontWeight.w600,)),
-
-              SizedBox(height: 12.0,),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                ],
-              ),
-            ],
-          ),
-        ),
-
-        SizedBox(height: 36.0,),
-        Container(
-          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text("About", style: TextStyle(fontWeight: FontWeight.w600,)),
-              SizedBox(height: 12.0,),
-              Text(
-                "Pittsburgh is a city in the Commonwealth of Pennsylvania "
-                    "in the United States, and is the county seat of Allegheny County. "
-                    "As of 2017, a population of 305,704 lives within the city limits, "
-                    "making it the 63rd-largest city in the U.S. The metropolitan population "
-                    "of 2,353,045 is the largest in both the Ohio Valley and Appalachia, "
-                    "the second-largest in Pennsylvania (behind Philadelphia), "
-                    "and the 26th-largest in the U.S.  Pittsburgh is located in the "
-                    "south west of the state, at the confluence of the Allegheny, "
-                    "Monongahela, and Ohio rivers, Pittsburgh is known both as 'the Steel City' "
-                    "for its more than 300 steel-related businesses and as the 'City of Bridges' "
-                    "for its 446 bridges. The city features 30 skyscrapers, two inclined railways, "
-                    "a pre-revolutionary fortification and the Point State Park at the "
-                    "confluence of the rivers. The city developed as a vital link of "
-                    "the Atlantic coast and Midwest, as the mineral-rich Allegheny "
-                    "Mountains made the area coveted by the French and British "
-                    "empires, Virginians, Whiskey Rebels, and Civil War raiders. ",
-                maxLines: 7,
-                overflow: TextOverflow.ellipsis,
-              ),
+                  ),
+                  labelText: "Enter KJ",
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(),
+                  ),
+                ),
+                validator: (val) {
+                  if(val.length == 0) {
+                    return null;
+                  } else {
+                    return null;
+                  }
+                },
+                keyboardType: TextInputType.number,
+              )
             ],
           ),
         ),
