@@ -3,9 +3,9 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/services.dart';
 // import 'package:fit_kit/fit_kit.dart';
 
-import 'package:snacktrack/login_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:snacktrack/login_register.dart';
 import 'package:snacktrack/tabs/overview.dart';
 import 'package:snacktrack/tabs/history.dart';
 import 'package:snacktrack/tabs/graph.dart';
@@ -32,6 +32,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => Router(),
+        '/loginSignupPage': (context) => LoginSignupPage(),
+
         '/overview': (context) => Overview(),
         '/settings': (context) => Settings(),
       },

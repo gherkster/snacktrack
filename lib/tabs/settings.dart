@@ -22,6 +22,6 @@ class SettingsState extends State<Settings> {
   _signOut() {
     var auth = new Auth();
     auth.emailSignOut();
-    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginSignupPage()));
+    Navigator.pushNamed(context, '/loginSignupPage');
   }
 }
