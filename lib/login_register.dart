@@ -149,7 +149,7 @@ class _LoginPageState extends State<LoginSignupPage> {
   void _googleSignIn() {
     var authHandler = new Auth(); // TODO Merge this with login pressed, make auth some sort of abstract class
     authHandler.signInWithGoogle().whenComplete(() { // TODO If google login is cancelled before completion then overview is still shown
-      Navigator.push(context, new MaterialPageRoute(builder: (context) => new Overview()));
+      Navigator.pushNamed(context, '/overview');
     });
   }
 
@@ -158,7 +158,7 @@ class _LoginPageState extends State<LoginSignupPage> {
     var auth = new Auth();
     auth.emailSignIn(_email, _password)
     .then((FirebaseUser user) {
-      Navigator.push(context, new MaterialPageRoute(builder: (context) => new Overview()));
+      Navigator.pushNamed(context, '/overview');
     }).catchError((e) => print(e));
   }
   void _createAccountPressed () {

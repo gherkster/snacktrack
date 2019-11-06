@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:charts_flutter/flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/services.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 // import 'package:fit_kit/fit_kit.dart';
 
 import 'package:snacktrack/login_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:snacktrack/tabs/overview.dart';
+import 'package:snacktrack/tabs/history.dart';
+import 'package:snacktrack/tabs/graph.dart';
+import 'package:snacktrack/tabs/settings.dart';
 
 void main() => runApp(MyApp());
 
@@ -28,7 +29,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Router(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => Router(),
+        '/overview': (context) => Overview(),
+        '/settings': (context) => Settings(),
+      },
+      //home: Router(),
     );
   }
 }
@@ -43,7 +50,7 @@ class Router extends StatelessWidget {
         stream: _auth.onAuthStateChanged,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Overview();
+            return HomePage();
           }
           return LoginSignupPage();
         },
@@ -52,12 +59,12 @@ class Router extends StatelessWidget {
   }
 }
 
-class Overview extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _OverviewState createState() => _OverviewState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _OverviewState extends State<Overview> {
+class _HomePageState extends State<HomePage> {
 
   FocusNode textFocus = new FocusNode();
   PanelController _pc = new PanelController();
@@ -65,7 +72,7 @@ class _OverviewState extends State<Overview> {
   double _panelHeightClosed = 95.0;
 
   final List<Widget> _widgetOptions = [
-    Center(child: OverviewMenu()),
+    Center(child: Overview()),
     Center(child: Text("Numba 2"),),
     Center(child: Text("Numba 3"),),
     Center(child: new Settings()),
@@ -76,11 +83,6 @@ class _OverviewState extends State<Overview> {
     setState(() {
       _selectedIndex = index;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -207,121 +209,5 @@ class _OverviewState extends State<Overview> {
         (_widgetOptions.elementAt(_selectedIndex)),
       ],
     );
-  }
-}
-
-class Weight {
-  final int year;
-  final int clicks;
-
-  Weight(this.year, this.clicks);
-}
-var data = [
-  new Weight(0, 70),
-  new Weight(1, 68),
-  new Weight(2, 65),
-];
-var series = [
-  new Series(
-    id: 'Clicks',
-    colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
-    domainFn: (Weight clickData, _) => clickData.year,
-    measureFn: (Weight clickData, _) => clickData.clicks,
-    data: data,
-  ),
-];
-var chart = new LineChart(
-  series,
-  animate: true,
-  primaryMeasureAxis: new NumericAxisSpec(
-    viewport: NumericExtents(50.0, 80.0),
-  ),
-  domainAxis: new NumericAxisSpec( // TODO DateTimeAxisSpec
-    viewport: NumericExtents(0.0, 5.0),
-  ),
-);
-
-class OverviewMenu extends StatefulWidget {
-  @override
-  OverviewMenuState createState() {
-    return OverviewMenuState();
-  }
-}
-class OverviewMenuState extends State<OverviewMenu> {
-
-  /*void read() async {
-    final results = await FitKit.read(
-      DataType.WEIGHT,
-      DateTime.now().subtract(Duration(days:90)),
-      DateTime.now(),
-    );
-    print(results);
-  }*/
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        CircularPercentIndicator(
-          radius: 200.0,
-          lineWidth: 6.0,
-          percent: 0.5,
-          progressColor: Colors.blueAccent,
-          animation: true,
-          animationDuration: 1000,
-          circularStrokeCap: CircularStrokeCap.round,
-          center: Card(
-            child: CircleAvatar(
-              radius: 80,
-              backgroundImage: NetworkImage('https://i.kinja-img.com/gawker-media/image/upload/c_lfill,w_768,q_90/txthbfekk2a1garzhu0j.jpg'), // TODO Get image from Google profile, onClick let user change image
-            ),
-            elevation: 20.0,
-            shape: CircleBorder(),
-            clipBehavior: Clip.antiAlias,
-          ),
-        ),
-        Center(
-          child: Container(
-            child: ListTile(
-              contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-              title: new Center(child: Text("7000 KJ")), // TODO Save data locally and sync new values to allow app to work outside internet
-              subtitle: new Center(child: Text("Intake for today")),
-            ),
-          ),
-        ),
-        Card( // TODO Remove card if possible
-            elevation: 0.0,
-            color: Colors.transparent,
-            margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-          child: Container(
-            height: 200.0,
-            child: chart
-          )
-        ),
-      ],
-    );
-  }
-}
-
-class Settings extends StatefulWidget {
-  @override
-  SettingsState createState() {
-    return SettingsState();
-  }
-}
-
-class SettingsState extends State<Settings> {
-  @override
-  Widget build(BuildContext context) {
-    return RaisedButton(
-      onPressed: () => _signOut() // TODO Signout google too
-    );
-  }
-
-  Future<void> _signOut() async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginSignupPage()));
   }
 }
