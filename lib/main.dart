@@ -5,6 +5,10 @@ import 'package:charts_flutter/flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/services.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+// import 'package:fit_kit/fit_kit.dart';
+
+import 'package:snacktrack/login_register.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,22 +28,39 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: Router(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
+FirebaseAuth _auth = FirebaseAuth.instance;
+
+class Router extends StatelessWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: new StreamBuilder(
+        stream: _auth.onAuthStateChanged,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Overview();
+          }
+          return LoginSignupPage();
+        },
+      )
+    );
+  }
 }
 
-FocusNode textFocus = new FocusNode();
+class Overview extends StatefulWidget {
+  @override
+  _OverviewState createState() => _OverviewState();
+}
 
-class _HomePageState extends State<HomePage> {
+class _OverviewState extends State<Overview> {
 
-  final double _initFabHeight = 120.0;
-  double _fabHeight;
+  FocusNode textFocus = new FocusNode();
+  PanelController _pc = new PanelController();
   double _panelHeightOpen = 575.0;
   double _panelHeightClosed = 95.0;
 
@@ -47,8 +68,7 @@ class _HomePageState extends State<HomePage> {
     Center(child: OverviewMenu()),
     Center(child: Text("Numba 2"),),
     Center(child: Text("Numba 3"),),
-    Center(child: Text("Numba 4"),),
-    Center(child: Text("Numba 5")),
+    Center(child: new Settings()),
   ];
 
   int _selectedIndex = 0;
@@ -59,9 +79,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    _fabHeight = _initFabHeight;
   }
 
   @override
@@ -74,6 +93,7 @@ class _HomePageState extends State<HomePage> {
           SlidingUpPanel(
             maxHeight: _panelHeightOpen,
             minHeight: _panelHeightClosed,
+            controller: _pc,
             onPanelOpened: () => setState((){
               FocusScope.of(context).requestFocus(textFocus);
             }),
@@ -83,9 +103,8 @@ class _HomePageState extends State<HomePage> {
             panel: _panel(),
             borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
             onPanelSlide: (double pos) => setState((){
-              _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) + _initFabHeight;
               if (pos < 0.9) {
-                FocusScope.of(context).requestFocus(FocusNode());
+                FocusScope.of(context).unfocus();
               }
             }),
           ),
@@ -165,12 +184,11 @@ class _HomePageState extends State<HomePage> {
                     borderSide: BorderSide(),
                   ),
                 ),
-                validator: (val) {
-                  if(val.length == 0) {
-                    return null;
-                  } else {
-                    return null;
-                  }
+                onFieldSubmitted: (input){
+                  print(input);
+                  // TODO Empty input
+                  // TODO Check value received
+                  _pc.close(); // TODO Decide if I want this functionality
                 },
                 keyboardType: TextInputType.number,
               )
@@ -231,6 +249,15 @@ class OverviewMenu extends StatefulWidget {
 }
 class OverviewMenuState extends State<OverviewMenu> {
 
+  /*void read() async {
+    final results = await FitKit.read(
+      DataType.WEIGHT,
+      DateTime.now().subtract(Duration(days:90)),
+      DateTime.now(),
+    );
+    print(results);
+  }*/
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -248,7 +275,7 @@ class OverviewMenuState extends State<OverviewMenu> {
           center: Card(
             child: CircleAvatar(
               radius: 80,
-              backgroundImage: NetworkImage('https://i.kinja-img.com/gawker-media/image/upload/c_lfill,w_768,q_90/txthbfekk2a1garzhu0j.jpg'),
+              backgroundImage: NetworkImage('https://i.kinja-img.com/gawker-media/image/upload/c_lfill,w_768,q_90/txthbfekk2a1garzhu0j.jpg'), // TODO Get image from Google profile, onClick let user change image
             ),
             elevation: 20.0,
             shape: CircleBorder(),
@@ -259,7 +286,7 @@ class OverviewMenuState extends State<OverviewMenu> {
           child: Container(
             child: ListTile(
               contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-              title: new Center(child: Text("7000 KJ")),
+              title: new Center(child: Text("7000 KJ")), // TODO Save data locally and sync new values to allow app to work outside internet
               subtitle: new Center(child: Text("Intake for today")),
             ),
           ),
@@ -275,5 +302,26 @@ class OverviewMenuState extends State<OverviewMenu> {
         ),
       ],
     );
+  }
+}
+
+class Settings extends StatefulWidget {
+  @override
+  SettingsState createState() {
+    return SettingsState();
+  }
+}
+
+class SettingsState extends State<Settings> {
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      onPressed: () => _signOut() // TODO Signout google too
+    );
+  }
+
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginSignupPage()));
   }
 }
