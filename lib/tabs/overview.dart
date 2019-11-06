@@ -2,6 +2,8 @@ import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+import 'package:snacktrack/auth.dart';
+
 class Overview extends StatefulWidget {
   @override
   OverviewState createState() {
@@ -21,6 +23,15 @@ class OverviewState extends State<Overview> {
 
   @override
   Widget build(BuildContext context) {
+
+    Auth auth = Auth();
+    String photoUrl = 'https://previews.123rf.com/images/abluecup/abluecup1407/abluecup140700156/29997267-three-question-mark-isolated-on-white-background.jpg';
+    auth.getCurrentUser().then((result) {
+      if (result != null) {
+        photoUrl = result.photoUrl.toString();
+      }
+    });
+
     return Material(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -37,8 +48,7 @@ class OverviewState extends State<Overview> {
               center: Card(
                 child: CircleAvatar(
                   radius: 80,
-                  backgroundImage: NetworkImage(
-                      'https://i.kinja-img.com/gawker-media/image/upload/c_lfill,w_768,q_90/txthbfekk2a1garzhu0j.jpg'), // TODO Get image from Google profile, onClick let user change image
+                  backgroundImage: NetworkImage(photoUrl), // TODO Get image from Google profile, onClick let user change image
                 ),
                 elevation: 20.0,
                 shape: CircleBorder(),
