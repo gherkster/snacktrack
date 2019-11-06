@@ -40,14 +40,6 @@ class _LoginPageState extends State<LoginSignupPage> {
   @override
   void initState() {
     super.initState();
-    handleStartScreen();
-  }
-
-  Future<void> handleStartScreen() async {
-    Auth auth = Auth();
-    if (await auth.isLoggedIn()) {
-      Navigator.push(context, new MaterialPageRoute(builder: (context) => new Overview()));
-    }
   }
 
   _LoginPageState() {
@@ -163,12 +155,11 @@ class _LoginPageState extends State<LoginSignupPage> {
 
   // These functions can self contain any user auth logic required, they all have access to _email and _password
   void _loginPressed () {
-    var authHandler = new Auth();
-    authHandler.handleSignInEmail(_email, _password)
+    var auth = new Auth();
+    auth.emailSignIn(_email, _password)
     .then((FirebaseUser user) {
       Navigator.push(context, new MaterialPageRoute(builder: (context) => new Overview()));
     }).catchError((e) => print(e));
-
   }
   void _createAccountPressed () {
     print('The user wants to create an accoutn with $_email and $_password');
