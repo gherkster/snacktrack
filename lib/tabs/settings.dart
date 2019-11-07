@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snacktrack/auth.dart';
-import 'package:snacktrack/login_register.dart';
+import 'package:snacktrack/database.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -10,13 +10,32 @@ class Settings extends StatefulWidget {
 }
 
 class SettingsState extends State<Settings> {
+
   @override
   Widget build(BuildContext context) {
     return Material(
-        child: RaisedButton(
-            onPressed: () => _signOut() // TODO Signout google too
+      child: ListView(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.person_outline),
+            title: Text('Sign Out'),
+            onTap: _signOut,
+          ),
+          ListTile(
+            leading: Icon(Icons.delete_forever),
+            title: Text('Clear Database'),
+            onTap: _deleteAll,
+          )
+        ],
         )
     );
+  }
+
+  _deleteAll() {
+    Database db = new Database();
+    db.delete();
   }
 
   _signOut() {

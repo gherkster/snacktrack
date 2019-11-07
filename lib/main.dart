@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +13,7 @@ import 'package:snacktrack/tabs/overview.dart';
 import 'package:snacktrack/tabs/history.dart';
 import 'package:snacktrack/tabs/graph.dart';
 import 'package:snacktrack/tabs/settings.dart';
+import 'package:snacktrack/totalValueBloc.dart';
 
 void main() => runApp(MyApp());
 
@@ -73,13 +76,14 @@ class _HomePageState extends State<HomePage> {
   FocusNode textFocus = new FocusNode();
   PanelController _pc = new PanelController();
   TextEditingController _textController = new TextEditingController();
+
   double _panelHeightOpen = 575.0;
   double _panelHeightClosed = 95.0;
 
   final List<Widget> _widgetOptions = [
     Center(child: Overview()),
-    Center(child: Text("Numba 2"),),
-    Center(child: Text("Numba 3"),),
+    Center(child: Text("Number 2"),),
+    Center(child: Text("Number 3"),),
     Center(child: new Settings()),
   ];
 
@@ -96,7 +100,6 @@ class _HomePageState extends State<HomePage> {
       child: Stack(
         alignment: Alignment.topCenter,
         children: <Widget>[
-
           SlidingUpPanel(
             maxHeight: _panelHeightOpen,
             minHeight: _panelHeightClosed,
@@ -198,11 +201,11 @@ class _HomePageState extends State<HomePage> {
                     'kj': input,
                     'date': DateTime.now()
                   });
+                  db.updateTotal();
                   _textController.clear();
-                  // TODO Empty input
                   // TODO Check value received
-                  _pc.close(); // TODO Decide if I want this functionality
-                  Navigator.pushNamed(context, '/homepage');
+                  // TODO Last 24 hours is not working properly, last 18 hours
+                  _pc.close();
                 },
                 keyboardType: TextInputType.number,
               )

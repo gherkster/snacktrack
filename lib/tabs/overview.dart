@@ -6,6 +6,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:snacktrack/database.dart';
+import 'package:snacktrack/totalValueBloc.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import 'package:snacktrack/auth.dart';
@@ -18,18 +19,12 @@ class Overview extends StatefulWidget {
 }
 class OverviewState extends State<Overview> {
 
-  /*void read() async {
-    final results = await FitKit.read(
-      DataType.WEIGHT,
-      DateTime.now().subtract(Duration(days:90)),
-      DateTime.now(),
-    );
-    print(results);
-  }*/
-
   @override
   void initState() {
     super.initState();
+    Database db = new Database();
+    db.updateTotal();
+    db.getWeight();
   }
 
   String photoUrl;
@@ -41,6 +36,20 @@ class OverviewState extends State<Overview> {
     return photoUrl;
   }
 
+  double value = 0.0;
+  Future<double> _getKJToday() async { // TODO Use local storage value in case no internet, only write collection to database once a day as backup with total, avoids doing lots of small writes
+    // TODO Do same with reads, is reading only for backup?
+    Database db = new Database();
+    value = await db.read('kj-intakes') as double;
+    return value;
+  }
+
+  Future<double> _getPercent() async {
+    Database db = Database();
+    int kjTotal = await db.read('kj-intakes');
+    return ((kjTotal.toDouble()) / 8500).clamp(0.0, 1.0);
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -49,50 +58,63 @@ class OverviewState extends State<Overview> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            CircularPercentIndicator(
-              radius: 200.0,
-              lineWidth: 6.0,
-              percent: 0.5,
-              progressColor: Colors.blueAccent,
-              animation: true,
-              animationDuration: 1000,
-              circularStrokeCap: CircularStrokeCap.round,
-              center: FutureBuilder<String>(
-                future: _getImage(),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  }
-                  else {
-                    return Card(
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(snapshot.data.toString()),
-                        radius: 80.0,
-                        ),
-                      elevation: 20.0,
-                      shape: CircleBorder(),
-                      clipBehavior: Clip.antiAlias,
+            StreamBuilder(
+              stream: totalValueBloc.totalValueStream,
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting: return Text('Loading...');
+                  default:
+                    if (snapshot.hasError) {
+                      return Text('Error: Cannot get KJ');
+                    }
+                    else return CircularPercentIndicator(
+                        radius: 200.0,
+                        lineWidth: 6.0,
+                        percent: (double.parse(snapshot.data) / 8500).clamp(0.0, 1.0), // Creep up from old value not from 0
+                        progressColor: Colors.blueAccent,
+                        animation: true,
+                        animationDuration: 1000,
+                        circularStrokeCap: CircularStrokeCap.round,
+                        center: FutureBuilder<String>(
+                          future: _getImage(),
+                          builder: (context, AsyncSnapshot snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            }
+                            else {
+                              return Card(
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage(snapshot.data.toString()),
+                                  radius: 80.0,
+                                ),
+                                elevation: 20.0,
+                                shape: CircleBorder(),
+                                clipBehavior: Clip.antiAlias,
+                              );
+                            }
+                          },
+                        )
                     );
-                  }
-                },
-              )
+                }
+              },
             ),
+
             Center(
               child: Container(
                 child: ListTile(
                   contentPadding: EdgeInsets.symmetric(
                       horizontal: 20.0, vertical: 10.0),
                   title: new Center(
-                    child: FutureBuilder(
-                      future: _getKJToday(),
-                      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    child: StreamBuilder(
+                      stream: totalValueBloc.totalValueStream,
+                      builder: (context, snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.waiting: return Text('Loading...');
                           default:
                             if (snapshot.hasError) {
                               return Text('Error: Cannot get KJ');
                             }
-                            else return Text(snapshot.data);
+                            else return Text(snapshot.data + " KJ");
                         }
                       },
                     ),
@@ -103,7 +125,7 @@ class OverviewState extends State<Overview> {
                 ),
               ),
             ),
-            Card( // TODO Remove card if possible
+            Card(
                 elevation: 0.0,
                 color: Colors.transparent,
                 margin: new EdgeInsets.symmetric(
@@ -119,41 +141,44 @@ class OverviewState extends State<Overview> {
   }
 }
 
-int value;
-Future<String> _getKJToday() async { // TODO Use local storage value in case no internet, only write collection to database once a day as backup with total, avoids doing lots of small writes
-                                      // TODO Do same with reads, is reading only for backup?
-  Database db = new Database();
-  value = await db.read('kj-intakes');
-  return value.toString();
-}
-
 class Weight {
-  final int year;
-  final int clicks;
+  final DateTime date;
+  final double weight;
 
-  Weight(this.year, this.clicks);
+  Weight(this.date, this.weight);
 }
 var data = [
-  new Weight(0, 70),
-  new Weight(1, 68),
-  new Weight(2, 65),
+  new Weight(new DateTime(2910, 11, 8), 70.0),
+  new Weight(new DateTime(2910, 11, 7), 69.8),
+  new Weight(new DateTime(2910, 11, 6), 69.7),
+  new Weight(new DateTime(2910, 11, 5), 69.6),
+  new Weight(new DateTime(2910, 11, 4), 69.3),
+  new Weight(new DateTime(2910, 11, 3), 69.2),
+  new Weight(new DateTime(2910, 11, 2), 69.2),
 ];
 var series = [
   new Series(
     id: 'Clicks',
     colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
-    domainFn: (Weight clickData, _) => clickData.year,
-    measureFn: (Weight clickData, _) => clickData.clicks,
+    domainFn: (Weight weights, _) => weights.date,
+    measureFn: (Weight weights, _) => weights.weight,
     data: data,
   ),
 ];
-var chart = new LineChart(
+var chart = new TimeSeriesChart(
   series,
   animate: true,
   primaryMeasureAxis: new NumericAxisSpec(
-    viewport: NumericExtents(50.0, 80.0),
+    viewport: NumericExtents(71, 68.0), // Set programmatically
+    tickProviderSpec: BasicNumericTickProviderSpec(
+    )
   ),
-  domainAxis: new NumericAxisSpec( // TODO DateTimeAxisSpec
-    viewport: NumericExtents(0.0, 5.0),
+  domainAxis: new DateTimeAxisSpec(
+    tickProviderSpec: DayTickProviderSpec(increments: [1]),
+    tickFormatterSpec: AutoDateTimeTickFormatterSpec(
+      day: TimeFormatterSpec(
+        format: 'EEE', transitionFormat: 'EEE', noonFormat: 'EEE'
+      )
+    )
   ),
 );
