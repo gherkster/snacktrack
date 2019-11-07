@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 // import 'package:fit_kit/fit_kit.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:snacktrack/database.dart';
 
 import 'package:snacktrack/login_register.dart';
 import 'package:snacktrack/tabs/overview.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => Router(),
-        '/homepage': (context) => HomePage(),
+        '/homepage': (context) => HomePage(), // TODO Descriptions for each
         '/loginSignupPage': (context) => LoginSignupPage(),
 
         '/overview': (context) => Overview(),
@@ -71,6 +72,7 @@ class _HomePageState extends State<HomePage> {
 
   FocusNode textFocus = new FocusNode();
   PanelController _pc = new PanelController();
+  TextEditingController _textController = new TextEditingController();
   double _panelHeightOpen = 575.0;
   double _panelHeightClosed = 95.0;
 
@@ -170,6 +172,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               TextFormField(
+                controller: _textController,
                 focusNode: textFocus,
                 style: TextStyle(
                   fontSize: 28,
@@ -190,10 +193,16 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 onFieldSubmitted: (input){
-                  print(input);
+                  Database db = new Database();
+                  db.create('kj-intakes', {
+                    'kj': input,
+                    'date': DateTime.now()
+                  });
+                  _textController.clear();
                   // TODO Empty input
                   // TODO Check value received
                   _pc.close(); // TODO Decide if I want this functionality
+                  Navigator.pushNamed(context, '/homepage');
                 },
                 keyboardType: TextInputType.number,
               )

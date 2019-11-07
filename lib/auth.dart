@@ -14,11 +14,12 @@ abstract class BaseAuth {
 
 
   Future<FirebaseUser> signInWithGoogle();
-
+  Future<GoogleIdentity> getGoogleIdentity();
   Future<void> signOutWithGoogle();
 
 
   Future<FirebaseUser> getCurrentUser();
+  Future<String> getCurrentUserUid();
 }
 
 class Auth implements BaseAuth {
@@ -71,6 +72,12 @@ class Auth implements BaseAuth {
 
     return user;
   }
+
+  Future<GoogleIdentity> getGoogleIdentity() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    return googleSignIn.currentUser;
+  }
+
   Future<void> signOutWithGoogle() async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
     await googleSignIn.signOut();
@@ -79,5 +86,10 @@ class Auth implements BaseAuth {
   Future<FirebaseUser> getCurrentUser() async {
     FirebaseUser user = await auth.currentUser();
     return user;
+  }
+
+  Future<String> getCurrentUserUid() async {
+    FirebaseUser user = await auth.currentUser();
+    return user.uid;
   }
 }
