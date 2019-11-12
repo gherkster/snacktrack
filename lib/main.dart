@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:snacktrack/stored_prefs.dart';
+import 'package:snacktrack/tools/stored_prefs.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/services.dart';

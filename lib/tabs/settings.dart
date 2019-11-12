@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snacktrack/auth.dart';
-import 'package:snacktrack/database.dart';
+import 'package:snacktrack/tools/database.dart';
 
 class Settings extends StatefulWidget {
   @override

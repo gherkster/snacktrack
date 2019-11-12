@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:snacktrack/auth.dart';
-import 'package:snacktrack/totalValueBloc.dart';
 import 'package:fit_kit/fit_kit.dart';
 
 abstract class BaseDatabase {
@@ -13,8 +12,6 @@ abstract class BaseDatabase {
   //Future<void> update();
 
   Future<void> delete();
-
-  Future<void> updateTotal();
 }
 
 class Database implements BaseDatabase {
@@ -62,11 +59,6 @@ class Database implements BaseDatabase {
       print(result.value);
       print("Hello there!");
     }
-  }
-
-  Future<void> updateTotal() async { // TODO Fix this
-    int intake = await read('kj-intakes');
-    totalValueBloc.updateTotalValue(intake.toString());
   }
 
   Future<void> delete() async { // TODO Remove later, this deletes whole collection of kj values

@@ -3,15 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:snacktrack/stored_prefs.dart';
+import 'package:snacktrack/tools/stored_prefs.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
-import 'package:snacktrack/database.dart';
-
+import 'package:snacktrack/tools/database.dart';
 import 'package:snacktrack/auth.dart';
 
 class Overview extends StatefulWidget {
-
-
 
   @override
   OverviewState createState() {
@@ -24,7 +21,6 @@ class OverviewState extends State<Overview> {
   void initState() {
     super.initState();
     Database db = new Database();
-    db.updateTotal();
     db.getWeight();
   }
 
