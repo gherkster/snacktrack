@@ -1,24 +1,32 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:snacktrack/stored_prefs.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/services.dart';
-// import 'package:fit_kit/fit_kit.dart';
+import 'package:provider/provider.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:snacktrack/database.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 import 'package:snacktrack/login_register.dart';
 import 'package:snacktrack/tabs/overview.dart';
 import 'package:snacktrack/tabs/history.dart';
 import 'package:snacktrack/tabs/graph.dart';
 import 'package:snacktrack/tabs/settings.dart';
-import 'package:snacktrack/totalValueBloc.dart';
 
-void main() => runApp(MyApp());
+Future<void> main() async {
+  final preferences = await StreamingSharedPreferences.instance;
+  final prefs = Prefs(preferences);
+
+  runApp(
+    Provider<Prefs>.value(value: prefs, child: MyApp()),
+  );
+}
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
 
@@ -48,6 +56,7 @@ class MyApp extends StatelessWidget {
 }
 
 FirebaseAuth _auth = FirebaseAuth.instance;
+FirebaseDatabase database = FirebaseDatabase.instance;
 
 class Router extends StatelessWidget {
   @override
@@ -76,15 +85,19 @@ class _HomePageState extends State<HomePage> {
   FocusNode textFocus = new FocusNode();
   PanelController _pc = new PanelController();
   TextEditingController _textController = new TextEditingController();
+  static final _formKey = new GlobalKey<FormState>();
 
   double _panelHeightOpen = 575.0;
   double _panelHeightClosed = 95.0;
 
+  static final Overview _overview = new Overview();
+  static final Settings _settings = new Settings();
+
   final List<Widget> _widgetOptions = [
-    Center(child: Overview()),
+    Center(child: _overview),
     Center(child: Text("Number 2"),),
     Center(child: Text("Number 3"),),
-    Center(child: new Settings()),
+    Center(child: _settings),
   ];
 
   int _selectedIndex = 0;
@@ -95,12 +108,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    database.setPersistenceEnabled(true);
+    database.setPersistenceCacheSizeBytes(100000000);
+  }
+
+  @override
   Widget build(BuildContext context){
+
     return Material(
       child: Stack(
         alignment: Alignment.topCenter,
         children: <Widget>[
-          SlidingUpPanel(
+          SlidingUpPanel( // TODO When opened goes fullscreen instead of ~80%
             maxHeight: _panelHeightOpen,
             minHeight: _panelHeightClosed,
             controller: _pc,
@@ -124,6 +145,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _panel(){
+    final prefs = Provider.of<Prefs>(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -174,40 +197,45 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              TextFormField(
-                controller: _textController,
-                focusNode: textFocus,
-                style: TextStyle(
-                  fontSize: 28,
-                ),
-                textInputAction: TextInputAction.send,
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 0.0),
+              Form(
+                key: _formKey,
+                child: TextFormField(
+                  controller: _textController,
+                  focusNode: textFocus,
+                  style: TextStyle(
+                    fontSize: 28,
                   ),
-                  focusedBorder: OutlineInputBorder(
+                  textInputAction: TextInputAction.send,
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 0.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
 
+                    ),
+                    labelText: "Enter KJ",
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(),
+                    ),
                   ),
-                  labelText: "Enter KJ",
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(),
-                  ),
+                  onFieldSubmitted: (input){ // TODO Move prefs to new file, so can be used anywhere easily
+                    if (_formKey.currentState.validate()) {
+                      int currentValue = prefs.kj.getValue();
+                      prefs.kj.setValue(currentValue + int.parse(input));
+                      _textController.clear();
+                      _pc.close();
+                    }
+                  },
+                  validator: (value) {
+                    if (value.isEmpty || double.parse(value) == 0.0 || double.tryParse(value) == null) {
+                      return ('Invalid KJ Intake');
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.number,
                 ),
-                onFieldSubmitted: (input){
-                  Database db = new Database();
-                  db.create('kj-intakes', {
-                    'kj': input,
-                    'date': DateTime.now()
-                  });
-                  db.updateTotal();
-                  _textController.clear();
-                  // TODO Check value received
-                  // TODO Last 24 hours is not working properly, last 18 hours
-                  _pc.close();
-                },
-                keyboardType: TextInputType.number,
               )
             ],
           ),
