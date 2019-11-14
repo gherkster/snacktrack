@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snacktrack/auth.dart';
 import 'package:snacktrack/tools/database.dart';
+import 'package:snacktrack/tools/http_request.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -27,7 +28,15 @@ class SettingsState extends State<Settings> {
             leading: Icon(Icons.delete_forever),
             title: Text('Clear Database'),
             onTap: _deleteAll,
-          )
+          ),
+          ListTile(
+            title: Text('Print Google Account'),
+            onTap: _printGoogleAccount,
+          ),
+          ListTile(
+            title: Text('Print Weight Data'),
+            onTap: _printWeightData,
+          ),
         ],
         )
     );
@@ -42,5 +51,15 @@ class SettingsState extends State<Settings> {
     var auth = new Auth();
     auth.emailSignOut();
     Navigator.pushNamed(context, '/loginSignupPage');
+  }
+
+  _printGoogleAccount() {
+    var auth = new Auth();
+    print(auth.getGoogleIdentity());
+  }
+
+  _printWeightData() {
+    var request = new HttpRequest();
+    request.getWeightData();
   }
 }

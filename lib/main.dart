@@ -8,17 +8,19 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 import 'package:snacktrack/login_register.dart';
 import 'package:snacktrack/tabs/overview.dart';
 import 'package:snacktrack/tabs/history.dart';
 import 'package:snacktrack/tabs/graph.dart';
 import 'package:snacktrack/tabs/settings.dart';
+import 'package:syncfusion_flutter_core/core.dart';
 
 Future<void> main() async {
   final preferences = await StreamingSharedPreferences.instance;
   final prefs = Prefs(preferences);
+
+  SyncfusionLicense.registerLicense("NT8mJyc2IWhiZH1gfWN9YmdoYmF8YGJ8ampqanNiYmlmamlmanMDHmgjMichOjA4Ezo6ICogfTA8Pn0yJg==");
 
   runApp(
     Provider<Prefs>.value(value: prefs, child: MyApp()),
@@ -56,7 +58,6 @@ class MyApp extends StatelessWidget {
 }
 
 FirebaseAuth _auth = FirebaseAuth.instance;
-FirebaseDatabase database = FirebaseDatabase.instance;
 
 class Router extends StatelessWidget {
   @override
@@ -87,7 +88,7 @@ class _HomePageState extends State<HomePage> {
   TextEditingController _textController = new TextEditingController();
   static final _formKey = new GlobalKey<FormState>();
 
-  double _panelHeightOpen = 575.0;
+  double _panelHeightOpen = 500.0; // TODO Jumping up when keyboard opens
   double _panelHeightClosed = 95.0;
 
   static final Overview _overview = new Overview();
@@ -110,8 +111,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    database.setPersistenceEnabled(true);
-    database.setPersistenceCacheSizeBytes(100000000);
   }
 
   @override

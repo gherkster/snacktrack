@@ -56,14 +56,18 @@ class Auth implements BaseAuth {
   }
 
   Future<FirebaseUser> signInWithGoogle() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+      scopes: [
+        'https://www.googleapis.com/auth/fitness.body.read', // Body weight
+      ]
+    );
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
 
     final AuthCredential cred = GoogleAuthProvider.getCredential(idToken: googleSignInAuthentication.idToken, accessToken: googleSignInAuthentication.accessToken);
     final AuthResult result = await auth.signInWithCredential(cred);
-    FirebaseUser user = result.user;
 
+    FirebaseUser user = result.user;
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
 
@@ -74,8 +78,13 @@ class Auth implements BaseAuth {
   }
 
   Future<GoogleIdentity> getGoogleIdentity() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    return googleSignIn.currentUser;
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: [
+          'https://www.googleapis.com/auth/fitness.body.read', // Body weight
+        ]
+    );
+    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signInSilently(); // TODO Check account is signed in
+    return googleSignInAccount;
   }
 
   Future<void> signOutWithGoogle() async {

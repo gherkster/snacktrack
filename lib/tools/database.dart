@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:snacktrack/auth.dart';
-import 'package:fit_kit/fit_kit.dart';
 
 abstract class BaseDatabase {
   Future<void> create(String collectionName, Map<String, dynamic> data);
 
   Future<int> read(String collectionName);
-
-  Future<void> getWeight();
 
   //Future<void> update();
 
@@ -42,23 +39,10 @@ class Database implements BaseDatabase {
 
     int total = 0;
     QuerySnapshot query = await dateRef.where('date', isGreaterThanOrEqualTo: desiredDate).getDocuments();
+    DocumentSnapshot doc = query.documents.elementAt(0);
+    print(doc.metadata.isFromCache ? "GOT DOC FROM LOCAL" : "GOT DOC FROM NETWORK");
     query.documents.forEach((f) => (total += int.parse(f.data['kj'])));
     return total;
-  }
-
-  Future<void> getWeight() async {
-
-    List<FitData> results = await FitKit.read(
-        DataType.WEIGHT,
-        DateTime.now().subtract(Duration(days: 7)),
-        DateTime.now());
-
-    print("Weight:");
-    print(results); // TODO Not working
-    for (FitData result in results) {
-      print(result.value);
-      print("Hello there!");
-    }
   }
 
   Future<void> delete() async { // TODO Remove later, this deletes whole collection of kj values
