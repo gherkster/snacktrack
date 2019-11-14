@@ -60,6 +60,6 @@ class SettingsState extends State<Settings> {
 
   _printWeightData() {
     var request = new HttpRequest();
-    request.getWeightData();
+    request.getParsedWeightJson();
   }
 }

@@ -110,7 +110,7 @@ class OverviewState extends State<Overview> {
                 margin: new EdgeInsets.symmetric(
                     horizontal: 10.0, vertical: 6.0),
                 child: FutureBuilder(
-                  future: request.getWeightData(),
+                  future: request.getParsedWeightJson(),
                   builder: (context, weights) {
                     switch (weights.connectionState) {
                       case ConnectionState.none: return Container(height: 200.0,);

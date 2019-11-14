@@ -1,13 +1,40 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:snacktrack/auth.dart';
 import 'package:http/http.dart';
+import 'package:snacktrack/tools/stored_prefs.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class HttpRequest { // TODO Make abstract class since methods are very dependent
 
-  Future<List<Weight>> getWeightData() async {
+  Future<List<Weight>> getParsedWeightJson() async {
+
+    final preferences = await StreamingSharedPreferences.instance;
+    final prefs = Prefs(preferences);
+
+    String jsonBody = prefs.weights.getValue();
+    if (jsonBody == "") {
+      jsonBody = await _fetchAndStoreWeightDataString();
+    }
+
+    Map<String, dynamic> parsedJson = json.decode(jsonBody);
+
+    List<Weight> weights = [];
+    for (Map<String, dynamic> point in parsedJson['point']) {
+
+      String timeInMs = point['startTimeNanos'];
+      timeInMs = timeInMs.substring(0, timeInMs.length - 3);
+
+      DateTime date = new DateTime.fromMicrosecondsSinceEpoch(int.parse(timeInMs));
+      double weight = point['value'][0]['fpVal'];
+
+      weights.add(new Weight(date, weight));
+    }
+    return weights;
+  }
+
+  Future<String> _fetchAndStoreWeightDataString() async {
+
     var auth = new Auth();
     GoogleSignInAccount googleIdentity = await auth.getGoogleIdentity();
 
@@ -21,27 +48,12 @@ class HttpRequest { // TODO Make abstract class since methods are very dependent
     final url = 'https://www.googleapis.com/fitness/v1/users/me/dataSources/derived:com.google.weight:com.google.android.gms:merge_weight/datasets/$pastWeek';
     final response = await get(url, headers: headers);
 
-    Map<String, dynamic> parsedJson = json.decode(response.body);
-    List<Weight> weightList = _parseMap(parsedJson);
+    final preferences = await StreamingSharedPreferences.instance;
+    final prefs = Prefs(preferences);
+    prefs.weights.setValue(response.body);
 
-    return weightList;
+    return (response.body);
   }
-}
-
-List<Weight> _parseMap(Map<String, dynamic> json) {
-
-  List<Weight> weights = [];
-  for (Map<String, dynamic> point in json['point']) {
-
-    String timeInMs = point['startTimeNanos'];
-    timeInMs = timeInMs.substring(0, timeInMs.length - 3);
-
-    DateTime date = new DateTime.fromMicrosecondsSinceEpoch(int.parse(timeInMs));
-    double weight = point['value'][0]['fpVal'];
-
-    weights.add(new Weight(date, weight));
-  }
-  return weights;
 }
 
 class Weight {
