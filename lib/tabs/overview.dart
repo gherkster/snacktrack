@@ -17,17 +17,6 @@ class Overview extends StatefulWidget {
   }
 }
 
-class ChartData {
-  ChartData(this.x, this.y);
-
-  final String x;
-  final double y;
-}
-
-final List<ChartData> chartData = [
-  ChartData('Test', 25),
-];
-
 class OverviewState extends State<Overview> {
 
   @override
@@ -48,8 +37,6 @@ class OverviewState extends State<Overview> {
   Widget build(BuildContext context) {
 
     final prefs = Provider.of<Prefs>(context);
-    final request = new HttpRequest();
-
     final _profileImage = FutureBuilder<String>(
       future: _getImage(),
       builder: (context, AsyncSnapshot snapshot) {

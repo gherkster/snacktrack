@@ -65,7 +65,7 @@ class Router extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: new StreamBuilder(
+      child: new StreamBuilder( // TODO Save login state to skip frame of login page
         stream: _auth.onAuthStateChanged,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
   static final TextEditingController _textController = new TextEditingController();
   static final _formKey = new GlobalKey<FormState>();
 
-  double _panelHeightOpen = 450.0; // TODO Jumping up when keyboard opens
+  double _panelHeightOpen = 450.0;
   double _panelHeightClosed = 95.0;
 
   static final Overview _overview = new Overview();
@@ -216,7 +216,7 @@ class _HomePageState extends State<HomePage> {
                       borderSide: BorderSide(),
                     ),
                   ),
-                  onFieldSubmitted: (input){ // TODO Move prefs to new file, so can be used anywhere easily
+                  onFieldSubmitted: (input){
                     if (_formKey.currentState.validate()) {
                       int currentValue = prefs.kj.getValue();
                       prefs.kj.setValue(currentValue + int.parse(input));
