@@ -7,33 +7,7 @@ import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class HttpRequest { // TODO Make abstract class since methods are very dependent
 
-  Future<List<Weight>> getParsedWeightJson() async {
-
-    final preferences = await StreamingSharedPreferences.instance;
-    final prefs = Prefs(preferences);
-
-    String jsonBody = prefs.weights.getValue();
-    if (jsonBody == "") {
-      jsonBody = await _fetchAndStoreWeightDataString();
-    }
-
-    Map<String, dynamic> parsedJson = json.decode(jsonBody);
-
-    List<Weight> weights = [];
-    for (Map<String, dynamic> point in parsedJson['point']) {
-
-      String timeInMs = point['startTimeNanos'];
-      timeInMs = timeInMs.substring(0, timeInMs.length - 3);
-
-      DateTime date = new DateTime.fromMicrosecondsSinceEpoch(int.parse(timeInMs));
-      double weight = point['value'][0]['fpVal'];
-
-      weights.add(new Weight(date, weight));
-    }
-    return weights;
-  }
-
-  Future<String> _fetchAndStoreWeightDataString() async {
+  Future<void> fetchNewWeightData() async {
 
     var auth = new Auth();
     GoogleSignInAccount googleIdentity = await auth.getGoogleIdentity();
@@ -50,15 +24,55 @@ class HttpRequest { // TODO Make abstract class since methods are very dependent
 
     final preferences = await StreamingSharedPreferences.instance;
     final prefs = Prefs(preferences);
-    prefs.weights.setValue(response.body);
 
-    return (response.body);
+    Map<String, dynamic> parsedJson = json.decode(response.body);
+
+    List<Weight> weightList = [];
+    for (Map<String, dynamic> point in parsedJson['point']) {
+
+      String timeInMs = point['startTimeNanos']; // TODO change to int
+
+      int date = int.parse(timeInMs.substring(0, timeInMs.length - 3)); // Time stored in microseconds since epoch
+      double weight = point['value'][0]['fpVal'];
+
+      weightList.add(new Weight(date, weight));
+    }
+
+    prefs.weights.setValue(new Weights(weightList));
   }
 }
 
 class Weight {
-  final DateTime date;
+  final int date;
   final double weight;
 
   Weight(this.date, this.weight);
+
+  Weight.fromJson(Map<String, dynamic> json) :
+        date = json['date'],
+        weight = json['weight'];
+
+  Map<String, dynamic> toJson() => { 'date': date, 'weight': weight};
+}
+
+class Weights {
+  List<Weight> weightList;
+
+  Weights(this.weightList);
+
+  Weights.fromJson(Map<String, dynamic> json) : // parse each member of list using Weight.fromJson and add to list
+    weightList = (json['weights'] as List).map((value) => Weight.fromJson(value)).toList();
+
+  Map<String, dynamic> toJson() {
+    List<Map<String, dynamic>> weights = weightList.map((value) => value.toJson()).toList();
+    return <String, dynamic>{
+      'weights': weights
+    };
+  }
+
+  bool isEmpty() {
+    return weightList.isEmpty;
+  }
+
+  static Weights empty() => new Weights([]);
 }

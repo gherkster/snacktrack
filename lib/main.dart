@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:snacktrack/tools/lifecycle_event_handler.dart';
 import 'package:snacktrack/tools/stored_prefs.dart';
+import 'package:snacktrack/tools/update_data.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/services.dart';
@@ -62,8 +64,8 @@ FirebaseAuth _auth = FirebaseAuth.instance;
 class Router extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: new StreamBuilder(
+    return Material(
+      child: new StreamBuilder(
         stream: _auth.onAuthStateChanged,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -83,12 +85,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  FocusNode textFocus = new FocusNode();
-  PanelController _pc = new PanelController();
-  TextEditingController _textController = new TextEditingController();
+  static final FocusNode textFocus = new FocusNode();
+  static final PanelController _pc = new PanelController();
+  static final TextEditingController _textController = new TextEditingController();
   static final _formKey = new GlobalKey<FormState>();
 
-  double _panelHeightOpen = 500.0; // TODO Jumping up when keyboard opens
+  double _panelHeightOpen = 450.0; // TODO Jumping up when keyboard opens
   double _panelHeightClosed = 95.0;
 
   static final Overview _overview = new Overview();
@@ -111,34 +113,31 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(new LifecycleEventHandler(resumeCallBack: () async => UpdateData.updateDataIfNextDay()));
   }
 
   @override
   Widget build(BuildContext context){
 
-    return Material(
-      child: Stack(
-        alignment: Alignment.topCenter,
-        children: <Widget>[
-          SlidingUpPanel( // TODO When opened goes fullscreen instead of ~80%
-            maxHeight: _panelHeightOpen,
-            minHeight: _panelHeightClosed,
-            controller: _pc,
-            onPanelOpened: () => setState((){
-              FocusScope.of(context).requestFocus(textFocus);
-            }),
-            parallaxEnabled: true,
-            parallaxOffset: .5,
-            body: _body(),
-            panel: _panel(),
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
-            onPanelSlide: (double pos) => setState((){
-              if (pos < 0.9) {
-                FocusScope.of(context).unfocus();
-              }
-            }),
-          ),
-        ],
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SlidingUpPanel(
+        maxHeight: _panelHeightOpen,
+        minHeight: _panelHeightClosed,
+        controller: _pc,
+        onPanelOpened: () => setState((){
+          FocusScope.of(context).requestFocus(textFocus);
+        }),
+        parallaxEnabled: true,
+        parallaxOffset: .5,
+        body: _body(), // Content behind sliding panel
+        panel: _panel(),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
+        onPanelSlide: (double pos) => setState((){
+          if (pos < 0.9) {
+            FocusScope.of(context).unfocus();
+          }
+        })
       ),
     );
   }
@@ -209,9 +208,7 @@ class _HomePageState extends State<HomePage> {
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey, width: 0.0),
                     ),
-                    focusedBorder: OutlineInputBorder(
-
-                    ),
+                    focusedBorder: OutlineInputBorder(),
                     labelText: "Enter KJ",
                     fillColor: Colors.white,
                     border: OutlineInputBorder(

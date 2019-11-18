@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:snacktrack/auth.dart';
 import 'package:snacktrack/tools/database.dart';
 import 'package:snacktrack/tools/http_request.dart';
+import 'package:snacktrack/tools/stored_prefs.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -34,7 +36,19 @@ class SettingsState extends State<Settings> {
             onTap: _printGoogleAccount,
           ),
           ListTile(
-            title: Text('Print Weight Data'),
+            title: Text('Update Weight Data'),
+            onTap: _printWeightData,
+          ),
+          ListTile(
+            title: Text('Measurement Units'),
+            onTap: _printWeightData,
+          ),
+          ListTile(
+            title: Text('Energy Target'),
+            onTap: _printWeightData,
+          ),
+          ListTile(
+            title: Text('Weight Target'),
             onTap: _printWeightData,
           ),
         ],
@@ -58,8 +72,8 @@ class SettingsState extends State<Settings> {
     print(auth.getGoogleIdentity());
   }
 
-  _printWeightData() {
-    var request = new HttpRequest();
-    request.getParsedWeightJson();
+  _printWeightData() async {
+    HttpRequest request = new HttpRequest();
+    request.fetchNewWeightData();
   }
 }

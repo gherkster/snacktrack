@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:snacktrack/tools/http_request.dart';
@@ -81,7 +82,7 @@ class OverviewState extends State<Overview> {
                     radius: 200.0,
                     lineWidth: 6.0,
                     percent: (((kjStream).toDouble()) / 8500).clamp(0.0, 1.0),
-                    progressColor: Colors.blueAccent,
+                    progressColor: Colors.blue,
                     animation: true,
                     animationDuration: 500,
                     circularStrokeCap: CircularStrokeCap.round,
@@ -90,18 +91,49 @@ class OverviewState extends State<Overview> {
                 }
             ),
             Center(
-              child: Container(
-                child: ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 10.0),
-                  title: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  FlatButton( // Daily KJ
+                    child: Center(
                       child: PreferenceBuilder<int>(
                         preference: prefs.kj,
-                        builder: (context, kjStream) => Text("$kjStream KJ"),
+                        builder: (context, kjStream) => GestureDetector(
+                          onLongPress: () {
+                            Fluttertoast.showToast(msg: "🥒"); // Gherkin
+                          },
+                          child: Text(
+                            "$kjStream KJ",
+                            style: TextStyle(
+                              fontFamily: 'Open Sans',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        )
                       )
+                    ),
+                    onPressed: () {},
                   ),
-                  subtitle: new Center(child: Text("Intake for today")),
-                ),
+                  FlatButton( // Daily KJ
+                    child: Center(
+                        child: GestureDetector(
+                          onLongPress: () {
+                            Fluttertoast.showToast(msg: "🚂🚃🚃🚃🚃🚃");
+                          },
+                          child: Text(
+                            "68.7 KG",
+                            style: TextStyle( // TODO Move to variable
+                              fontFamily: 'Open Sans',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        )
+                    ),
+                    onPressed: () {},
+                  ),
+                ],
               ),
             ),
             Card(
@@ -109,26 +141,26 @@ class OverviewState extends State<Overview> {
                 color: Colors.transparent,
                 margin: new EdgeInsets.symmetric(
                     horizontal: 10.0, vertical: 6.0),
-                child: FutureBuilder(
-                  future: request.getParsedWeightJson(),
-                  builder: (context, weights) {
-                    switch (weights.connectionState) {
-                      case ConnectionState.none: return Container(height: 200.0,);
-                      case ConnectionState.waiting: return Container(
-                        height: 200.0,
-                        width: 200.0,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                      default:
-                        if (weights.hasError) return Text('Error: ${weights.data}');
-                        else return Container(
-                            height: 200.0,
-                            child: _buildLineChart(weights.data)
+                child: StreamBuilder(
+                  stream: prefs.weights,
+                  builder: (context, weightStream) {
+                    switch (weightStream.connectionState) {
+                        case ConnectionState.none: return Container(height: 200.0,);
+                        case ConnectionState.waiting: return Container(
+                          height: 200.0,
+                          width: 200.0,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
                         );
-                    }
-                  },
+                        default:
+                          if (weightStream.hasError) return Text('Error: ${weightStream.data}');
+                          else return Container(
+                              height: 200.0,
+                              child: _buildLineChart(weightStream.data) // TODO Fix linechart animating on sliding panel pull, animates when data points values are updated it seems
+                          );
+                      }
+                  }
                 )
             ),
           ],
@@ -137,19 +169,64 @@ class OverviewState extends State<Overview> {
   }
 }
 
-_buildLineChart(List<Weight> weights) {
+_buildLineChart(Weights weights) {
+
+  List<Weight> weightList = weights.weightList;
 
   return SfCartesianChart(
-    primaryXAxis: DateTimeAxis(),
-    primaryYAxis: NumericAxis(),
-    tooltipBehavior: TooltipBehavior(enable: true),
-    series: <LineSeries<Weight, DateTime>>[
-      LineSeries<Weight, DateTime>(
-        dataSource: weights,
-        xValueMapper: (Weight weights, _) => weights.date,
+    primaryXAxis: DateTimeAxis(
+      majorGridLines: MajorGridLines(width: 0),
+      interval: 1,
+    ),
+    primaryYAxis: NumericAxis(
+      interval: 1,
+    ),
+    tooltipBehavior: TooltipBehavior(
+      enable: true,
+      header: '',
+      canShowMarker: false,
+      animationDuration: 0,
+      elevation: 0,
+      format: 'point.y KG',
+    ),
+    axes: <ChartAxis>[
+      NumericAxis(
+        name: "xAxis",
+        isVisible: false
+      ),
+    ],
+    series: <CartesianSeries>[
+      SplineSeries<Weight, DateTime>(
+        dataSource: weightList,
+        xValueMapper: (Weight weights, _) => new DateTime.fromMicrosecondsSinceEpoch(weights.date),
         yValueMapper: (Weight weights, _) => weights.weight,
+        animationDuration: 0, // TODO Fix animation
+        color: Colors.blue,
+        splineType: SplineType.natural,
+        markerSettings: MarkerSettings(isVisible: true),
+      ),
+      LineSeries<Data, double>(
+        dataSource: [new Data(1, 68.0), new Data(2, 68.0)],
+        xAxisName: "xAxis",
+        dashArray: [10, 16],
+        enableTooltip: false,
+        opacity: 0.7,
+        xValueMapper: (Data data, _) => data.x,
+        yValueMapper: (Data data, _) => data.y,
+        animationDuration: 0,
+        color: Colors.blue,
       )
     ],
   );
+}
+
+class Data {
+double x;
+double y;
+
+  Data(double x, double y) {
+    this.x = x;
+    this.y = y;
+  }
 }
 
