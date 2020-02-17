@@ -50,24 +50,22 @@ class MyApp extends StatelessWidget {
         '/': (context) => Router(),
         '/homepage': (context) => HomePage(), // TODO Descriptions for each
         '/loginSignupPage': (context) => LoginSignupPage(),
-
         '/overview': (context) => Overview(),
         '/settings': (context) => Settings(),
       },
-      //home: Router(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
-FirebaseAuth _auth = FirebaseAuth.instance;
-
 class Router extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: new StreamBuilder( // TODO Save login state to skip frame of login page
-        stream: _auth.onAuthStateChanged,
-        builder: (context, snapshot) {
+      child: new FutureBuilder( // TODO Save login state to skip frame of login page
+        future: FirebaseAuth.instance.currentUser(),
+        builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
           if (snapshot.hasData) {
             return HomePage();
           }
@@ -241,6 +239,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _body(){
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,

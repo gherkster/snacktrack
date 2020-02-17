@@ -104,19 +104,22 @@ class OverviewState extends State<Overview> {
                   ),
                   FlatButton( // Daily KJ
                     child: Center(
-                        child: GestureDetector(
+                      child: PreferenceBuilder<double>(
+                        preference: prefs.weight,
+                        builder: (context, weightStream) => GestureDetector(
                           onLongPress: () {
                             Fluttertoast.showToast(msg: "🚂🚃🚃🚃🚃🚃");
                           },
                           child: Text(
-                            "68.7 KG",
+                            "${num.parse(weightStream.toStringAsFixed(2))} KG",
                             style: TextStyle( // TODO Move to variable
                               fontFamily: 'Open Sans',
                               fontSize: 20,
                               fontWeight: FontWeight.w300,
                             ),
                           ),
-                        )
+                        ),
+                      )
                     ),
                     onPressed: () {},
                   ),
@@ -128,26 +131,29 @@ class OverviewState extends State<Overview> {
                 color: Colors.transparent,
                 margin: new EdgeInsets.symmetric(
                     horizontal: 10.0, vertical: 6.0),
-                child: StreamBuilder(
-                  stream: prefs.weights,
-                  builder: (context, weightStream) {
-                    switch (weightStream.connectionState) {
-                        case ConnectionState.none: return Container(height: 200.0,);
-                        case ConnectionState.waiting: return Container(
-                          height: 200.0,
-                          width: 200.0,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                        default:
-                          if (weightStream.hasError) return Text('Error: ${weightStream.data}');
-                          else return Container(
-                              height: 200.0,
-                              child: _buildLineChart(weightStream.data) // TODO Fix linechart animating on sliding panel pull, animates when data points values are updated it seems
+                child: PreferenceBuilder(
+                  preference: prefs.weightTarget,
+                  builder: (context, weightTarget) => StreamBuilder( // TODO Try avoiding nested streams
+                      stream: prefs.weights,
+                      builder: (context, weightStream) {
+                        switch (weightStream.connectionState) {
+                          case ConnectionState.none: return Container(height: 200.0,);
+                          case ConnectionState.waiting: return Container(
+                            height: 200.0,
+                            width: 200.0,
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
                           );
+                          default:
+                            if (weightStream.hasError) return Text('Error: ${weightStream.data}');
+                            else return Container(
+                                height: 200.0,
+                                child: _buildLineChart(weightStream.data, weightTarget) // TODO Add loading animation if values are being updated
+                            );
+                        }
                       }
-                  }
+                  )
                 )
             ),
           ],
@@ -156,7 +162,7 @@ class OverviewState extends State<Overview> {
   }
 }
 
-_buildLineChart(Weights weights) {
+_buildLineChart(Weights weights, int weightTarget) {
 
   List<Weight> weightList = weights.weightList;
 
@@ -187,19 +193,19 @@ _buildLineChart(Weights weights) {
         dataSource: weightList,
         xValueMapper: (Weight weights, _) => new DateTime.fromMicrosecondsSinceEpoch(weights.date),
         yValueMapper: (Weight weights, _) => weights.weight,
-        animationDuration: 0, // TODO Fix animation
+        animationDuration: 0, // TODO Fix linechart animating on sliding panel pull, animates when data points values are updated it seems
         color: Colors.blue,
         splineType: SplineType.natural,
         markerSettings: MarkerSettings(isVisible: true),
       ),
-      LineSeries<Data, double>(
-        dataSource: [new Data(1, 68.0), new Data(2, 68.0)],
+      LineSeries<WeightTarget, int>(
+        dataSource: [new WeightTarget(1, weightTarget), new WeightTarget(2, weightTarget)],
         xAxisName: "xAxis",
         dashArray: [10, 16],
         enableTooltip: false,
         opacity: 0.7,
-        xValueMapper: (Data data, _) => data.x,
-        yValueMapper: (Data data, _) => data.y,
+        xValueMapper: (WeightTarget data, _) => data.x,
+        yValueMapper: (WeightTarget data, _) => data.y,
         animationDuration: 0,
         color: Colors.blue,
       )
@@ -207,11 +213,11 @@ _buildLineChart(Weights weights) {
   );
 }
 
-class Data {
-double x;
-double y;
+class WeightTarget {
+int x;
+int y;
 
-  Data(double x, double y) {
+  WeightTarget(int x, int y) {
     this.x = x;
     this.y = y;
   }

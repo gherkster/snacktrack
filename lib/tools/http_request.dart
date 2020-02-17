@@ -38,6 +38,7 @@ class HttpRequest { // TODO Make abstract class since methods are very dependent
       weightList.add(new Weight(date, weight));
     }
 
+    prefs.weight.setValue(weightList.last.weight);
     prefs.weights.setValue(new Weights(weightList));
   }
 }
