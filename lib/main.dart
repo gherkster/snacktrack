@@ -18,11 +18,13 @@ import 'package:snacktrack/tabs/graph.dart';
 import 'package:snacktrack/tabs/settings.dart';
 import 'package:syncfusion_flutter_core/core.dart';
 
+import 'package:snacktrack/auth/keys.dart';
+
 Future<void> main() async {
   final preferences = await StreamingSharedPreferences.instance;
   final prefs = Prefs(preferences);
 
-  SyncfusionLicense.registerLicense("NT8mJyc2IWhiZH1gfWN9YmdoYmF8YGJ8ampqanNiYmlmamlmanMDHmgjMichOjA4Ezo6ICogfTA8Pn0yJg==");
+  SyncfusionLicense.registerLicense(Keys.SYNCFUSION_KEY);
 
   runApp(
     Provider<Prefs>.value(value: prefs, child: MyApp()),
