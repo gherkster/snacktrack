@@ -8,4 +8,6 @@ abstract class IEnergyRepository {
   void add(double amount, DateTime time);
 
   Iterable<Energy> getAll();
+
+  void deleteAll();
 }

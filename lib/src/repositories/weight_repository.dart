@@ -31,4 +31,7 @@ class WeightRepository implements IWeightRepository {
       return latest.weight;
     }
   }
+
+  @override
+  void deleteAll() => _box.clear();
 }

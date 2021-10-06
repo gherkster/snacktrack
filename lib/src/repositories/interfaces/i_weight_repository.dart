@@ -12,4 +12,6 @@ abstract class IWeightRepository {
   Iterable<Weight> getAllRecords();
 
   double getLatest();
+
+  void deleteAll();
 }

@@ -25,4 +25,6 @@ abstract class ISettingsRepository {
 
   Day get weekStart;
   set weekStart(Day day);
+
+  void deleteAll();
 }

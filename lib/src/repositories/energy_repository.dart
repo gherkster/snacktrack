@@ -17,4 +17,7 @@ class EnergyRepository implements IEnergyRepository {
 
   @override
   Iterable<Energy> getAll() => _box.values as Iterable<Energy>;
+
+  @override
+  void deleteAll() => _box.clear();
 }
