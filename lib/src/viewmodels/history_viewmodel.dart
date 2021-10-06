@@ -5,9 +5,10 @@ import 'package:snacktrack/src/models/weight.dart';
 import 'package:snacktrack/src/repositories/interfaces/i_energy_repository.dart';
 import 'package:snacktrack/src/repositories/interfaces/i_settings_repository.dart';
 import 'package:snacktrack/src/repositories/interfaces/i_weight_repository.dart';
+import 'package:snacktrack/src/viewmodels/interfaces/i_history_viewmodel.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-class HistoryViewModel {
+class HistoryViewModel extends ChangeNotifier implements IHistoryViewModel {
   final IEnergyRepository _energyRepository;
   final IWeightRepository _weightRepository;
   final ISettingsRepository _settingsRepository;
@@ -30,7 +31,7 @@ class HistoryViewModel {
     return values.toList();
   }
 
-  _AppointmentDataSource get appointmentDataSource {
+  AppointmentDataSource get appointmentDataSource {
     final List<Appointment> appointments = [];
     appointments
       ..add(Appointment(
@@ -38,12 +39,6 @@ class HistoryViewModel {
       ..add(Appointment(isAllDay: true, startTime: today.subtract(Duration(days: 1)), endTime: today.subtract(Duration(days: 1)), subject: '70 KG'))
       ..add(Appointment(isAllDay: true, startTime: today, endTime: today, subject: '4500 KJ'));
 
-    return _AppointmentDataSource(appointments);
-  }
-}
-
-class _AppointmentDataSource extends CalendarDataSource {
-  _AppointmentDataSource(List<Appointment> source) {
-    appointments = source;
+    return AppointmentDataSource(appointments);
   }
 }

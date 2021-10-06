@@ -7,8 +7,9 @@ import 'package:snacktrack/src/models/weight_unit.dart';
 import 'package:snacktrack/src/repositories/interfaces/i_energy_repository.dart';
 import 'package:snacktrack/src/repositories/interfaces/i_settings_repository.dart';
 import 'package:snacktrack/src/repositories/interfaces/i_weight_repository.dart';
+import 'package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart';
 
-class OverviewViewModel {
+class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
   final IEnergyRepository _energyRepository;
   final IWeightRepository _weightRepository;
   final ISettingsRepository _settingsRepository;
@@ -50,8 +51,12 @@ class OverviewViewModel {
     return _settingsRepository.weightUnit == WeightUnit.kg ? double.parse(current.toStringAsFixed(2)) : double.parse((current * 2.205).toStringAsFixed(2));
   }
 
+  double get weightMinSelectable => weightUnit == WeightUnit.kg ? 40.0 : 80.0;
+  double get weightMaxSelectable => weightUnit == WeightUnit.kg ? 200.0 : 400.0;
+
   set weightCurrent(double amount) {
     _weightRepository.put(amount, today);
+    notifyListeners();
   }
 
   double get weightTarget {
@@ -60,6 +65,7 @@ class OverviewViewModel {
 
   set weightTarget(double target) {
     _settingsRepository.weightTarget = target;
+    notifyListeners();
   }
 
   double get energyCurrentTotalClamped => (energyCurrentTotal.toDouble() / energyTarget).clamp(0.0, 1.0).toDouble();
