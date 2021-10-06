@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:snacktrack/src/viewmodels/history_viewmodel.dart';
-import 'package:snacktrack/src/repositories/interfaces/i_energy_repository.dart';
-import 'package:snacktrack/src/repositories/interfaces/i_settings_repository.dart';
-import 'package:snacktrack/src/repositories/interfaces/i_weight_repository.dart';
+import 'package:snacktrack/src/viewmodels/interfaces/i_history_viewmodel.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -12,43 +9,29 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  HistoryViewModel _historyViewModel;
-  List<Appointment> appointmentDetails;
-
-  @override
-  void didChangeDependencies() {
-    if (_historyViewModel == null) {
-      final energyRepository = Provider.of<IEnergyRepository>(context);
-      final weightRepository = Provider.of<IWeightRepository>(context);
-      final settingsRepository = Provider.of<ISettingsRepository>(context);
-
-      _historyViewModel = HistoryViewModel(energyRepository, weightRepository, settingsRepository);
-    }
-  }
-
-  @override
-  void initState() {
-    appointmentDetails = <Appointment>[];
-    super.initState();
-  }
+  List<Appointment> appointmentDetails = <Appointment>[];
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          height: 400,
-          child: SfCalendar(
-            view: CalendarView.month,
-            dataSource: _historyViewModel.appointmentDataSource,
-            onTap: _calendarTapped,
-          ),
+        Consumer<IHistoryViewModel>(
+          builder: (context, model, child) {
+            return Container(
+              height: 400,
+              child: SfCalendar(
+                view: CalendarView.month,
+                dataSource: model.appointmentDataSource,
+                onTap: _calendarTapped,
+              ),
+            );
+          },
         ),
         Container(
           height: 150, // TODO calculate
           child: GridView.builder(
             itemCount: appointmentDetails.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               childAspectRatio: 30.0 / 10.0,
               crossAxisCount: 2,
             ),
@@ -79,7 +62,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void _calendarTapped(CalendarTapDetails calendarTapDetails) {
     if (calendarTapDetails.targetElement == CalendarElement.calendarCell) {
       setState(() {
-        appointmentDetails = calendarTapDetails.appointments as List<Appointment>;
+        appointmentDetails = calendarTapDetails.appointments!.cast<Appointment>();
       });
     }
   }
