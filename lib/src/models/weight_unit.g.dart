@@ -18,7 +18,7 @@ class WeightUnitAdapter extends TypeAdapter<WeightUnit> {
       case 1:
         return WeightUnit.lb;
       default:
-        return null;
+        return WeightUnit.kg;
     }
   }
 

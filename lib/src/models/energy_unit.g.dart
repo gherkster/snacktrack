@@ -18,7 +18,7 @@ class EnergyUnitAdapter extends TypeAdapter<EnergyUnit> {
       case 1:
         return EnergyUnit.cal;
       default:
-        return null;
+        return EnergyUnit.kj;
     }
   }
 

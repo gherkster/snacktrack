@@ -28,7 +28,7 @@ class DayAdapter extends TypeAdapter<Day> {
       case 6:
         return Day.sunday;
       default:
-        return null;
+        return Day.monday;
     }
   }
 
