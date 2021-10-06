@@ -67,7 +67,7 @@ linter:
     # pedantic: disabled
     # - https://github.com/dart-lang/linter/issues/1401
     # http://dart-lang.github.io/linter/lints/avoid_as.html
-    # - avoid_as
+    - avoid_as
 
     # Highlights boolean expressions which can be simplified
     # http://dart-lang.github.io/linter/lints/avoid_bool_literals_in_conditional_expressions.html
@@ -549,7 +549,7 @@ linter:
     # Use whatever makes you happy. lint doesn't define a style
     # pedantic: disabled
     # https://dart-lang.github.io/linter/lints/prefer_double_quotes.html
-    # - prefer_double_quotes
+    - prefer_double_quotes
 
     # Prevent confusion with call-side when using named parameters
     # pedantic: enabled

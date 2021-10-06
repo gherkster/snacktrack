@@ -4,9 +4,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:snacktrack/src/models/day.dart';
 import 'package:snacktrack/src/models/energy.dart';
 import 'package:snacktrack/src/models/energy_unit.dart';
-import 'package:snacktrack/src/models/weight_unit.dart';
 import 'package:snacktrack/src/models/theme_setting.dart';
 import 'package:snacktrack/src/models/weight.dart';
+import 'package:snacktrack/src/models/weight_unit.dart';
+
 import 'src/app.dart';
 
 Future<void> main() async {
