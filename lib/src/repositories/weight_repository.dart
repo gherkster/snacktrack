@@ -9,6 +9,8 @@ class WeightRepository implements IWeightRepository {
 
   WeightRepository(this._box);
 
+  DateTime get _today => DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
   @override
   ValueListenable<Box<dynamic>> get stream => _box.listenable();
 
@@ -19,15 +21,19 @@ class WeightRepository implements IWeightRepository {
   void put(double amount, DateTime time) => _box.put(time.millisecondsSinceEpoch.toString(), Weight(amount, time));
 
   @override
-  Iterable<Weight> getAllRecords() => _box.values as Iterable<Weight>;
+  double get currentWeight => _getLatest();
+  @override
+  set currentWeight(double amount) => put(amount, _today);
 
   @override
-  double getLatest() {
-    final int index = _box.toMap().length - 1;
-    if (index < 0) {
+  Iterable<Weight> getAllRecords() => _box.values as Iterable<Weight>;
+
+  double _getLatest() {
+    final int lastIndex = _box.toMap().length - 1;
+    if (lastIndex < 0) {
       return 70.0;
     } else {
-      final Weight latest = _box.values.toList()[index] as Weight;
+      final Weight latest = _box.values.toList()[lastIndex] as Weight;
       return latest.weight;
     }
   }

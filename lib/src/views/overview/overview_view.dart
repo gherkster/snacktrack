@@ -25,7 +25,7 @@ class OverviewScreen extends StatelessWidget {
                     radius: 200.0,
                     lineWidth: 16.0,
                     percent: overviewModel.energyCurrentTotalClamped,
-                    progressColor: overviewModel.energyCurrentTotal > overviewModel.energyTarget ? Colors.red : Colors.blue,
+                    progressColor: overviewModel.currentEnergyTotal > overviewModel.targetEnergy ? Colors.red : Colors.blue,
                     animation: true,
                     animateFromLastPercent: true,
                     circularStrokeCap: CircularStrokeCap.round,
@@ -34,11 +34,11 @@ class OverviewScreen extends StatelessWidget {
                       children: [
                         TextButton(
                           onPressed: () {},
-                          child: Text(overviewModel.energyCurrentTotal.toString(), style: const TextStyle(fontSize: 30)),
+                          child: Text(overviewModel.currentEnergyTotal.toString(), style: const TextStyle(fontSize: 30)),
                         ),
                         TextButton(
                           onPressed: () {},
-                          child: Text(overviewModel.energyTarget.toString(), style: const TextStyle(fontSize: 16)),
+                          child: Text(overviewModel.targetEnergy.toString(), style: const TextStyle(fontSize: 16)),
                         )
                       ],
                     ),
@@ -53,22 +53,22 @@ class OverviewScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomDecimalNumberPicker(
-                    initialValue: Decimal.parse(model.weightCurrent.toString()),
+                    initialValue: Decimal.parse(model.currentWeight.toString()),
                     minValue: Decimal.parse(model.weightMinSelectable.toString()),
                     maxValue: Decimal.parse(model.weightMaxSelectable.toString()),
                     step: Decimal.parse("0.1"),
                     roundingPlaces: 1,
                     incrementSpeedMilliseconds: 200,
-                    onValue: (value) => model.weightCurrent = value.toDouble(),
+                    onValue: (value) => model.currentWeight = value.toDouble(),
                   ),
                   CustomDecimalNumberPicker(
-                    initialValue: Decimal.parse(model.weightTarget.toString()),
+                    initialValue: Decimal.parse(model.targetWeight.toString()),
                     minValue: Decimal.parse(model.weightMinSelectable.toString()),
                     maxValue: Decimal.parse(model.weightMaxSelectable.toString()),
                     step: Decimal.parse("0.1"),
                     roundingPlaces: 1,
                     incrementSpeedMilliseconds: 200,
-                    onValue: (value) => model.weightTarget = value.toDouble(),
+                    onValue: (value) => model.targetWeight = value.toDouble(),
                   ),
                 ],
               );
@@ -93,8 +93,8 @@ class OverviewScreen extends StatelessWidget {
                             plotBands: [
                               PlotBand(
                                 isVisible: true,
-                                start: model.weightTarget,
-                                end: model.weightTarget,
+                                start: model.targetWeight,
+                                end: model.targetWeight,
                                 dashArray: [10, 21],
                                 borderWidth: 2,
                                 borderColor: Colors.blue,

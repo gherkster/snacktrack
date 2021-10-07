@@ -9,9 +9,10 @@ abstract class IWeightRepository {
 
   void put(double value, DateTime time);
 
-  Iterable<Weight> getAllRecords();
+  double get currentWeight;
+  set currentWeight(double current);
 
-  double getLatest();
+  Iterable<Weight> getAllRecords();
 
   void deleteAll();
 }

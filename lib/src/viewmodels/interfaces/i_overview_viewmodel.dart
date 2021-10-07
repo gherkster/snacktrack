@@ -4,17 +4,16 @@ import 'package:snacktrack/src/models/weight.dart';
 import 'package:snacktrack/src/models/weight_unit.dart';
 
 abstract class IOverviewViewModel extends ChangeNotifier {
-  int get energyTarget;
-  double get weightTarget;
-  set weightTarget(double target);
+  int get targetEnergy;
 
-  DateTime get today;
+  double get currentWeight;
+  set currentWeight(double amount);
 
-  int get energyCurrentTotal;
-  double get weightCurrent;
-  set weightCurrent(double amount);
+  double get targetWeight;
+  set targetWeight(double target);
 
-  EnergyUnit get energyUnit;
+  int get currentEnergyTotal;
+
   WeightUnit get weightUnit;
 
   List<Weight> get weightAllRecentValues;

@@ -3,8 +3,6 @@ import 'package:snacktrack/src/models/weight.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 abstract class IHistoryViewModel extends ChangeNotifier {
-  DateTime get today;
-
   List<Weight> energyGetAllRecentValues(int durationInDays);
 
   List<Weight> weightGetAllRecentValues(int durationInDays);

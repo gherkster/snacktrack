@@ -15,29 +15,28 @@ class HistoryViewModel extends ChangeNotifier implements IHistoryViewModel {
 
   HistoryViewModel(this._energyRepository, this._weightRepository, this._settingsRepository);
 
-  ValueListenable<Box<dynamic>> get energyStream => _energyRepository.stream;
-  ValueListenable<Box<dynamic>> get weightStream => _weightRepository.stream;
-  ValueListenable<Box<dynamic>> get settingsStream => _settingsRepository.stream;
+  DateTime get _today => DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-  DateTime get today => DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-
+  @override
   List<Weight> energyGetAllRecentValues(int durationInDays) {
-    final Iterable<Weight> values = _weightRepository.getAllRecords().where((record) => record.time.isAfter(today.subtract(Duration(days: durationInDays))));
+    final Iterable<Weight> values = _weightRepository.getAllRecords().where((record) => record.time.isAfter(_today.subtract(Duration(days: durationInDays))));
     return values.toList();
   }
 
+  @override
   List<Weight> weightGetAllRecentValues(int durationInDays) {
-    final Iterable<Weight> values = _weightRepository.getAllRecords().where((record) => record.time.isAfter(today.subtract(Duration(days: durationInDays))));
+    final Iterable<Weight> values = _weightRepository.getAllRecords().where((record) => record.time.isAfter(_today.subtract(Duration(days: durationInDays))));
     return values.toList();
   }
 
+  @override
   AppointmentDataSource get appointmentDataSource {
     final List<Appointment> appointments = [];
     appointments
       ..add(Appointment(
-          isAllDay: true, startTime: today.subtract(Duration(days: 1)), endTime: today.subtract(Duration(days: 1)), subject: '8000 KJ', color: Colors.orange))
-      ..add(Appointment(isAllDay: true, startTime: today.subtract(Duration(days: 1)), endTime: today.subtract(Duration(days: 1)), subject: '70 KG'))
-      ..add(Appointment(isAllDay: true, startTime: today, endTime: today, subject: '4500 KJ'));
+          isAllDay: true, startTime: _today.subtract(Duration(days: 1)), endTime: _today.subtract(Duration(days: 1)), subject: '8000 KJ', color: Colors.orange))
+      ..add(Appointment(isAllDay: true, startTime: _today.subtract(Duration(days: 1)), endTime: _today.subtract(Duration(days: 1)), subject: '70 KG'))
+      ..add(Appointment(isAllDay: true, startTime: _today, endTime: _today, subject: '4500 KJ'));
 
     return AppointmentDataSource(appointments);
   }
