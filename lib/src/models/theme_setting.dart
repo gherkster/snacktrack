@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import "package:flutter/material.dart";
+import "package:hive/hive.dart";
 
 class ThemeModeAdapter extends TypeAdapter<ThemeMode?> {
   @override

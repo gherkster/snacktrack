@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:snacktrack/src/models/day.dart';
-import 'package:snacktrack/src/models/energy_unit.dart';
-import 'package:snacktrack/src/models/weight_unit.dart';
+import "package:flutter/material.dart";
+import "package:snacktrack/src/models/day.dart";
+import "package:snacktrack/src/models/energy_unit.dart";
+import "package:snacktrack/src/models/weight_unit.dart";
 
 abstract class ISettingsViewmodel extends ChangeNotifier {
   EnergyUnit get energyUnit;

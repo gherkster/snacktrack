@@ -1,6 +1,6 @@
-import 'package:hive/hive.dart';
+import "package:hive/hive.dart";
 
-part 'energy.g.dart';
+part "energy.g.dart";
 
 @HiveType(typeId: 1)
 class Energy extends HiveObject {

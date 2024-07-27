@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
-import 'package:snacktrack/src/models/weight.dart';
+import "package:flutter/foundation.dart";
+import "package:hive/hive.dart";
+import "package:snacktrack/src/models/weight.dart";
 
 abstract class IWeightRepository {
   ValueListenable<Box<dynamic>> get stream;

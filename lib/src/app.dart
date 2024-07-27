@@ -1,20 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:provider/provider.dart';
-import 'package:snacktrack/src/repositories/interfaces/i_settings_repository.dart';
-import 'package:snacktrack/src/repositories/settings_repository.dart';
-import 'package:snacktrack/src/viewmodels/history_viewmodel.dart';
-import 'package:snacktrack/src/viewmodels/interfaces/i_history_viewmodel.dart';
-import 'package:snacktrack/src/viewmodels/interfaces/i_settings_viewmodel.dart';
-import 'package:snacktrack/src/viewmodels/navigation_viewmodel.dart';
-import 'package:snacktrack/src/viewmodels/overview_viewmodel.dart';
-import 'package:snacktrack/src/viewmodels/settings_viewmodel.dart';
+import "package:flutter/material.dart";
+import "package:hive/hive.dart";
+import "package:provider/provider.dart";
+import "package:snacktrack/src/repositories/interfaces/i_settings_repository.dart";
+import "package:snacktrack/src/repositories/settings_repository.dart";
+import "package:snacktrack/src/viewmodels/history_viewmodel.dart";
+import "package:snacktrack/src/viewmodels/interfaces/i_history_viewmodel.dart";
+import "package:snacktrack/src/viewmodels/interfaces/i_settings_viewmodel.dart";
+import "package:snacktrack/src/viewmodels/navigation_viewmodel.dart";
+import "package:snacktrack/src/viewmodels/overview_viewmodel.dart";
+import "package:snacktrack/src/viewmodels/settings_viewmodel.dart";
 
-import 'repositories/energy_repository.dart';
-import 'repositories/weight_repository.dart';
-import 'viewmodels/interfaces/i_navigation_viewmodel.dart';
-import 'viewmodels/interfaces/i_overview_viewmodel.dart';
-import 'views/navigation.dart';
+import "repositories/energy_repository.dart";
+import "repositories/weight_repository.dart";
+import "viewmodels/interfaces/i_navigation_viewmodel.dart";
+import "viewmodels/interfaces/i_overview_viewmodel.dart";
+import "views/navigation.dart";
 
 class App extends StatelessWidget {
   final Box energyBox;

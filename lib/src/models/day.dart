@@ -1,6 +1,6 @@
-import 'package:hive/hive.dart';
+import "package:hive/hive.dart";
 
-part 'day.g.dart';
+part "day.g.dart";
 
 @HiveType(typeId: 6)
 enum Day {

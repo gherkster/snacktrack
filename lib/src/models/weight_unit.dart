@@ -1,6 +1,6 @@
-import 'package:hive/hive.dart';
+import "package:hive/hive.dart";
 
-part 'weight_unit.g.dart';
+part "weight_unit.g.dart";
 
 @HiveType(typeId: 4)
 enum WeightUnit {

@@ -1,11 +1,11 @@
-import 'package:flutter/widgets.dart';
-import 'package:snacktrack/src/constants.dart' as constants;
-import 'package:snacktrack/src/models/energy_unit.dart';
-import 'package:snacktrack/src/models/weight_unit.dart';
-import 'package:snacktrack/src/repositories/interfaces/i_energy_repository.dart';
-import 'package:snacktrack/src/repositories/interfaces/i_settings_repository.dart';
-import 'package:snacktrack/src/repositories/interfaces/i_weight_repository.dart';
-import 'package:snacktrack/src/viewmodels/interfaces/i_navigation_viewmodel.dart';
+import "package:flutter/widgets.dart";
+import "package:snacktrack/src/constants.dart" as constants;
+import "package:snacktrack/src/models/energy_unit.dart";
+import "package:snacktrack/src/models/weight_unit.dart";
+import "package:snacktrack/src/repositories/interfaces/i_energy_repository.dart";
+import "package:snacktrack/src/repositories/interfaces/i_settings_repository.dart";
+import "package:snacktrack/src/repositories/interfaces/i_weight_repository.dart";
+import "package:snacktrack/src/viewmodels/interfaces/i_navigation_viewmodel.dart";
 
 class NavigationViewModel extends ChangeNotifier implements INavigationViewModel {
   final IEnergyRepository _energyRepository;
@@ -34,7 +34,7 @@ class NavigationViewModel extends ChangeNotifier implements INavigationViewModel
   @override
   String? validator(String? value) {
     if (value == null || value.isEmpty || double.tryParse(value) == null || double.parse(value) == 0.0) {
-      return 'Energy invalid';
+      return "Energy invalid";
     }
     return null;
   }

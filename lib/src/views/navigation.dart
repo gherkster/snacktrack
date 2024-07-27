@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:snacktrack/src/models/energy_unit.dart';
-import 'package:snacktrack/src/viewmodels/interfaces/i_navigation_viewmodel.dart';
+import "package:flutter/material.dart";
+import "package:provider/provider.dart";
+import "package:sliding_up_panel/sliding_up_panel.dart";
+import "package:snacktrack/src/models/energy_unit.dart";
+import "package:snacktrack/src/viewmodels/interfaces/i_navigation_viewmodel.dart";
 
-import 'history/history_view.dart';
-import 'overview/overview_view.dart';
-import 'settings/settings_view.dart';
+import "history/history_view.dart";
+import "overview/overview_view.dart";
+import "settings/settings_view.dart";
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -71,9 +71,9 @@ class _NavBarState extends State<NavBar> {
                 elevation: 0.0,
                 backgroundColor: Colors.white,
                 items: const [
-                  BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Overview'),
-                  BottomNavigationBarItem(icon: Icon(Icons.event_note), label: 'History'),
-                  BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+                  BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: "Overview"),
+                  BottomNavigationBarItem(icon: Icon(Icons.event_note), label: "History"),
+                  BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
                 ],
                 currentIndex: _selectedTabIndex,
                 selectedItemColor: Colors.red[800],

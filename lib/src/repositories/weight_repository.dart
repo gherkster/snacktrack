@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:snacktrack/src/models/weight.dart';
-import 'interfaces/i_weight_repository.dart';
+import "package:flutter/foundation.dart";
+import "package:hive_flutter/hive_flutter.dart";
+import "package:snacktrack/src/extensions.dart";
+import "package:snacktrack/src/models/weight.dart";
+import "interfaces/i_weight_repository.dart";
 
 class WeightRepository implements IWeightRepository {
   final Box _box;
@@ -15,10 +15,10 @@ class WeightRepository implements IWeightRepository {
   ValueListenable<Box<dynamic>> get stream => _box.listenable();
 
   @override
-  void add(double amount, DateTime time) => _box.add(Weight(amount, time));
+  void add(double amount, DateTime time) => _box.add(Weight(amount.roundToPrecision(2), time));
 
   @override
-  void put(double amount, DateTime time) => _box.put(time.millisecondsSinceEpoch.toString(), Weight(amount, time));
+  void put(double amount, DateTime time) => _box.put(time.millisecondsSinceEpoch.toString(), Weight(amount.roundToPrecision(2), time));
 
   @override
   double get currentWeight => _getLatest();

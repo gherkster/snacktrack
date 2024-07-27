@@ -1,14 +1,13 @@
-import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
-import 'package:snacktrack/src/constants.dart' as constants;
-import 'package:snacktrack/src/models/energy.dart';
-import 'package:snacktrack/src/models/energy_unit.dart';
-import 'package:snacktrack/src/models/weight.dart';
-import 'package:snacktrack/src/models/weight_unit.dart';
-import 'package:snacktrack/src/repositories/interfaces/i_energy_repository.dart';
-import 'package:snacktrack/src/repositories/interfaces/i_settings_repository.dart';
-import 'package:snacktrack/src/repositories/interfaces/i_weight_repository.dart';
-import 'package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart';
+import "package:flutter/foundation.dart";
+import "package:snacktrack/src/constants.dart" as constants;
+import "package:snacktrack/src/models/energy.dart";
+import "package:snacktrack/src/models/energy_unit.dart";
+import "package:snacktrack/src/models/weight.dart";
+import "package:snacktrack/src/models/weight_unit.dart";
+import "package:snacktrack/src/repositories/interfaces/i_energy_repository.dart";
+import "package:snacktrack/src/repositories/interfaces/i_settings_repository.dart";
+import "package:snacktrack/src/repositories/interfaces/i_weight_repository.dart";
+import "package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart";
 
 class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
   final IEnergyRepository _energyRepository;

@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:snacktrack/src/viewmodels/interfaces/i_history_viewmodel.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import "package:flutter/material.dart";
+import "package:provider/provider.dart";
+import "package:snacktrack/src/viewmodels/interfaces/i_history_viewmodel.dart";
+import "package:syncfusion_flutter_calendar/calendar.dart";
 
 class HistoryScreen extends StatefulWidget {
   @override
@@ -17,7 +17,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       children: [
         Consumer<IHistoryViewModel>(
           builder: (context, model, child) {
-            return Container(
+            return SizedBox(
               height: 400,
               child: SfCalendar(
                 view: CalendarView.month,
@@ -27,7 +27,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             );
           },
         ),
-        Container(
+        SizedBox(
           height: 150, // TODO calculate
           child: GridView.builder(
             itemCount: appointmentDetails.length,
@@ -37,7 +37,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
             itemBuilder: (BuildContext context, int index) {
               return Padding(
-                padding: EdgeInsets.all(5),
+                padding: const EdgeInsets.all(5),
                 child: Card(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                     child: InkWell(

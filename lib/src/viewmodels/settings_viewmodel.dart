@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:snacktrack/src/models/day.dart';
-import 'package:snacktrack/src/models/energy_unit.dart';
-import 'package:snacktrack/src/models/weight_unit.dart';
-import 'package:snacktrack/src/repositories/interfaces/i_energy_repository.dart';
-import 'package:snacktrack/src/repositories/interfaces/i_settings_repository.dart';
-import 'package:snacktrack/src/repositories/interfaces/i_weight_repository.dart';
-import 'package:snacktrack/src/viewmodels/interfaces/i_settings_viewmodel.dart';
+import "package:flutter/material.dart";
+import "package:snacktrack/src/models/day.dart";
+import "package:snacktrack/src/models/energy_unit.dart";
+import "package:snacktrack/src/models/weight_unit.dart";
+import "package:snacktrack/src/repositories/interfaces/i_energy_repository.dart";
+import "package:snacktrack/src/repositories/interfaces/i_settings_repository.dart";
+import "package:snacktrack/src/repositories/interfaces/i_weight_repository.dart";
+import "package:snacktrack/src/viewmodels/interfaces/i_settings_viewmodel.dart";
 
 class SettingsViewModel extends ChangeNotifier implements ISettingsViewmodel {
   final IEnergyRepository _energyRepository;
