@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:google_fonts/google_fonts.dart";
 import "package:hive/hive.dart";
 import "package:provider/provider.dart";
 import "package:snacktrack/src/repositories/interfaces/i_settings_repository.dart";
@@ -41,7 +42,9 @@ class App extends StatelessWidget {
         child: Consumer<ThemeNotifier>(
           builder: (context, provider, child) => MaterialApp(
             home: const NavBar(),
-            theme: ThemeData.light(),
+            theme: ThemeData(
+              fontFamily: GoogleFonts.openSans().fontFamily,
+            ),
             darkTheme: ThemeData.dark(),
             themeMode: Provider.of<ThemeNotifier>(context).themeMode,
             debugShowCheckedModeBanner: false,
