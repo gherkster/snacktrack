@@ -37,7 +37,7 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
 
   @override
   List<Weight> get weightAllRecentValues {
-    final List<Weight> weights = _weightRepository.getAllRecords().where((record) => record.time.isAfter(_today.subtract(const Duration(days: 14)))).toList();
+    final List<Weight> weights = _weightRepository.getAllRecords().where((record) => record.time.isAfter(_today.subtract(const Duration(days: 7)))).toList();
     if (_settingsRepository.weightUnit == WeightUnit.lb) {
       for (final Weight weightObj in weights) {
         weightObj.weight = weightObj.weight * constants.weightConversionFactor;
