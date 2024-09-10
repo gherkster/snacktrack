@@ -4,7 +4,7 @@ import "package:snacktrack/src/repositories/interfaces/i_energy_repository.dart"
 import "package:snacktrack/src/repositories/interfaces/i_settings_repository.dart";
 import "package:snacktrack/src/repositories/interfaces/i_weight_repository.dart";
 import "package:snacktrack/src/viewmodels/interfaces/i_history_viewmodel.dart";
-import "package:syncfusion_flutter_calendar/calendar.dart";
+//import "package:syncfusion_flutter_calendar/calendar.dart";
 
 class HistoryViewModel extends ChangeNotifier implements IHistoryViewModel {
   final IEnergyRepository _energyRepository;
@@ -27,15 +27,15 @@ class HistoryViewModel extends ChangeNotifier implements IHistoryViewModel {
     return values.toList();
   }
 
-  @override
-  AppointmentDataSource get appointmentDataSource {
-    final List<Appointment> appointments = [];
-    appointments
-      ..add(Appointment(
-          isAllDay: true, startTime: _today.subtract(const Duration(days: 1)), endTime: _today.subtract(const Duration(days: 1)), subject: "8000 KJ", color: Colors.orange))
-      ..add(Appointment(isAllDay: true, startTime: _today.subtract(const Duration(days: 1)), endTime: _today.subtract(const Duration(days: 1)), subject: "70 KG"))
-      ..add(Appointment(isAllDay: true, startTime: _today, endTime: _today, subject: "4500 KJ"));
+  // @override
+  // AppointmentDataSource get appointmentDataSource {
+  //   final List<Appointment> appointments = [];
+  //   appointments
+  //     ..add(Appointment(
+  //         isAllDay: true, startTime: _today.subtract(const Duration(days: 1)), endTime: _today.subtract(const Duration(days: 1)), subject: "8000 KJ", color: Colors.orange))
+  //     ..add(Appointment(isAllDay: true, startTime: _today.subtract(const Duration(days: 1)), endTime: _today.subtract(const Duration(days: 1)), subject: "70 KG"))
+  //     ..add(Appointment(isAllDay: true, startTime: _today, endTime: _today, subject: "4500 KJ"));
 
-    return AppointmentDataSource(appointments);
-  }
+  //   return AppointmentDataSource(appointments);
+  // }
 }
