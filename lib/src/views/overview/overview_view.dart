@@ -1,7 +1,11 @@
+import "dart:math";
+
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
+import "package:intl/intl.dart";
 import "package:percent_indicator/circular_percent_indicator.dart";
 import "package:provider/provider.dart";
+import "package:snacktrack/src/extensions.dart";
 import "package:snacktrack/src/models/weight.dart";
 import "package:snacktrack/src/viewmodels/interfaces/i_navigation_viewmodel.dart";
 import "package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart";
@@ -29,13 +33,14 @@ class OverviewScreen extends StatelessWidget {
               return Consumer<INavigationViewModel>(
                 builder: (context, navModel, child) {
                   return Ink(
-                    width: 280,
-                    height: 280,
+                    width: 260,
+                    height: 260,
                     child: InkWell(
                       onTap: () => {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const TargetEnergyForm()),
+                          MaterialPageRoute(
+                              builder: (context) => const TargetEnergyForm()),
                         ),
                       },
                       borderRadius: BorderRadius.circular(400),
@@ -43,9 +48,16 @@ class OverviewScreen extends StatelessWidget {
                       child: CircularPercentIndicator(
                         radius: 100.0,
                         lineWidth: 12.0,
-                        percent: overviewModel.energyCurrentTotalClamped <= 0.005 ? 0.005 : overviewModel.energyCurrentTotalClamped,
-                        backgroundColor: const Color.fromARGB(94, 148, 197, 214),
-                        progressColor: overviewModel.currentEnergyTotal > overviewModel.targetEnergy ? Colors.red : const Color.fromRGBO(70, 100, 159, 1),
+                        percent:
+                            overviewModel.energyCurrentTotalClamped <= 0.005
+                                ? 0.005
+                                : overviewModel.energyCurrentTotalClamped,
+                        backgroundColor:
+                            const Color.fromARGB(94, 148, 197, 214),
+                        progressColor: overviewModel.currentEnergyTotal >
+                                overviewModel.targetEnergy
+                            ? Colors.red
+                            : const Color.fromRGBO(70, 100, 159, 1),
                         animation: true,
                         animateFromLastPercent: true,
                         circularStrokeCap: CircularStrokeCap.round,
@@ -85,46 +97,86 @@ class OverviewScreen extends StatelessWidget {
                   TextButton(
                     onPressed: () {},
                     child: Column(
-                      children: [Text('${model.targetEnergy} kJ'), const Text("Energy goal")],
+                      children: [
+                        Text('${model.targetEnergy} kJ'),
+                        const Text("Energy goal")
+                      ],
                     ),
                   ),
                   TextButton(
                     onPressed: () {},
                     child: Column(
-                      children: [Text('${model.targetWeight} KG'), const Text("Weight goal")],
+                      children: [
+                        Text('${model.targetWeight} KG'),
+                        const Text("Weight goal")
+                      ],
                     ),
                   ),
                 ],
               );
             },
           )),
+          const SizedBox(
+            height: 12,
+          ),
           Card(
             elevation: 1.0,
-            margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+            margin:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
             child: Container(
                 height: 200,
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0, 12.0, 8.0),
                 child: Consumer<IOverviewViewModel>(
                   builder: (context, model, child) {
                     return SfCartesianChart(
-                      primaryXAxis: const DateTimeAxis(
-                        majorGridLines: MajorGridLines(width: 0),
+                      primaryXAxis: DateTimeAxis(
+                        majorGridLines: const MajorGridLines(width: 0),
                         intervalType: DateTimeIntervalType.days,
                         interval: 1,
+                        // Add some visual padding to the last week of data
+                        minimum: DateTime(DateTime.now().year,
+                                DateTime.now().month, DateTime.now().day)
+                            .add(const Duration(days: -7, hours: -12)),
+                        maximum: DateTime(DateTime.now().year,
+                                DateTime.now().month, DateTime.now().day)
+                            .add(const Duration(hours: 12)),
+                        axisLabelFormatter: (axisLabelRenderArgs) {
+                          var text = DateFormat("EEE").format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  axisLabelRenderArgs.value.toInt()));
+                          return ChartAxisLabel(text, null);
+                        },
                       ),
                       primaryYAxis: NumericAxis(
-                          isVisible: false,
-                          plotBands: [
-                            PlotBand(
-                              start: model.targetWeight,
-                              end: model.targetWeight,
-                              dashArray: const [10, 21],
-                              borderColor: Colors.blue,
-                              opacity: 0.5,
-                            ),
-                          ],
-                          minorTicksPerInterval:
-                              1), // Both 2nd digit of min and max (ie min 40<-, max 80<-) need to be 5 or 0 if setting manually, can't be different
+                        isVisible: true,
+                        minimum: [
+                              model.targetWeight,
+                              ...model.getLatest(7).map((e) => e.weight)
+                            ].min.toDouble() -
+                            5,
+                        maximum: [
+                              model.targetWeight,
+                              ...model.getLatest(7).map((e) => e.weight)
+                            ].max.toDouble() +
+                            5,
+                        majorGridLines:
+                            const MajorGridLines(color: Colors.transparent),
+                        majorTickLines:
+                            const MajorTickLines(color: Colors.transparent),
+
+                        plotBands: [
+                          PlotBand(
+                            start: model.targetWeight,
+                            end: model.targetWeight,
+                            shouldRenderAboveSeries: true,
+                            dashArray: const [10, 21],
+                            borderColor: Colors.blue,
+                            opacity: 0.5,
+                          ),
+                        ],
+                        //minorTicksPerInterval: 1,
+                      ),
+                      // Both 2nd digit of min and max (ie min 40<-, max 80<-) need to be 5 or 0 if setting manually, can't be different
                       tooltipBehavior: TooltipBehavior(
                         enable: true,
                         header: "",
@@ -135,7 +187,7 @@ class OverviewScreen extends StatelessWidget {
                       ),
                       series: <CartesianSeries>[
                         SplineSeries<Weight, DateTime>(
-                          dataSource: model.weightAllRecentValues,
+                          dataSource: model.getLatest(7),
                           xValueMapper: (Weight weights, _) => weights.time,
                           yValueMapper: (Weight weights, _) => weights.weight,
                           emptyPointSettings: const EmptyPointSettings(
@@ -147,6 +199,17 @@ class OverviewScreen extends StatelessWidget {
                             isVisible: true,
                           ),
                         ),
+                        // LineSeries<Weight, DateTime>(
+                        //   dataSource: [
+                        //     Weight(model.targetWeight,
+                        //         DateTime.now().add(const Duration(days: -30))),
+                        //     Weight(model.targetWeight,
+                        //         DateTime.now().add(const Duration(days: 30))),
+                        //   ],
+                        //   xValueMapper: (Weight weight, _) => weight.time,
+                        //   yValueMapper: (Weight weight, _) => weight.weight,
+                        //   dashArray: const [10, 21],
+                        // )
                       ],
                     );
                   },

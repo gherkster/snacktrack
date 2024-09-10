@@ -18,11 +18,16 @@ class NavBar extends StatefulWidget {
 class _NavBarState extends State<NavBar> {
   static final PanelController _panelController = PanelController();
   static final FocusNode _energyInputFocus = FocusNode();
-  static final TextEditingController _textEditingController = TextEditingController();
+  static final TextEditingController _textEditingController =
+      TextEditingController();
   static final _formKey = GlobalKey<FormState>();
 
   int _selectedTabIndex = 0;
-  final List<Widget> _availableTabs = [OverviewScreen(), HistoryScreen(), SettingsScreen()];
+  final List<Widget> _availableTabs = [
+    OverviewScreen(),
+    HistoryScreen(),
+    SettingsScreen()
+  ];
 
   @override
   void dispose() {
@@ -38,7 +43,7 @@ class _NavBarState extends State<NavBar> {
       bottomNavigationBar: NavigationBar(
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.dashboard),
+            icon: Icon(Icons.home),
             label: "Overview",
           ),
           NavigationDestination(
@@ -56,7 +61,7 @@ class _NavBarState extends State<NavBar> {
           });
         },
         selectedIndex: _selectedTabIndex,
-        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
       body: SingleChildScrollView(
         child: _availableTabs[_selectedTabIndex],
