@@ -39,13 +39,13 @@ dependencies:
   percent_indicator: ^4.2.3
   numberpicker: ^2.1.2
   provider: ^6.1.2
-  fl_chart: ^0.68.0
-  syncfusion_flutter_charts: ^26.2.5+1
-  syncfusion_flutter_calendar: ^26.2.5
+  syncfusion_flutter_charts: ^26.2.14
+  #syncfusion_flutter_calendar: ^26.2.5
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   sliding_up_panel: ^2.0.0+1
   google_fonts: ^6.2.1
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
