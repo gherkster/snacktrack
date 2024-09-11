@@ -1,5 +1,6 @@
 import "package:flutter/foundation.dart";
 import "package:snacktrack/src/constants.dart" as constants;
+import "package:snacktrack/src/extensions.dart";
 import "package:snacktrack/src/models/energy.dart";
 import "package:snacktrack/src/models/energy_unit.dart";
 import "package:snacktrack/src/models/weight.dart";
@@ -43,7 +44,7 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
   WeightUnit get weightUnit => _settingsRepository.weightUnit;
 
   @override
-  List<Weight> getLatest(int days) {
+  List<Weight> get recentWeights {
     return [
       Weight(80.6, _today.add(const Duration(days: -9))),
       Weight(80.5, _today.add(const Duration(days: -8))),
@@ -56,6 +57,17 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
       Weight(80.1, _today.add(const Duration(days: -1))),
       Weight(80, _today)
     ];
+  }
+
+  @override
+  double? get maximumRecentWeight =>
+      recentWeights.isNotEmpty ? recentWeights.map((w) => w.weight).max : null;
+  @override
+  double? get minimumRecentWeight =>
+      recentWeights.isNotEmpty ? recentWeights.map((w) => w.weight).min : null;
+
+  @override
+  List<Weight> getLatest(int days) {
     final List<Weight> weights = _weightRepository
         .getAllRecords()
         .where((record) =>

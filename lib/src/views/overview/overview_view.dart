@@ -5,7 +5,6 @@ import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 import "package:percent_indicator/circular_percent_indicator.dart";
 import "package:provider/provider.dart";
-import "package:snacktrack/src/extensions.dart";
 import "package:snacktrack/src/models/weight.dart";
 import "package:snacktrack/src/viewmodels/interfaces/i_navigation_viewmodel.dart";
 import "package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart";
@@ -136,7 +135,7 @@ class OverviewScreen extends StatelessWidget {
                         // Add some visual padding to the last week of data
                         minimum: DateTime(DateTime.now().year,
                                 DateTime.now().month, DateTime.now().day)
-                            .add(const Duration(days: -7, hours: -12)),
+                            .add(const Duration(days: -6, hours: -12)),
                         maximum: DateTime(DateTime.now().year,
                                 DateTime.now().month, DateTime.now().day)
                             .add(const Duration(hours: 12)),
@@ -149,29 +148,41 @@ class OverviewScreen extends StatelessWidget {
                       ),
                       primaryYAxis: NumericAxis(
                         isVisible: true,
-                        minimum: [
-                              model.targetWeight,
-                              ...model.getLatest(7).map((e) => e.weight)
-                            ].min.toDouble() -
-                            5,
-                        maximum: [
-                              model.targetWeight,
-                              ...model.getLatest(7).map((e) => e.weight)
-                            ].max.toDouble() +
-                            5,
+                        maximum: max(
+                                model.targetWeight,
+                                model.maximumRecentWeight ??
+                                    model.targetWeight) +
+                            2,
                         majorGridLines:
                             const MajorGridLines(color: Colors.transparent),
                         majorTickLines:
                             const MajorTickLines(color: Colors.transparent),
-
+                        labelPosition: ChartDataLabelPosition.inside,
+                        labelStyle: const TextStyle(color: Colors.transparent),
                         plotBands: [
                           PlotBand(
                             start: model.targetWeight,
                             end: model.targetWeight,
                             shouldRenderAboveSeries: true,
-                            dashArray: const [10, 21],
+                            dashArray: const [6, 16],
                             borderColor: Colors.blue,
                             opacity: 0.5,
+                            text:
+                                '${model.targetWeight} ${model.weightUnit.name}',
+                            verticalTextAlignment:
+                                model.maximumRecentWeight != null &&
+                                        model.targetWeight >
+                                            model.maximumRecentWeight! + 1
+                                    ? TextAnchor.start
+                                    : TextAnchor.end,
+                            verticalTextPadding:
+                                model.maximumRecentWeight != null &&
+                                        model.targetWeight >
+                                            model.maximumRecentWeight! + 1
+                                    ? "-4px"
+                                    : "8px",
+                            horizontalTextAlignment: TextAnchor.start,
+                            horizontalTextPadding: "8px",
                           ),
                         ],
                         //minorTicksPerInterval: 1,
@@ -187,7 +198,7 @@ class OverviewScreen extends StatelessWidget {
                       ),
                       series: <CartesianSeries>[
                         SplineSeries<Weight, DateTime>(
-                          dataSource: model.getLatest(7),
+                          dataSource: model.recentWeights,
                           xValueMapper: (Weight weights, _) => weights.time,
                           yValueMapper: (Weight weights, _) => weights.weight,
                           emptyPointSettings: const EmptyPointSettings(
@@ -199,17 +210,6 @@ class OverviewScreen extends StatelessWidget {
                             isVisible: true,
                           ),
                         ),
-                        // LineSeries<Weight, DateTime>(
-                        //   dataSource: [
-                        //     Weight(model.targetWeight,
-                        //         DateTime.now().add(const Duration(days: -30))),
-                        //     Weight(model.targetWeight,
-                        //         DateTime.now().add(const Duration(days: 30))),
-                        //   ],
-                        //   xValueMapper: (Weight weight, _) => weight.time,
-                        //   yValueMapper: (Weight weight, _) => weight.weight,
-                        //   dashArray: const [10, 21],
-                        // )
                       ],
                     );
                   },
@@ -219,11 +219,4 @@ class OverviewScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-class WeightTarget {
-  DateTime time;
-  double target;
-
-  WeightTarget(this.time, this.target);
 }

@@ -18,6 +18,10 @@ abstract class IOverviewViewModel extends ChangeNotifier {
   // Potentially just get the values, then use another function to generate the empty values for any Date
   List<Weight> getLatest(int days);
 
+  List<Weight> get recentWeights;
+  double? get maximumRecentWeight;
+  double? get minimumRecentWeight;
+
   double get weightMinSelectable;
   double get weightMaxSelectable;
 
