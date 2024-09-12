@@ -63,9 +63,7 @@ class _NavBarState extends State<NavBar> {
         selectedIndex: _selectedTabIndex,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
-      body: SingleChildScrollView(
-        child: _availableTabs[_selectedTabIndex],
-      ),
+      body: _availableTabs[_selectedTabIndex],
     );
   }
 }
