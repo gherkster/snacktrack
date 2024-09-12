@@ -22,7 +22,11 @@ class App extends StatelessWidget {
   final Box weightBox;
   final Box settingsBox;
 
-  const App({Key? key, required this.energyBox, required this.weightBox, required this.settingsBox}) : super(key: key);
+  const App(
+      {super.key,
+      required this.energyBox,
+      required this.weightBox,
+      required this.settingsBox});
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +36,22 @@ class App extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<INavigationViewModel>(create: (_) => NavigationViewModel(energyRepository, weightRepository, settingsRepository)),
-        ChangeNotifierProvider<IOverviewViewModel>(create: (_) => OverviewViewModel(energyRepository, weightRepository, settingsRepository)),
-        ChangeNotifierProvider<IHistoryViewModel>(create: (_) => HistoryViewModel(energyRepository, weightRepository, settingsRepository)),
-        ChangeNotifierProvider<ISettingsViewmodel>(create: (_) => SettingsViewModel(energyRepository, weightRepository, settingsRepository))
+        ChangeNotifierProvider<INavigationViewModel>(
+          create: (_) => NavigationViewModel(
+              energyRepository, weightRepository, settingsRepository),
+        ),
+        ChangeNotifierProvider<IOverviewViewModel>(
+          create: (_) => OverviewViewModel(
+              energyRepository, weightRepository, settingsRepository),
+        ),
+        ChangeNotifierProvider<IHistoryViewModel>(
+          create: (_) => HistoryViewModel(
+              energyRepository, weightRepository, settingsRepository),
+        ),
+        ChangeNotifierProvider<ISettingsViewmodel>(
+          create: (_) => SettingsViewModel(
+              energyRepository, weightRepository, settingsRepository),
+        ),
       ],
       child: ChangeNotifierProvider<ThemeNotifier>(
         create: (context) => ThemeNotifier(settingsRepository),

@@ -1,6 +1,5 @@
 import "dart:math";
 
-import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter_expandable_fab/flutter_expandable_fab.dart";
 import "package:intl/intl.dart";
@@ -14,6 +13,8 @@ import "package:snacktrack/src/views/overview/target_energy_form.dart";
 import "package:syncfusion_flutter_charts/charts.dart";
 
 class OverviewScreen extends StatelessWidget {
+  const OverviewScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -214,7 +215,7 @@ class OverviewScreen extends StatelessWidget {
                         canShowMarker: false,
                         animationDuration: 0,
                         elevation: 0,
-                        format: "point.y ${describeEnum(model.weightUnit)}",
+                        format: "point.y ${model.weightUnit.name}",
                       ),
                       series: <CartesianSeries>[
                         SplineSeries<Weight, DateTime>(
