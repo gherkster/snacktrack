@@ -1,4 +1,5 @@
 import "package:flutter/foundation.dart";
+import "package:snacktrack/src/models/energy_unit.dart";
 import "package:snacktrack/src/models/weight.dart";
 import "package:snacktrack/src/models/weight_unit.dart";
 
@@ -13,6 +14,7 @@ abstract class IOverviewViewModel extends ChangeNotifier {
 
   int get currentEnergyTotal;
 
+  EnergyUnit get energyUnit;
   WeightUnit get weightUnit;
 
   // Potentially just get the values, then use another function to generate the empty values for any Date

@@ -14,21 +14,21 @@ class WeightUnitAdapter extends TypeAdapter<WeightUnit> {
   WeightUnit read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return WeightUnit.kg;
+        return WeightUnit.kilograms;
       case 1:
-        return WeightUnit.lb;
+        return WeightUnit.pounds;
       default:
-        return WeightUnit.kg;
+        return WeightUnit.kilograms;
     }
   }
 
   @override
   void write(BinaryWriter writer, WeightUnit obj) {
     switch (obj) {
-      case WeightUnit.kg:
+      case WeightUnit.kilograms:
         writer.writeByte(0);
         break;
-      case WeightUnit.lb:
+      case WeightUnit.pounds:
         writer.writeByte(1);
         break;
     }

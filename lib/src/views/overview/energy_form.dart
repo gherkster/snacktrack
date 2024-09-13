@@ -22,7 +22,7 @@ class EnergyForm extends StatelessWidget {
                   textInputAction: TextInputAction.send,
                   decoration: InputDecoration(
                     enabledBorder: const OutlineInputBorder(),
-                    labelText: model.energyUnit == EnergyUnit.kj ? "Energy" : "Calories",
+                    labelText: model.energyUnit.longName,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15.0),

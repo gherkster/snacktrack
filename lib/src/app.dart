@@ -59,9 +59,19 @@ class App extends StatelessWidget {
           builder: (context, provider, child) => MaterialApp(
             home: const NavBar(),
             theme: ThemeData(
-              fontFamily: GoogleFonts.openSans().fontFamily,
-            ),
-            darkTheme: ThemeData.dark(),
+                fontFamily: GoogleFonts.openSans().fontFamily,
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: Colors.blueAccent,
+                ).copyWith(
+                  surface: Colors.grey[50],
+                ),
+                textTheme: TextTheme(
+                  titleLarge: TextStyle(
+                    color: Colors.blue[700],
+                    fontWeight: FontWeight.bold,
+                  ),
+                )),
+            //darkTheme: ThemeData.dark(),
             themeMode: Provider.of<ThemeNotifier>(context).themeMode,
             debugShowCheckedModeBanner: false,
           ),

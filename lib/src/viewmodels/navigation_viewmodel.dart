@@ -7,22 +7,32 @@ import "package:snacktrack/src/repositories/interfaces/i_settings_repository.dar
 import "package:snacktrack/src/repositories/interfaces/i_weight_repository.dart";
 import "package:snacktrack/src/viewmodels/interfaces/i_navigation_viewmodel.dart";
 
-class NavigationViewModel extends ChangeNotifier implements INavigationViewModel {
+class NavigationViewModel extends ChangeNotifier
+    implements INavigationViewModel {
   final IEnergyRepository _energyRepository;
   final IWeightRepository _weightRepository;
   final ISettingsRepository _settingsRepository;
 
-  NavigationViewModel(this._energyRepository, this._weightRepository, this._settingsRepository);
+  NavigationViewModel(
+      this._energyRepository, this._weightRepository, this._settingsRepository);
 
   @override
   void energyAddRecord(double amount) {
-    _energyRepository.add(_settingsRepository.energyUnit == EnergyUnit.kj ? amount : amount / constants.energyConversionFactor, DateTime.now());
+    _energyRepository.add(
+        _settingsRepository.energyUnit == EnergyUnit.kilojoules
+            ? amount
+            : amount / constants.energyConversionFactor,
+        DateTime.now());
     notifyListeners();
   }
 
   @override
   void weightAddRecord(double amount) {
-    _weightRepository.add(_settingsRepository.weightUnit == WeightUnit.kg ? amount : amount / constants.weightConversionFactor, DateTime.now());
+    _weightRepository.add(
+        _settingsRepository.weightUnit == WeightUnit.kilograms
+            ? amount
+            : amount / constants.weightConversionFactor,
+        DateTime.now());
     notifyListeners();
   }
 
@@ -33,7 +43,10 @@ class NavigationViewModel extends ChangeNotifier implements INavigationViewModel
 
   @override
   String? validator(String? value) {
-    if (value == null || value.isEmpty || double.tryParse(value) == null || double.parse(value) == 0.0) {
+    if (value == null ||
+        value.isEmpty ||
+        double.tryParse(value) == null ||
+        double.parse(value) == 0.0) {
       return "Energy invalid";
     }
     return null;

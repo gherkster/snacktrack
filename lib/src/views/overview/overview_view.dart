@@ -6,10 +6,9 @@ import "package:intl/intl.dart";
 import "package:percent_indicator/circular_percent_indicator.dart";
 import "package:provider/provider.dart";
 import "package:snacktrack/src/models/weight.dart";
-import "package:snacktrack/src/viewmodels/interfaces/i_navigation_viewmodel.dart";
 import "package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart";
-import "package:snacktrack/src/views/overview/energy_form.dart";
 import "package:snacktrack/src/views/overview/target_energy_form.dart";
+import "package:snacktrack/src/views/overview/weight_form.dart";
 import "package:syncfusion_flutter_charts/charts.dart";
 
 class OverviewScreen extends StatelessWidget {
@@ -22,6 +21,10 @@ class OverviewScreen extends StatelessWidget {
       floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: ExpandableFab(
         type: ExpandableFabType.up,
+        childrenAnimation: ExpandableFabAnimation.none,
+        overlayStyle: ExpandableFabOverlayStyle(
+          color: Colors.white.withOpacity(0.8),
+        ),
         children: [
           Row(
             children: [
@@ -32,11 +35,11 @@ class OverviewScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const EnergyForm(),
+                      builder: (context) => const WeightForm(),
                     ),
                   );
                 },
-                child: const Icon(Icons.scale),
+                child: const Icon(Icons.monitor_weight_outlined),
               )
             ],
           ),
@@ -50,62 +53,56 @@ class OverviewScreen extends StatelessWidget {
             ),
             Consumer<IOverviewViewModel>(
               builder: (context, overviewModel, child) {
-                return Consumer<INavigationViewModel>(
-                  builder: (context, navModel, child) {
-                    return Ink(
-                      width: 260,
-                      height: 260,
-                      child: InkWell(
-                        onTap: () => {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const TargetEnergyForm()),
-                          ),
-                        },
-                        borderRadius: BorderRadius.circular(400),
-                        radius: 300,
-                        child: CircularPercentIndicator(
-                          radius: 100.0,
-                          lineWidth: 12.0,
-                          percent:
-                              overviewModel.energyCurrentTotalClamped <= 0.005
-                                  ? 0.005
-                                  : overviewModel.energyCurrentTotalClamped,
-                          backgroundColor:
-                              const Color.fromARGB(94, 148, 197, 214),
-                          progressColor: overviewModel.currentEnergyTotal >
-                                  overviewModel.targetEnergy
-                              ? Colors.red
-                              : const Color.fromRGBO(70, 100, 159, 1),
-                          animation: true,
-                          animateFromLastPercent: true,
-                          circularStrokeCap: CircularStrokeCap.round,
-                          center: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(overviewModel.currentEnergyTotal.toString(),
-                                  style: const TextStyle(
-                                    fontSize: 44,
-                                    fontWeight: FontWeight.w700,
-                                    height: 1.1,
-                                    color: Color.fromRGBO(70, 100, 159, 1),
-                                  )),
-                              const Text(
-                                "Kilojoules", // TODO: Get string from settings
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  height: 1.1,
-                                  color: Color.fromRGBO(70, 100, 159, 1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                return Ink(
+                  width: 260,
+                  height: 260,
+                  child: InkWell(
+                    onTap: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TargetEnergyForm()),
                       ),
-                    );
-                  },
+                    },
+                    borderRadius: BorderRadius.circular(400),
+                    radius: 300,
+                    child: CircularPercentIndicator(
+                      radius: 100.0,
+                      lineWidth: 12.0,
+                      percent: overviewModel.energyCurrentTotalClamped <= 0.005
+                          ? 0.005
+                          : overviewModel.energyCurrentTotalClamped,
+                      backgroundColor: const Color.fromARGB(94, 148, 197, 214),
+                      progressColor: overviewModel.currentEnergyTotal >
+                              overviewModel.targetEnergy
+                          ? Colors.red
+                          : const Color.fromRGBO(70, 100, 159, 1),
+                      animation: true,
+                      animateFromLastPercent: true,
+                      circularStrokeCap: CircularStrokeCap.round,
+                      center: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(overviewModel.currentEnergyTotal.toString(),
+                              style: const TextStyle(
+                                fontSize: 44,
+                                fontWeight: FontWeight.w700,
+                                height: 1.1,
+                                color: Color.fromRGBO(70, 100, 159, 1),
+                              )),
+                          const Text(
+                            "Kilojoules", // TODO: Get string from settings
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              height: 1.1,
+                              color: Color.fromRGBO(70, 100, 159, 1),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 );
               },
             ),
@@ -118,17 +115,30 @@ class OverviewScreen extends StatelessWidget {
                       onPressed: () {},
                       child: Column(
                         children: [
-                          Text('${model.targetEnergy} kJ'),
-                          const Text("Energy goal")
+                          Text(
+                            '${model.targetEnergy}',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          Text(
+                            'Target ${model.energyUnit.shortName}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
                         ],
                       ),
                     ),
+                    const SizedBox(width: 20),
                     TextButton(
                       onPressed: () {},
                       child: Column(
                         children: [
-                          Text('${model.targetWeight} KG'),
-                          const Text("Weight goal")
+                          Text(
+                            '${model.targetWeight}',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          Text(
+                            'Target ${model.weightUnit.shortName}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
                         ],
                       ),
                     ),
@@ -141,6 +151,8 @@ class OverviewScreen extends StatelessWidget {
             ),
             Card(
               elevation: 1.0,
+              // TODO: Get from theme
+              color: Colors.grey[25],
               margin:
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
               child: Container(
@@ -189,7 +201,7 @@ class OverviewScreen extends StatelessWidget {
                             borderColor: Colors.blue,
                             opacity: 0.5,
                             text:
-                                '${model.targetWeight} ${model.weightUnit.name}',
+                                '${model.targetWeight} ${model.weightUnit.shortName}',
                             verticalTextAlignment:
                                 model.maximumRecentWeight != null &&
                                         model.targetWeight >
@@ -215,7 +227,7 @@ class OverviewScreen extends StatelessWidget {
                         canShowMarker: false,
                         animationDuration: 0,
                         elevation: 0,
-                        format: "point.y ${model.weightUnit.name}",
+                        format: "point.y ${model.weightUnit.shortName}",
                       ),
                       series: <CartesianSeries>[
                         SplineSeries<Weight, DateTime>(

@@ -14,21 +14,21 @@ class EnergyUnitAdapter extends TypeAdapter<EnergyUnit> {
   EnergyUnit read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return EnergyUnit.kj;
+        return EnergyUnit.kilojoules;
       case 1:
-        return EnergyUnit.cal;
+        return EnergyUnit.calories;
       default:
-        return EnergyUnit.kj;
+        return EnergyUnit.kilojoules;
     }
   }
 
   @override
   void write(BinaryWriter writer, EnergyUnit obj) {
     switch (obj) {
-      case EnergyUnit.kj:
+      case EnergyUnit.kilojoules:
         writer.writeByte(0);
         break;
-      case EnergyUnit.cal:
+      case EnergyUnit.calories:
         writer.writeByte(1);
         break;
     }

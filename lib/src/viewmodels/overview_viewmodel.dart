@@ -22,7 +22,8 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   @override
-  int get targetEnergy => _settingsRepository.energyUnit == EnergyUnit.kj
+  int get targetEnergy => _settingsRepository.energyUnit ==
+          EnergyUnit.kilojoules
       ? _settingsRepository.energyTarget.toInt()
       : (_settingsRepository.energyTarget * constants.energyConversionFactor)
           .toInt();
@@ -34,11 +35,14 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
         .where((record) => record.time.isAfter(_today));
     double total = values.fold(0, (sum, item) => sum + item.energy);
 
-    total = _settingsRepository.energyUnit == EnergyUnit.kj
+    total = _settingsRepository.energyUnit == EnergyUnit.kilojoules
         ? total
         : total * constants.energyConversionFactor;
     return total.toInt();
   }
+
+  @override
+  EnergyUnit get energyUnit => _settingsRepository.energyUnit;
 
   @override
   WeightUnit get weightUnit => _settingsRepository.weightUnit;
@@ -73,7 +77,7 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
         .where((record) =>
             record.time.isAfter(_today.subtract(Duration(days: days))))
         .toList();
-    if (_settingsRepository.weightUnit == WeightUnit.lb) {
+    if (_settingsRepository.weightUnit == WeightUnit.pounds) {
       for (final Weight weightObj in weights) {
         weightObj.weight = weightObj.weight * constants.weightConversionFactor;
       }
@@ -82,29 +86,31 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
   }
 
   @override
-  double get weightMinSelectable => weightUnit == WeightUnit.kg ? 40.0 : 80.0;
+  double get weightMinSelectable =>
+      weightUnit == WeightUnit.kilograms ? 40.0 : 80.0;
   @override
-  double get weightMaxSelectable => weightUnit == WeightUnit.kg ? 200.0 : 400.0;
+  double get weightMaxSelectable =>
+      weightUnit == WeightUnit.kilograms ? 200.0 : 400.0;
 
   @override
-  double get currentWeight => weightUnit == WeightUnit.kg
+  double get currentWeight => weightUnit == WeightUnit.kilograms
       ? _weightRepository.currentWeight
       : _weightRepository.currentWeight * constants.weightConversionFactor;
   @override
   set currentWeight(double amount) {
-    _weightRepository.currentWeight = weightUnit == WeightUnit.kg
+    _weightRepository.currentWeight = weightUnit == WeightUnit.kilograms
         ? amount
         : amount / constants.weightConversionFactor;
     notifyListeners();
   }
 
   @override
-  double get targetWeight => weightUnit == WeightUnit.kg
+  double get targetWeight => weightUnit == WeightUnit.kilograms
       ? _settingsRepository.weightTarget
       : _settingsRepository.weightTarget * constants.weightConversionFactor;
   @override
   set targetWeight(double target) {
-    _settingsRepository.weightTarget = weightUnit == WeightUnit.kg
+    _settingsRepository.weightTarget = weightUnit == WeightUnit.kilograms
         ? target
         : target / constants.weightConversionFactor;
     notifyListeners();

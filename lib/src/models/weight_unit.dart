@@ -5,8 +5,12 @@ part "weight_unit.g.dart";
 @HiveType(typeId: 4)
 enum WeightUnit {
   @HiveField(0)
-  kg,
+  kilograms("kg", "Kilograms"),
 
   @HiveField(1)
-  lb,
+  pounds("lb", "Pounds");
+
+  const WeightUnit(this.shortName, this.longName);
+  final String shortName;
+  final String longName;
 }
