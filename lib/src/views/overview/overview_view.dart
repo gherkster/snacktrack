@@ -23,13 +23,17 @@ class OverviewScreen extends StatelessWidget {
         type: ExpandableFabType.up,
         childrenAnimation: ExpandableFabAnimation.none,
         overlayStyle: ExpandableFabOverlayStyle(
-          color: Colors.white.withOpacity(0.8),
+          color: Colors.white.withOpacity(0.85),
         ),
+        openButtonBuilder: DefaultFloatingActionButtonBuilder(
+          child: const Icon(Icons.add),
+        ),
+        distance: 90,
         children: [
           Row(
             children: [
               const Text("Add weight"),
-              const SizedBox(width: 20),
+              const SizedBox(width: 16),
               FloatingActionButton.small(
                 onPressed: () {
                   Navigator.push(
@@ -90,9 +94,9 @@ class OverviewScreen extends StatelessWidget {
                                 height: 1.1,
                                 color: Color.fromRGBO(70, 100, 159, 1),
                               )),
-                          const Text(
-                            "Kilojoules", // TODO: Get string from settings
-                            style: TextStyle(
+                          Text(
+                            overviewModel.energyUnit.longName,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               height: 1.1,
