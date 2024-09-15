@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:snacktrack/src/models/energy_unit.dart';
-import 'package:snacktrack/src/viewmodels/interfaces/i_navigation_viewmodel.dart';
+import 'package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart';
 
 class TargetEnergyForm extends StatelessWidget {
   const TargetEnergyForm({super.key});
@@ -11,7 +10,7 @@ class TargetEnergyForm extends StatelessWidget {
     return Material(
       child: Form(
         //key: _formKey,
-        child: Consumer<INavigationViewModel>(
+        child: Consumer<IOverviewViewModel>(
           builder: (context, model, child) {
             return TextFormField(
               //controller: _textEditingController,
@@ -33,7 +32,6 @@ class TargetEnergyForm extends StatelessWidget {
                 //   _textEditingController.clear();
                 // }
               },
-              validator: (value) => model.validator(value),
               keyboardType: TextInputType.number,
             );
           },

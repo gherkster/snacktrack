@@ -7,13 +7,11 @@ import "package:snacktrack/src/repositories/settings_repository.dart";
 import "package:snacktrack/src/viewmodels/history_viewmodel.dart";
 import "package:snacktrack/src/viewmodels/interfaces/i_history_viewmodel.dart";
 import "package:snacktrack/src/viewmodels/interfaces/i_settings_viewmodel.dart";
-import "package:snacktrack/src/viewmodels/navigation_viewmodel.dart";
 import "package:snacktrack/src/viewmodels/overview_viewmodel.dart";
 import "package:snacktrack/src/viewmodels/settings_viewmodel.dart";
 
 import "repositories/energy_repository.dart";
 import "repositories/weight_repository.dart";
-import "viewmodels/interfaces/i_navigation_viewmodel.dart";
 import "viewmodels/interfaces/i_overview_viewmodel.dart";
 import "views/navigation.dart";
 
@@ -22,11 +20,7 @@ class App extends StatelessWidget {
   final Box weightBox;
   final Box settingsBox;
 
-  const App(
-      {super.key,
-      required this.energyBox,
-      required this.weightBox,
-      required this.settingsBox});
+  const App({super.key, required this.energyBox, required this.weightBox, required this.settingsBox});
 
   @override
   Widget build(BuildContext context) {
@@ -36,21 +30,14 @@ class App extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<INavigationViewModel>(
-          create: (_) => NavigationViewModel(
-              energyRepository, weightRepository, settingsRepository),
-        ),
         ChangeNotifierProvider<IOverviewViewModel>(
-          create: (_) => OverviewViewModel(
-              energyRepository, weightRepository, settingsRepository),
+          create: (_) => OverviewViewModel(energyRepository, weightRepository, settingsRepository),
         ),
         ChangeNotifierProvider<IHistoryViewModel>(
-          create: (_) => HistoryViewModel(
-              energyRepository, weightRepository, settingsRepository),
+          create: (_) => HistoryViewModel(energyRepository, weightRepository, settingsRepository),
         ),
         ChangeNotifierProvider<ISettingsViewmodel>(
-          create: (_) => SettingsViewModel(
-              energyRepository, weightRepository, settingsRepository),
+          create: (_) => SettingsViewModel(energyRepository, weightRepository, settingsRepository),
         ),
       ],
       child: ChangeNotifierProvider<ThemeNotifier>(
