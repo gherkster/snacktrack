@@ -95,7 +95,7 @@ class OverviewScreen extends StatelessWidget {
                     onTap: () => {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const TargetEnergyForm()),
+                        MaterialPageRoute(builder: (context) => const EnergyForm()),
                       ),
                     },
                     borderRadius: BorderRadius.circular(400),
