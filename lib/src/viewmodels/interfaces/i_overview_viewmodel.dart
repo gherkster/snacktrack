@@ -28,8 +28,8 @@ abstract class IOverviewViewModel extends ChangeNotifier {
   void addEnergyRecord(double amount, DateTime dateTime);
   void addWeightRecord(double amount, DateTime dateTime);
 
-  double get weightMinSelectable;
-  double get weightMaxSelectable;
+  int get weightMinSelectable;
+  int get weightMaxSelectable;
 
   DateTime get minChartDate;
   DateTime get maxChartDate;

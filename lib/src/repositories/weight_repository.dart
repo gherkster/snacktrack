@@ -1,6 +1,6 @@
 import "package:flutter/foundation.dart";
 import "package:hive_flutter/hive_flutter.dart";
-import "package:snacktrack/src/extensions.dart";
+import "package:snacktrack/src/extensions/num.dart";
 import "package:snacktrack/src/models/weight.dart";
 import "interfaces/i_weight_repository.dart";
 
@@ -18,7 +18,8 @@ class WeightRepository implements IWeightRepository {
   void add(double amount, DateTime time) => _box.add(Weight(amount.roundToPrecision(2), time));
 
   @override
-  void put(double amount, DateTime time) => _box.put(time.millisecondsSinceEpoch.toString(), Weight(amount.roundToPrecision(2), time));
+  void put(double amount, DateTime time) =>
+      _box.put(time.millisecondsSinceEpoch.toString(), Weight(amount.roundToPrecision(2), time));
 
   @override
   double get currentWeight => _getLatest();

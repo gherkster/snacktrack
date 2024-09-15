@@ -46,7 +46,10 @@ class OverviewScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const WeightForm(),
+                      builder: (context) {
+                        var currentWeight = context.read<IOverviewViewModel>().currentWeight;
+                        return WeightForm(currentWeight: currentWeight);
+                      },
                     ),
                   );
                 },
@@ -92,8 +95,7 @@ class OverviewScreen extends StatelessWidget {
                     onTap: () => {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => const TargetEnergyForm()),
+                        MaterialPageRoute(builder: (context) => const TargetEnergyForm()),
                       ),
                     },
                     borderRadius: BorderRadius.circular(400),
@@ -105,8 +107,7 @@ class OverviewScreen extends StatelessWidget {
                           ? 0.005
                           : overviewModel.energyCurrentTotalClamped,
                       backgroundColor: const Color.fromARGB(94, 148, 197, 214),
-                      progressColor: overviewModel.currentEnergyTotal >
-                              overviewModel.targetEnergy
+                      progressColor: overviewModel.currentEnergyTotal > overviewModel.targetEnergy
                           ? Colors.red
                           : const Color.fromRGBO(70, 100, 159, 1),
                       animation: true,
@@ -185,10 +186,9 @@ class OverviewScreen extends StatelessWidget {
               elevation: 1.0,
               // TODO: Get from theme
               color: Colors.grey[25],
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              margin: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
               child: Container(
-                height: 200,
+                height: 160,
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0, 12.0, 8.0),
                 child: Consumer<IOverviewViewModel>(
                   builder: (context, model, child) {
@@ -196,27 +196,21 @@ class OverviewScreen extends StatelessWidget {
                       primaryXAxis: DateTimeAxis(
                         majorGridLines: const MajorGridLines(width: 0),
                         intervalType: DateTimeIntervalType.months,
-                        interval: 1,
+                        //interval: 1,
+                        rangePadding: ChartRangePadding.auto,
                         minimum: model.minChartDate,
                         maximum: model.maxChartDate,
                         axisLabelFormatter: (axisLabelRenderArgs) {
-                          var text = DateFormat("MMM").format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  axisLabelRenderArgs.value.toInt()));
+                          var text = DateFormat("MMM")
+                              .format(DateTime.fromMillisecondsSinceEpoch(axisLabelRenderArgs.value.toInt()));
                           return ChartAxisLabel(text, null);
                         },
                       ),
                       primaryYAxis: NumericAxis(
                         isVisible: true,
-                        maximum: max(
-                                model.targetWeight,
-                                model.maximumRecentWeight ??
-                                    model.targetWeight) +
-                            2,
-                        majorGridLines:
-                            const MajorGridLines(color: Colors.transparent),
-                        majorTickLines:
-                            const MajorTickLines(color: Colors.transparent),
+                        maximum: max(model.targetWeight, model.maximumRecentWeight ?? model.targetWeight) + 2,
+                        majorGridLines: const MajorGridLines(color: Colors.transparent),
+                        majorTickLines: const MajorTickLines(color: Colors.transparent),
                         labelPosition: ChartDataLabelPosition.inside,
                         labelStyle: const TextStyle(color: Colors.transparent),
                         plotBands: [
@@ -227,18 +221,13 @@ class OverviewScreen extends StatelessWidget {
                             dashArray: const [6, 16],
                             borderColor: Colors.blue,
                             opacity: 0.5,
-                            text:
-                                '${model.targetWeight} ${model.weightUnit.shortName}',
+                            text: '${model.targetWeight} ${model.weightUnit.shortName}',
                             verticalTextAlignment:
-                                model.maximumRecentWeight != null &&
-                                        model.targetWeight >
-                                            model.maximumRecentWeight! + 1
+                                model.maximumRecentWeight != null && model.targetWeight >= model.maximumRecentWeight!
                                     ? TextAnchor.start
                                     : TextAnchor.end,
                             verticalTextPadding:
-                                model.maximumRecentWeight != null &&
-                                        model.targetWeight >
-                                            model.maximumRecentWeight! + 1
+                                model.maximumRecentWeight != null && model.targetWeight >= model.maximumRecentWeight!
                                     ? "-4px"
                                     : "8px",
                             horizontalTextAlignment: TextAnchor.start,

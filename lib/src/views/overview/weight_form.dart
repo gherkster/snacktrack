@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
-import 'package:snacktrack/src/extensions.dart';
+import 'package:snacktrack/src/extensions/datetime.dart';
+import 'package:snacktrack/src/extensions/num.dart';
 import 'package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart';
 
 class WeightForm extends StatefulWidget {
-  const WeightForm({super.key});
+  const WeightForm({super.key, required this.currentWeight});
+
+  final double currentWeight;
 
   @override
   State<WeightForm> createState() => _WeightFormState();
@@ -16,8 +20,10 @@ class _WeightFormState extends State<WeightForm> {
 
   var date = DateTime.now().date;
   var time = TimeOfDay.now();
-  // TODO: Prepopulate the latest weight to set an accurate default
-  var weight = 70.0;
+  late double initialWeight = widget.currentWeight;
+
+  late int weightIntegerSegment = initialWeight.integer;
+  late int weightFractionSegment = initialWeight.fraction;
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +47,7 @@ class _WeightFormState extends State<WeightForm> {
                             var selectedDate = await showDatePicker(
                               context: context,
                               initialDate: date,
-                              firstDate: model.today
-                                  .copyWith(year: model.today.year - 1),
+                              firstDate: model.today.copyWith(year: model.today.year - 1),
                               lastDate: model.today,
                             );
 
@@ -83,6 +88,16 @@ class _WeightFormState extends State<WeightForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Weight"),
+                    NumberPicker(
+                        minValue: model.weightMinSelectable,
+                        maxValue: model.weightMaxSelectable,
+                        value: weightIntegerSegment,
+                        onChanged: (value) => setState(() => weightIntegerSegment = value)),
+                    NumberPicker(
+                        minValue: 0,
+                        maxValue: 9,
+                        value: weightFractionSegment,
+                        onChanged: (value) => setState(() => weightFractionSegment = value)),
                     Text("kg"),
                   ],
                 ),
@@ -91,7 +106,9 @@ class _WeightFormState extends State<WeightForm> {
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState?.validate() == true) {
-                          model.addWeightRecord(weight, date.addTime(time));
+                          var combinedWeight = weightIntegerSegment + (weightFractionSegment.toDouble() / 10);
+                          model.addWeightRecord(combinedWeight, date.addTime(time));
+
                           Navigator.pop(context);
                         }
                       },

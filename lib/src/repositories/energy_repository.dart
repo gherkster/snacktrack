@@ -1,6 +1,6 @@
 import "package:flutter/foundation.dart";
 import "package:hive_flutter/hive_flutter.dart";
-import "package:snacktrack/src/extensions.dart";
+import "package:snacktrack/src/extensions/num.dart";
 import "package:snacktrack/src/models/energy.dart";
 import "package:snacktrack/src/repositories/interfaces/i_energy_repository.dart";
 

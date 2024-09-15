@@ -1,7 +1,7 @@
 import 'package:dart_date/dart_date.dart';
 import "package:flutter/foundation.dart";
 import "package:snacktrack/src/constants.dart" as constants;
-import "package:snacktrack/src/extensions.dart";
+import "package:snacktrack/src/extensions/iterable.dart";
 import "package:snacktrack/src/models/energy.dart";
 import "package:snacktrack/src/models/energy_unit.dart";
 import "package:snacktrack/src/models/weight.dart";
@@ -16,30 +16,22 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
   final IWeightRepository _weightRepository;
   final ISettingsRepository _settingsRepository;
 
-  OverviewViewModel(
-      this._energyRepository, this._weightRepository, this._settingsRepository);
+  OverviewViewModel(this._energyRepository, this._weightRepository, this._settingsRepository);
 
   @override
-  DateTime get today =>
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime get today => DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   @override
-  int get targetEnergy => _settingsRepository.energyUnit ==
-          EnergyUnit.kilojoules
+  int get targetEnergy => _settingsRepository.energyUnit == EnergyUnit.kilojoules
       ? _settingsRepository.energyTarget.toInt()
-      : (_settingsRepository.energyTarget * constants.energyConversionFactor)
-          .toInt();
+      : (_settingsRepository.energyTarget * constants.energyConversionFactor).toInt();
 
   @override
   int get currentEnergyTotal {
-    final Iterable<Energy> values = _energyRepository
-        .getAll()
-        .where((record) => record.time.isAfter(today));
+    final Iterable<Energy> values = _energyRepository.getAll().where((record) => record.time.isAfter(today));
     double total = values.fold(0, (sum, item) => sum + item.energy);
 
-    total = _settingsRepository.energyUnit == EnergyUnit.kilojoules
-        ? total
-        : total * constants.energyConversionFactor;
+    total = _settingsRepository.energyUnit == EnergyUnit.kilojoules ? total : total * constants.energyConversionFactor;
     return total.toInt();
   }
 
@@ -71,20 +63,15 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
   }
 
   @override
-  double? get maximumRecentWeight => recentDailyWeights.isNotEmpty
-      ? recentDailyWeights.map((w) => w.weight).max
-      : null;
+  double? get maximumRecentWeight => recentDailyWeights.isNotEmpty ? recentDailyWeights.map((w) => w.weight).max : null;
   @override
-  double? get minimumRecentWeight => recentDailyWeights.isNotEmpty
-      ? recentDailyWeights.map((w) => w.weight).min
-      : null;
+  double? get minimumRecentWeight => recentDailyWeights.isNotEmpty ? recentDailyWeights.map((w) => w.weight).min : null;
 
   @override
   List<Weight> getLatest(int days) {
     final List<Weight> weights = _weightRepository
         .getAllRecords()
-        .where((record) =>
-            record.time.isAfter(today.subtract(Duration(days: days))))
+        .where((record) => record.time.isAfter(today.subtract(Duration(days: days))))
         .toList();
     if (_settingsRepository.weightUnit == WeightUnit.pounds) {
       for (final Weight weightObj in weights) {
@@ -97,9 +84,7 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
   @override
   void addEnergyRecord(double amount, [DateTime? dateTime]) {
     _energyRepository.add(
-      _settingsRepository.energyUnit == EnergyUnit.kilojoules
-          ? amount
-          : amount / constants.energyConversionFactor,
+      _settingsRepository.energyUnit == EnergyUnit.kilojoules ? amount : amount / constants.energyConversionFactor,
       dateTime ?? DateTime.now(),
     );
     notifyListeners();
@@ -108,25 +93,21 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
   @override
   void addWeightRecord(double amount, [DateTime? dateTime]) {
     _weightRepository.add(
-      _settingsRepository.weightUnit == WeightUnit.kilograms
-          ? amount
-          : amount / constants.weightConversionFactor,
+      _settingsRepository.weightUnit == WeightUnit.kilograms ? amount : amount / constants.weightConversionFactor,
       dateTime ?? DateTime.now(),
     );
     notifyListeners();
   }
 
   @override
-  double get weightMinSelectable =>
-      weightUnit == WeightUnit.kilograms ? 40.0 : 80.0;
+  int get weightMinSelectable => weightUnit == WeightUnit.kilograms ? 40 : 80;
   @override
-  double get weightMaxSelectable =>
-      weightUnit == WeightUnit.kilograms ? 200.0 : 400.0;
+  int get weightMaxSelectable => weightUnit == WeightUnit.kilograms ? 200 : 400;
 
   @override
-  DateTime get minChartDate => today.addMonths(-2);
+  DateTime get minChartDate => today.addMonths(-2).addDays(-10);
   @override
-  DateTime get maxChartDate => today;
+  DateTime get maxChartDate => today.addDays(8);
 
   @override
   double get currentWeight => weightUnit == WeightUnit.kilograms
@@ -134,9 +115,8 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
       : _weightRepository.currentWeight * constants.weightConversionFactor;
   @override
   set currentWeight(double amount) {
-    _weightRepository.currentWeight = weightUnit == WeightUnit.kilograms
-        ? amount
-        : amount / constants.weightConversionFactor;
+    _weightRepository.currentWeight =
+        weightUnit == WeightUnit.kilograms ? amount : amount / constants.weightConversionFactor;
     notifyListeners();
   }
 
@@ -146,13 +126,11 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
       : _settingsRepository.weightTarget * constants.weightConversionFactor;
   @override
   set targetWeight(double target) {
-    _settingsRepository.weightTarget = weightUnit == WeightUnit.kilograms
-        ? target
-        : target / constants.weightConversionFactor;
+    _settingsRepository.weightTarget =
+        weightUnit == WeightUnit.kilograms ? target : target / constants.weightConversionFactor;
     notifyListeners();
   }
 
   @override
-  double get energyCurrentTotalClamped =>
-      (currentEnergyTotal.toDouble() / targetEnergy).clamp(0.0, 1.0).toDouble();
+  double get energyCurrentTotalClamped => (currentEnergyTotal.toDouble() / targetEnergy).clamp(0.0, 1.0).toDouble();
 }
