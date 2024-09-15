@@ -17,26 +17,6 @@ class NavigationViewModel extends ChangeNotifier
       this._energyRepository, this._weightRepository, this._settingsRepository);
 
   @override
-  void energyAddRecord(double amount) {
-    _energyRepository.add(
-        _settingsRepository.energyUnit == EnergyUnit.kilojoules
-            ? amount
-            : amount / constants.energyConversionFactor,
-        DateTime.now());
-    notifyListeners();
-  }
-
-  @override
-  void weightAddRecord(double amount) {
-    _weightRepository.add(
-        _settingsRepository.weightUnit == WeightUnit.kilograms
-            ? amount
-            : amount / constants.weightConversionFactor,
-        DateTime.now());
-    notifyListeners();
-  }
-
-  @override
   EnergyUnit get energyUnit => _settingsRepository.energyUnit;
   @override
   WeightUnit get weightUnit => _settingsRepository.weightUnit;

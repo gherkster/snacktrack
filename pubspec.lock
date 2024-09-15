@@ -57,6 +57,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  dart_date:
+    dependency: "direct main"
+    description:
+      name: dart_date
+      sha256: b107b5fed4aa2a0e5ccc636049a98833f5bdbb99e1d67b9b1a4ef80037482f01
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   decimal:
     dependency: "direct main"
     description:
@@ -408,6 +416,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.2"
+  timeago:
+    dependency: transitive
+    description:
+      name: timeago
+      sha256: "054cedf68706bb142839ba0ae6b135f6b68039f0b8301cbe8784ae653d5ff8de"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.0"
   typed_data:
     dependency: transitive
     description:

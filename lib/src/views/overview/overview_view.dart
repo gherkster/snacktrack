@@ -7,12 +7,16 @@ import "package:percent_indicator/circular_percent_indicator.dart";
 import "package:provider/provider.dart";
 import "package:snacktrack/src/models/weight.dart";
 import "package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart";
+import "package:snacktrack/src/viewmodels/interfaces/i_settings_viewmodel.dart";
+import "package:snacktrack/src/views/overview/energy_form.dart";
 import "package:snacktrack/src/views/overview/target_energy_form.dart";
 import "package:snacktrack/src/views/overview/weight_form.dart";
 import "package:syncfusion_flutter_charts/charts.dart";
 
 class OverviewScreen extends StatelessWidget {
-  const OverviewScreen({super.key});
+  OverviewScreen({super.key});
+
+  final _fabKey = GlobalKey<ExpandableFabState>();
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +24,7 @@ class OverviewScreen extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: ExpandableFab(
+        key: _fabKey,
         type: ExpandableFabType.up,
         childrenAnimation: ExpandableFabAnimation.none,
         overlayStyle: ExpandableFabOverlayStyle(
@@ -28,14 +33,16 @@ class OverviewScreen extends StatelessWidget {
         openButtonBuilder: DefaultFloatingActionButtonBuilder(
           child: const Icon(Icons.add),
         ),
-        distance: 90,
+        distance: 80,
         children: [
           Row(
             children: [
-              const Text("Add weight"),
+              const Text("Record Weight"),
               const SizedBox(width: 16),
               FloatingActionButton.small(
+                heroTag: null,
                 onPressed: () {
+                  closeFabMenu();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -43,10 +50,31 @@ class OverviewScreen extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Icon(Icons.monitor_weight_outlined),
+                child: const Icon(Icons.scale_rounded),
               )
             ],
           ),
+          Row(
+            children: [
+              Text(
+                'Record ${context.watch<ISettingsViewmodel>().energyUnit.longName}',
+              ),
+              const SizedBox(width: 16),
+              FloatingActionButton.small(
+                heroTag: null,
+                onPressed: () {
+                  closeFabMenu();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EnergyForm(),
+                    ),
+                  );
+                },
+                child: const Icon(Icons.restaurant_rounded),
+              ),
+            ],
+          )
         ],
       ),
       body: SingleChildScrollView(
@@ -167,17 +195,12 @@ class OverviewScreen extends StatelessWidget {
                     return SfCartesianChart(
                       primaryXAxis: DateTimeAxis(
                         majorGridLines: const MajorGridLines(width: 0),
-                        intervalType: DateTimeIntervalType.days,
+                        intervalType: DateTimeIntervalType.months,
                         interval: 1,
-                        // Add some visual padding to the last week of data
-                        minimum: DateTime(DateTime.now().year,
-                                DateTime.now().month, DateTime.now().day)
-                            .add(const Duration(days: -6, hours: -12)),
-                        maximum: DateTime(DateTime.now().year,
-                                DateTime.now().month, DateTime.now().day)
-                            .add(const Duration(hours: 12)),
+                        minimum: model.minChartDate,
+                        maximum: model.maxChartDate,
                         axisLabelFormatter: (axisLabelRenderArgs) {
-                          var text = DateFormat("EEE").format(
+                          var text = DateFormat("MMM").format(
                               DateTime.fromMillisecondsSinceEpoch(
                                   axisLabelRenderArgs.value.toInt()));
                           return ChartAxisLabel(text, null);
@@ -235,7 +258,7 @@ class OverviewScreen extends StatelessWidget {
                       ),
                       series: <CartesianSeries>[
                         SplineSeries<Weight, DateTime>(
-                          dataSource: model.recentWeights,
+                          dataSource: model.recentDailyWeights,
                           xValueMapper: (Weight weights, _) => weights.time,
                           yValueMapper: (Weight weights, _) => weights.weight,
                           emptyPointSettings: const EmptyPointSettings(
@@ -257,5 +280,11 @@ class OverviewScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void closeFabMenu() {
+    if (_fabKey.currentState != null && _fabKey.currentState!.isOpen) {
+      _fabKey.currentState!.toggle();
+    }
   }
 }

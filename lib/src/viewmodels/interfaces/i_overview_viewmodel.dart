@@ -4,6 +4,8 @@ import "package:snacktrack/src/models/weight.dart";
 import "package:snacktrack/src/models/weight_unit.dart";
 
 abstract class IOverviewViewModel extends ChangeNotifier {
+  DateTime get today;
+
   int get targetEnergy;
 
   double get currentWeight;
@@ -17,15 +19,20 @@ abstract class IOverviewViewModel extends ChangeNotifier {
   EnergyUnit get energyUnit;
   WeightUnit get weightUnit;
 
-  // Potentially just get the values, then use another function to generate the empty values for any Date
   List<Weight> getLatest(int days);
 
-  List<Weight> get recentWeights;
+  List<Weight> get recentDailyWeights;
   double? get maximumRecentWeight;
   double? get minimumRecentWeight;
 
+  void addEnergyRecord(double amount, DateTime dateTime);
+  void addWeightRecord(double amount, DateTime dateTime);
+
   double get weightMinSelectable;
   double get weightMaxSelectable;
+
+  DateTime get minChartDate;
+  DateTime get maxChartDate;
 
   double get energyCurrentTotalClamped;
 }
