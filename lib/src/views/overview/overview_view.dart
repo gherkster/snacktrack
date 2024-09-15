@@ -9,7 +9,6 @@ import "package:snacktrack/src/models/weight.dart";
 import "package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart";
 import "package:snacktrack/src/viewmodels/interfaces/i_settings_viewmodel.dart";
 import "package:snacktrack/src/views/overview/energy_form.dart";
-import "package:snacktrack/src/views/overview/target_energy_form.dart";
 import "package:snacktrack/src/views/overview/weight_form.dart";
 import "package:syncfusion_flutter_charts/charts.dart";
 

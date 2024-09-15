@@ -25,7 +25,7 @@ abstract class IOverviewViewModel extends ChangeNotifier {
   double? get maximumRecentWeight;
   double? get minimumRecentWeight;
 
-  void addEnergyRecord(double amount, DateTime dateTime);
+  void addEnergyRecord(int amount, DateTime dateTime);
   void addWeightRecord(double amount, DateTime dateTime);
 
   int get weightMinSelectable;

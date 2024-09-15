@@ -82,9 +82,11 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
   }
 
   @override
-  void addEnergyRecord(double amount, [DateTime? dateTime]) {
+  void addEnergyRecord(int amount, [DateTime? dateTime]) {
     _energyRepository.add(
-      _settingsRepository.energyUnit == EnergyUnit.kilojoules ? amount : amount / constants.energyConversionFactor,
+      _settingsRepository.energyUnit == EnergyUnit.kilojoules
+          ? amount.toDouble()
+          : amount / constants.energyConversionFactor,
       dateTime ?? DateTime.now(),
     );
     notifyListeners();

@@ -18,7 +18,7 @@ class WeightForm extends StatefulWidget {
 class _WeightFormState extends State<WeightForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final fieldPadding = const EdgeInsets.symmetric(horizontal: 16);
+  final fieldPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
 
   var date = DateTime.now().date;
   var time = TimeOfDay.now();
