@@ -123,7 +123,7 @@ class _EnergyFormState extends State<EnergyForm> {
                 const Divider(),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: ElevatedButton(
+                  child: FilledButton(
                     onPressed: () {
                       if (formKey.currentState?.validate() == true) {
                         var energy = int.tryParse(energyInputController.text);

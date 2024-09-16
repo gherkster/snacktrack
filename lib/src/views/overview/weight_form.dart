@@ -124,7 +124,7 @@ class _WeightFormState extends State<WeightForm> {
                 const Divider(),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: ElevatedButton(
+                  child: FilledButton(
                     onPressed: () {
                       if (_formKey.currentState?.validate() == true) {
                         model.addWeightRecord(weight, date.addTime(time));
