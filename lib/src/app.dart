@@ -25,11 +25,11 @@ class App extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<OverviewViewModel>(
-          create: (_) => OverviewViewModel(energyRepository, weightRepository, settingsRepository),
+        ChangeNotifierProvider<HealthService>(
+          create: (_) => HealthService(energyRepository, weightRepository, settingsRepository),
         ),
-        ChangeNotifierProvider<SettingsViewModel>(
-          create: (_) => SettingsViewModel(energyRepository, weightRepository, settingsRepository),
+        ChangeNotifierProvider<SettingsService>(
+          create: (_) => SettingsService(energyRepository, weightRepository, settingsRepository),
         ),
       ],
       child: ChangeNotifierProvider<ThemeNotifier>(

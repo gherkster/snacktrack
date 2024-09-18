@@ -10,7 +10,7 @@ class WeightOptionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsViewModel>(
+    return Consumer<SettingsService>(
       builder: (context, model, child) {
         return Scaffold(
           appBar: AppBar(),
@@ -31,7 +31,7 @@ class WeightOptionsScreen extends StatelessWidget {
                   title: const Text("Pounds"),
                   onTap: () {
                     model.weightUnit = WeightUnit.pounds;
-                    Provider.of<SettingsViewModel>(context, listen: false).energyUnit = EnergyUnit.calories;
+                    Provider.of<SettingsService>(context, listen: false).energyUnit = EnergyUnit.calories;
                   },
                   trailing: model.weightUnit == WeightUnit.pounds ? const Icon(Icons.check) : null,
                   contentPadding: EdgeInsets.zero,

@@ -31,7 +31,7 @@ class _EnergyFormState extends State<EnergyForm> {
       ),
       body: Form(
         key: formKey,
-        child: Consumer<OverviewViewModel>(
+        child: Consumer<HealthService>(
           builder: (context, model, child) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -9,7 +9,7 @@ class EnergyOptionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsViewModel>(
+    return Consumer<SettingsService>(
       builder: (context, model, child) {
         return Scaffold(
           appBar: AppBar(),
@@ -30,7 +30,7 @@ class EnergyOptionsScreen extends StatelessWidget {
                   title: const Text("Calories"),
                   onTap: () {
                     model.energyUnit = EnergyUnit.calories;
-                    Provider.of<SettingsViewModel>(context, listen: false).energyUnit = EnergyUnit.calories;
+                    Provider.of<SettingsService>(context, listen: false).energyUnit = EnergyUnit.calories;
                   },
                   trailing: model.energyUnit == EnergyUnit.calories ? const Icon(Icons.check) : null,
                   contentPadding: EdgeInsets.zero,

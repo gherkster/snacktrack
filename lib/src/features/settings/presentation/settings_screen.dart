@@ -17,7 +17,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsViewModel>(
+    return Consumer<SettingsService>(
       builder: (context, model, child) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),

@@ -5,12 +5,12 @@ import "package:snacktrack/src/features/health/data/energy_repository.dart";
 import "package:snacktrack/src/features/settings/data/settings_repository.dart";
 import "package:snacktrack/src/features/health/data/weight_repository.dart";
 
-class SettingsViewModel extends ChangeNotifier {
+class SettingsService extends ChangeNotifier {
   final EnergyRepository _energyRepository;
   final WeightRepository _weightRepository;
   final SettingsRepository _settingsRepository;
 
-  SettingsViewModel(this._energyRepository, this._weightRepository, this._settingsRepository);
+  SettingsService(this._energyRepository, this._weightRepository, this._settingsRepository);
 
   EnergyUnit get energyUnit => _settingsRepository.energyUnit;
   set energyUnit(EnergyUnit unit) {

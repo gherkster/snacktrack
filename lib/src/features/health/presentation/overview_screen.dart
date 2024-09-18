@@ -46,7 +46,7 @@ class OverviewScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        var currentWeight = context.read<OverviewViewModel>().currentWeight;
+                        var currentWeight = context.read<HealthService>().currentWeight;
                         return WeightForm(currentWeight: currentWeight);
                       },
                     ),
@@ -59,7 +59,7 @@ class OverviewScreen extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Record ${context.watch<SettingsViewModel>().energyUnit.longName}',
+                'Record ${context.watch<SettingsService>().energyUnit.longName}',
               ),
               const SizedBox(width: 16),
               FloatingActionButton.small(
@@ -85,7 +85,7 @@ class OverviewScreen extends StatelessWidget {
             const SizedBox(
               height: 24,
             ),
-            Consumer<OverviewViewModel>(
+            Consumer<HealthService>(
               builder: (context, overviewModel, child) {
                 return Ink(
                   width: 260,
@@ -138,7 +138,7 @@ class OverviewScreen extends StatelessWidget {
                 );
               },
             ),
-            Center(child: Consumer<OverviewViewModel>(
+            Center(child: Consumer<HealthService>(
               builder: (context, model, child) {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -189,7 +189,7 @@ class OverviewScreen extends StatelessWidget {
               child: Container(
                 height: 160,
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0, 12.0, 8.0),
-                child: Consumer<OverviewViewModel>(
+                child: Consumer<HealthService>(
                   builder: (context, model, child) {
                     return SfCartesianChart(
                       primaryXAxis: DateTimeAxis(

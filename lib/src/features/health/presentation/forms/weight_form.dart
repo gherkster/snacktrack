@@ -33,7 +33,7 @@ class _WeightFormState extends State<WeightForm> {
       ),
       body: Form(
         key: _formKey,
-        child: Consumer<OverviewViewModel>(
+        child: Consumer<HealthService>(
           builder: (context, model, child) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,

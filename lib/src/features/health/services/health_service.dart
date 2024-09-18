@@ -10,12 +10,12 @@ import "package:snacktrack/src/features/health/data/energy_repository.dart";
 import "package:snacktrack/src/features/settings/data/settings_repository.dart";
 import "package:snacktrack/src/features/health/data/weight_repository.dart";
 
-class OverviewViewModel extends ChangeNotifier {
+class HealthService extends ChangeNotifier {
   final EnergyRepository _energyRepository;
   final WeightRepository _weightRepository;
   final SettingsRepository _settingsRepository;
 
-  OverviewViewModel(this._energyRepository, this._weightRepository, this._settingsRepository);
+  HealthService(this._energyRepository, this._weightRepository, this._settingsRepository);
 
   DateTime get today => DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
