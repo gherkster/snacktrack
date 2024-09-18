@@ -1,11 +1,10 @@
 import "package:flutter/material.dart";
 import "package:hive_flutter/hive_flutter.dart";
-import "package:snacktrack/src/models/day.dart";
-import "package:snacktrack/src/models/energy.dart";
-import "package:snacktrack/src/models/energy_unit.dart";
-import "package:snacktrack/src/models/theme_setting.dart";
-import "package:snacktrack/src/models/weight.dart";
-import "package:snacktrack/src/models/weight_unit.dart";
+import "package:snacktrack/src/features/health/domain/energy.dart";
+import "package:snacktrack/src/features/health/domain/energy_unit.dart";
+import "package:snacktrack/src/features/settings/domain/theme_setting.dart";
+import "package:snacktrack/src/features/health/domain/weight.dart";
+import "package:snacktrack/src/features/health/domain/weight_unit.dart";
 
 import "src/app.dart";
 
@@ -17,7 +16,6 @@ Future<void> main() async {
   Hive.registerAdapter(EnergyUnitAdapter());
   Hive.registerAdapter(WeightUnitAdapter());
   Hive.registerAdapter(ThemeModeAdapter());
-  Hive.registerAdapter(DayAdapter());
 
   final energyBox = await Hive.openBox<Energy>("Energy");
   final weightBox = await Hive.openBox<Weight>("Weight");

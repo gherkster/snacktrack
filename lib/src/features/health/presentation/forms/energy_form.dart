@@ -1,29 +1,27 @@
 import 'package:dart_date/dart_date.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 import 'package:snacktrack/src/extensions/datetime.dart';
-import 'package:snacktrack/src/viewmodels/overview_viewmodel.dart';
+import 'package:snacktrack/src/features/health/services/health_service.dart';
 import 'package:snacktrack/src/widgets/big_heading.dart';
 
-class WeightForm extends StatefulWidget {
-  const WeightForm({super.key, required this.currentWeight});
-
-  final double currentWeight;
+class EnergyForm extends StatefulWidget {
+  const EnergyForm({super.key});
 
   @override
-  State<WeightForm> createState() => _WeightFormState();
+  State<EnergyForm> createState() => _EnergyFormState();
 }
 
-class _WeightFormState extends State<WeightForm> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class _EnergyFormState extends State<EnergyForm> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final energyInputController = TextEditingController();
 
   final fieldPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
 
   var date = DateTime.now().date;
   var time = TimeOfDay.now();
-  late double weight = widget.currentWeight;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +30,7 @@ class _WeightFormState extends State<WeightForm> {
         forceMaterialTransparency: true,
       ),
       body: Form(
-        key: _formKey,
+        key: formKey,
         child: Consumer<OverviewViewModel>(
           builder: (context, model, child) {
             return Column(
@@ -40,7 +38,7 @@ class _WeightFormState extends State<WeightForm> {
               children: [
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: BigHeading(title: "Add weight"),
+                  child: BigHeading(title: "Add energy"),
                 ),
                 const Divider(),
                 Padding(
@@ -104,20 +102,21 @@ class _WeightFormState extends State<WeightForm> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("Weight"),
-                      Stack(
-                        alignment: Alignment.center,
+                      const Text("Energy"),
+                      Row(
                         children: [
-                          DecimalNumberPicker(
-                            minValue: model.weightMinSelectable,
-                            maxValue: model.weightMaxSelectable,
-                            value: weight,
-                            onChanged: (value) => setState(() => weight = value),
-                            itemWidth: 64,
+                          SizedBox(
+                            width: 72,
+                            child: TextFormField(
+                              controller: energyInputController,
+                              autofocus: true,
+                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                              keyboardType: TextInputType.number,
+                            ),
                           ),
+                          Text(model.energyUnit.shortName),
                         ],
                       ),
-                      Text(model.weightUnit.shortName),
                     ],
                   ),
                 ),
@@ -127,15 +126,20 @@ class _WeightFormState extends State<WeightForm> {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: FilledButton(
                       onPressed: () {
-                        if (_formKey.currentState?.validate() == true) {
-                          model.addWeightRecord(weight, date.addTime(time));
+                        if (formKey.currentState?.validate() == true) {
+                          var energy = int.tryParse(energyInputController.text);
+                          // Energy should always be valid as the keyboard filter only allows for integer input
+                          // However we should still avoid storing empty values
+                          if (energy != null && energy > 0) {
+                            model.addEnergyRecord(energy, date.addTime(time));
+                          }
 
                           Navigator.pop(context);
                         }
                       },
                       child: Padding(
                         padding: fieldPadding,
-                        child: const Text("Add weight"),
+                        child: const Text("Add energy"),
                       ),
                     ),
                   ),

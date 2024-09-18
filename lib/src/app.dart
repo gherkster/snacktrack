@@ -2,13 +2,13 @@ import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 import "package:hive/hive.dart";
 import "package:provider/provider.dart";
-import "package:snacktrack/src/repositories/settings_repository.dart";
-import "package:snacktrack/src/viewmodels/overview_viewmodel.dart";
-import "package:snacktrack/src/viewmodels/settings_viewmodel.dart";
+import "package:snacktrack/src/features/settings/data/settings_repository.dart";
+import "package:snacktrack/src/features/health/services/health_service.dart";
+import "package:snacktrack/src/features/settings/services/settings_service.dart";
 
-import "repositories/energy_repository.dart";
-import "repositories/weight_repository.dart";
-import "views/navigation.dart";
+import "features/health/data/energy_repository.dart";
+import "features/health/data/weight_repository.dart";
+import "routing/navigation.dart";
 
 class App extends StatelessWidget {
   final Box energyBox;

@@ -1,8 +1,7 @@
 import "package:flutter/material.dart";
 
-import "history/history_view.dart";
-import "overview/overview_view.dart";
-import "settings/settings_view.dart";
+import "../features/health/presentation/overview_screen.dart";
+import "../features/settings/presentation/settings_screen.dart";
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
@@ -15,8 +14,7 @@ class _NavBarState extends State<NavBar> {
   int _selectedTabIndex = 0;
   final List<Widget> _availableTabs = [
     OverviewScreen(),
-    HistoryScreen(),
-    SettingsScreen()
+    const SettingsScreen(),
   ];
 
   @override
@@ -28,10 +26,6 @@ class _NavBarState extends State<NavBar> {
           NavigationDestination(
             icon: Icon(Icons.home),
             label: "Overview",
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.event_note),
-            label: "History",
           ),
           NavigationDestination(
             icon: Icon(Icons.settings),

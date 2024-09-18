@@ -5,11 +5,11 @@ import "package:flutter_expandable_fab/flutter_expandable_fab.dart";
 import "package:intl/intl.dart";
 import "package:percent_indicator/circular_percent_indicator.dart";
 import "package:provider/provider.dart";
-import "package:snacktrack/src/models/weight.dart";
-import "package:snacktrack/src/viewmodels/overview_viewmodel.dart";
-import "package:snacktrack/src/viewmodels/settings_viewmodel.dart";
-import "package:snacktrack/src/views/overview/energy_form.dart";
-import "package:snacktrack/src/views/overview/weight_form.dart";
+import "package:snacktrack/src/features/health/domain/weight.dart";
+import "package:snacktrack/src/features/health/services/health_service.dart";
+import "package:snacktrack/src/features/settings/services/settings_service.dart";
+import "package:snacktrack/src/features/health/presentation/forms/energy_form.dart";
+import "package:snacktrack/src/features/health/presentation/forms/weight_form.dart";
 import "package:syncfusion_flutter_charts/charts.dart";
 
 class OverviewScreen extends StatelessWidget {

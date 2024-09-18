@@ -1,7 +1,7 @@
 import "package:flutter/foundation.dart";
 import "package:hive_flutter/hive_flutter.dart";
 import "package:snacktrack/src/extensions/num.dart";
-import "package:snacktrack/src/models/weight.dart";
+import "package:snacktrack/src/features/health/domain/weight.dart";
 
 class WeightRepository {
   final Box _box;

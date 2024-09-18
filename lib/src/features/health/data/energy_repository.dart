@@ -1,7 +1,7 @@
 import "package:flutter/foundation.dart";
 import "package:hive_flutter/hive_flutter.dart";
 import "package:snacktrack/src/extensions/num.dart";
-import "package:snacktrack/src/models/energy.dart";
+import "package:snacktrack/src/features/health/domain/energy.dart";
 
 class EnergyRepository {
   final Box _box;

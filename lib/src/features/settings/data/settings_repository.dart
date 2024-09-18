@@ -2,9 +2,8 @@ import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:hive_flutter/hive_flutter.dart";
 import "package:snacktrack/src/extensions/num.dart";
-import "package:snacktrack/src/models/day.dart";
-import "package:snacktrack/src/models/energy_unit.dart";
-import "package:snacktrack/src/models/weight_unit.dart";
+import "package:snacktrack/src/features/health/domain/energy_unit.dart";
+import "package:snacktrack/src/features/health/domain/weight_unit.dart";
 
 class SettingsRepository {
   final Box _box;
@@ -27,9 +26,6 @@ class SettingsRepository {
 
   ThemeMode get themeMode => _box.get("themeMode") as ThemeMode? ?? ThemeMode.system;
   set themeMode(ThemeMode mode) => _box.put("themeMode", mode);
-
-  Day get weekStart => _box.get("weekStart") as Day? ?? Day.monday;
-  set weekStart(Day day) => _box.put("weekStart", day);
 
   void deleteAll() => _box.clear();
 }

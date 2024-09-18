@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
-import "package:snacktrack/src/models/energy_unit.dart";
-import "package:snacktrack/src/models/weight_unit.dart";
-import "package:snacktrack/src/viewmodels/settings_viewmodel.dart";
+import "package:snacktrack/src/features/health/domain/energy_unit.dart";
+import "package:snacktrack/src/features/health/domain/weight_unit.dart";
+import "package:snacktrack/src/features/settings/services/settings_service.dart";
 import "package:snacktrack/src/widgets/big_heading.dart";
 
 class WeightOptionsScreen extends StatelessWidget {

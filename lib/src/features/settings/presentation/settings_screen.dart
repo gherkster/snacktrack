@@ -1,13 +1,13 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
-import "package:snacktrack/src/models/energy_unit.dart";
-import "package:snacktrack/src/models/weight_unit.dart";
-import "package:snacktrack/src/viewmodels/settings_viewmodel.dart";
+import "package:snacktrack/src/features/health/domain/energy_unit.dart";
+import "package:snacktrack/src/features/health/domain/weight_unit.dart";
+import "package:snacktrack/src/features/settings/services/settings_service.dart";
 import "package:snacktrack/src/widgets/big_heading.dart";
 
-import "options/devicetheme_options_screen.dart";
-import "options/energy_options_screen.dart";
-import "options/weight_options_screen.dart";
+import "options/theme_options.dart";
+import "options/energy_unit_options.dart";
+import "options/weight_unit_options.dart";
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});

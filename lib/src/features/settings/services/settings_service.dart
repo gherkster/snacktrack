@@ -1,10 +1,9 @@
 import "package:flutter/material.dart";
-import "package:snacktrack/src/models/day.dart";
-import "package:snacktrack/src/models/energy_unit.dart";
-import "package:snacktrack/src/models/weight_unit.dart";
-import "package:snacktrack/src/repositories/energy_repository.dart";
-import "package:snacktrack/src/repositories/settings_repository.dart";
-import "package:snacktrack/src/repositories/weight_repository.dart";
+import "package:snacktrack/src/features/health/domain/energy_unit.dart";
+import "package:snacktrack/src/features/health/domain/weight_unit.dart";
+import "package:snacktrack/src/features/health/data/energy_repository.dart";
+import "package:snacktrack/src/features/settings/data/settings_repository.dart";
+import "package:snacktrack/src/features/health/data/weight_repository.dart";
 
 class SettingsViewModel extends ChangeNotifier {
   final EnergyRepository _energyRepository;
@@ -38,12 +37,6 @@ class SettingsViewModel extends ChangeNotifier {
   }
 
   ThemeMode get themeMode => _settingsRepository.themeMode;
-
-  Day get weekStart => _settingsRepository.weekStart;
-  set weekStart(Day day) {
-    _settingsRepository.weekStart = day;
-    notifyListeners();
-  }
 
   void deleteDeviceData() {
     _energyRepository.deleteAll();
