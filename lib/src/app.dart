@@ -59,7 +59,7 @@ class App extends StatelessWidget {
                 ),
               ),
             ),
-            //darkTheme: ThemeData.dark(),
+            darkTheme: ThemeData.dark(),
             themeMode: Provider.of<ThemeNotifier>(context).themeMode,
             debugShowCheckedModeBanner: false,
           ),
