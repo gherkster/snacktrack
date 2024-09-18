@@ -19,6 +19,9 @@ class OverviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final healthService = context.watch<HealthService>();
+    final settingsService = context.watch<SettingsService>();
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: ExpandableFab.location,
@@ -85,99 +88,93 @@ class OverviewScreen extends StatelessWidget {
             const SizedBox(
               height: 24,
             ),
-            Consumer<HealthService>(
-              builder: (context, overviewModel, child) {
-                return Ink(
-                  width: 260,
-                  height: 260,
-                  child: InkWell(
-                    onTap: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const EnergyForm()),
+            Ink(
+              width: 260,
+              height: 260,
+              child: InkWell(
+                onTap: () => {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const EnergyForm()),
+                  ),
+                },
+                borderRadius: BorderRadius.circular(400),
+                radius: 300,
+                child: CircularPercentIndicator(
+                  radius: 100.0,
+                  lineWidth: 12.0,
+                  percent: healthService.energyCurrentTotalClamped <= 0.005
+                      ? 0.005
+                      : healthService.energyCurrentTotalClamped,
+                  backgroundColor: const Color.fromARGB(94, 148, 197, 214),
+                  progressColor: healthService.currentEnergyTotal > settingsService.targetEnergy
+                      ? Colors.red
+                      : const Color.fromRGBO(70, 100, 159, 1),
+                  animation: true,
+                  animateFromLastPercent: true,
+                  circularStrokeCap: CircularStrokeCap.round,
+                  center: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(healthService.currentEnergyTotal.toString(),
+                          style: const TextStyle(
+                            fontSize: 44,
+                            fontWeight: FontWeight.w700,
+                            height: 1.1,
+                            color: Color.fromRGBO(70, 100, 159, 1),
+                          )),
+                      Text(
+                        settingsService.energyUnit.longName,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          height: 1.1,
+                          color: Color.fromRGBO(70, 100, 159, 1),
+                        ),
                       ),
-                    },
-                    borderRadius: BorderRadius.circular(400),
-                    radius: 300,
-                    child: CircularPercentIndicator(
-                      radius: 100.0,
-                      lineWidth: 12.0,
-                      percent: overviewModel.energyCurrentTotalClamped <= 0.005
-                          ? 0.005
-                          : overviewModel.energyCurrentTotalClamped,
-                      backgroundColor: const Color.fromARGB(94, 148, 197, 214),
-                      progressColor: overviewModel.currentEnergyTotal > overviewModel.targetEnergy
-                          ? Colors.red
-                          : const Color.fromRGBO(70, 100, 159, 1),
-                      animation: true,
-                      animateFromLastPercent: true,
-                      circularStrokeCap: CircularStrokeCap.round,
-                      center: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(overviewModel.currentEnergyTotal.toString(),
-                              style: const TextStyle(
-                                fontSize: 44,
-                                fontWeight: FontWeight.w700,
-                                height: 1.1,
-                                color: Color.fromRGBO(70, 100, 159, 1),
-                              )),
-                          Text(
-                            overviewModel.energyUnit.longName,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              height: 1.1,
-                              color: Color.fromRGBO(70, 100, 159, 1),
-                            ),
-                          ),
-                        ],
-                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {},
+                    child: Column(
+                      children: [
+                        Text(
+                          '${settingsService.targetEnergy}',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        Text(
+                          'Target ${settingsService.energyUnit.shortName}',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
                     ),
                   ),
-                );
-              },
+                  const SizedBox(width: 20),
+                  TextButton(
+                    onPressed: () {},
+                    child: Column(
+                      children: [
+                        Text(
+                          '${settingsService.targetWeight}',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        Text(
+                          'Target ${settingsService.weightUnit.shortName}',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Center(child: Consumer<HealthService>(
-              builder: (context, model, child) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: () {},
-                      child: Column(
-                        children: [
-                          Text(
-                            '${model.targetEnergy}',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          Text(
-                            'Target ${model.energyUnit.shortName}',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    TextButton(
-                      onPressed: () {},
-                      child: Column(
-                        children: [
-                          Text(
-                            '${model.targetWeight}',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          Text(
-                            'Target ${model.weightUnit.shortName}',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
-            )),
             const SizedBox(
               height: 12,
             ),
@@ -189,78 +186,76 @@ class OverviewScreen extends StatelessWidget {
               child: Container(
                 height: 160,
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0, 12.0, 8.0),
-                child: Consumer<HealthService>(
-                  builder: (context, model, child) {
-                    return SfCartesianChart(
-                      primaryXAxis: DateTimeAxis(
-                        majorGridLines: const MajorGridLines(width: 0),
-                        intervalType: DateTimeIntervalType.months,
-                        //interval: 1,
-                        rangePadding: ChartRangePadding.auto,
-                        minimum: model.minChartDate,
-                        maximum: model.maxChartDate,
-                        axisLabelFormatter: (axisLabelRenderArgs) {
-                          var text = DateFormat("MMM")
-                              .format(DateTime.fromMillisecondsSinceEpoch(axisLabelRenderArgs.value.toInt()));
-                          return ChartAxisLabel(text, null);
-                        },
+                child: SfCartesianChart(
+                  primaryXAxis: DateTimeAxis(
+                    majorGridLines: const MajorGridLines(width: 0),
+                    intervalType: DateTimeIntervalType.months,
+                    //interval: 1,
+                    rangePadding: ChartRangePadding.auto,
+                    minimum: healthService.minChartDate,
+                    maximum: healthService.maxChartDate,
+                    axisLabelFormatter: (axisLabelRenderArgs) {
+                      var text = DateFormat("MMM")
+                          .format(DateTime.fromMillisecondsSinceEpoch(axisLabelRenderArgs.value.toInt()));
+                      return ChartAxisLabel(text, null);
+                    },
+                  ),
+                  primaryYAxis: NumericAxis(
+                    isVisible: true,
+                    maximum: max(settingsService.targetWeight,
+                            healthService.maximumRecentWeight ?? settingsService.targetWeight) +
+                        2,
+                    majorGridLines: const MajorGridLines(color: Colors.transparent),
+                    majorTickLines: const MajorTickLines(color: Colors.transparent),
+                    labelPosition: ChartDataLabelPosition.inside,
+                    labelStyle: const TextStyle(color: Colors.transparent),
+                    plotBands: [
+                      PlotBand(
+                        start: settingsService.targetWeight,
+                        end: settingsService.targetWeight,
+                        shouldRenderAboveSeries: true,
+                        dashArray: const [6, 16],
+                        borderColor: Colors.blue,
+                        opacity: 0.5,
+                        text: '${settingsService.targetWeight} ${settingsService.weightUnit.shortName}',
+                        verticalTextAlignment: healthService.maximumRecentWeight != null &&
+                                settingsService.targetWeight >= healthService.maximumRecentWeight!
+                            ? TextAnchor.start
+                            : TextAnchor.end,
+                        verticalTextPadding: healthService.maximumRecentWeight != null &&
+                                settingsService.targetWeight >= healthService.maximumRecentWeight!
+                            ? "-4px"
+                            : "8px",
+                        horizontalTextAlignment: TextAnchor.start,
+                        horizontalTextPadding: "8px",
                       ),
-                      primaryYAxis: NumericAxis(
+                    ],
+                    //minorTicksPerInterval: 1,
+                  ),
+                  // Both 2nd digit of min and max (ie min 40<-, max 80<-) need to be 5 or 0 if setting manually, can't be different
+                  tooltipBehavior: TooltipBehavior(
+                    enable: true,
+                    header: "",
+                    canShowMarker: false,
+                    animationDuration: 0,
+                    elevation: 0,
+                    format: "point.y ${settingsService.weightUnit.shortName}",
+                  ),
+                  series: <CartesianSeries>[
+                    SplineSeries<Weight, DateTime>(
+                      dataSource: healthService.recentDailyWeights,
+                      xValueMapper: (Weight weights, _) => weights.time,
+                      yValueMapper: (Weight weights, _) => weights.weight,
+                      emptyPointSettings: const EmptyPointSettings(
+                        mode: EmptyPointMode.average,
+                      ),
+                      color: Colors.blue,
+                      splineType: SplineType.monotonic,
+                      markerSettings: const MarkerSettings(
                         isVisible: true,
-                        maximum: max(model.targetWeight, model.maximumRecentWeight ?? model.targetWeight) + 2,
-                        majorGridLines: const MajorGridLines(color: Colors.transparent),
-                        majorTickLines: const MajorTickLines(color: Colors.transparent),
-                        labelPosition: ChartDataLabelPosition.inside,
-                        labelStyle: const TextStyle(color: Colors.transparent),
-                        plotBands: [
-                          PlotBand(
-                            start: model.targetWeight,
-                            end: model.targetWeight,
-                            shouldRenderAboveSeries: true,
-                            dashArray: const [6, 16],
-                            borderColor: Colors.blue,
-                            opacity: 0.5,
-                            text: '${model.targetWeight} ${model.weightUnit.shortName}',
-                            verticalTextAlignment:
-                                model.maximumRecentWeight != null && model.targetWeight >= model.maximumRecentWeight!
-                                    ? TextAnchor.start
-                                    : TextAnchor.end,
-                            verticalTextPadding:
-                                model.maximumRecentWeight != null && model.targetWeight >= model.maximumRecentWeight!
-                                    ? "-4px"
-                                    : "8px",
-                            horizontalTextAlignment: TextAnchor.start,
-                            horizontalTextPadding: "8px",
-                          ),
-                        ],
-                        //minorTicksPerInterval: 1,
                       ),
-                      // Both 2nd digit of min and max (ie min 40<-, max 80<-) need to be 5 or 0 if setting manually, can't be different
-                      tooltipBehavior: TooltipBehavior(
-                        enable: true,
-                        header: "",
-                        canShowMarker: false,
-                        animationDuration: 0,
-                        elevation: 0,
-                        format: "point.y ${model.weightUnit.shortName}",
-                      ),
-                      series: <CartesianSeries>[
-                        SplineSeries<Weight, DateTime>(
-                          dataSource: model.recentDailyWeights,
-                          xValueMapper: (Weight weights, _) => weights.time,
-                          yValueMapper: (Weight weights, _) => weights.weight,
-                          emptyPointSettings: const EmptyPointSettings(
-                            mode: EmptyPointMode.average,
-                          ),
-                          color: Colors.blue,
-                          splineType: SplineType.monotonic,
-                          markerSettings: const MarkerSettings(
-                            isVisible: true,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:snacktrack/src/constants.dart" as constants;
 import "package:snacktrack/src/features/health/domain/energy_unit.dart";
 import "package:snacktrack/src/features/health/domain/weight_unit.dart";
 import "package:snacktrack/src/features/health/data/energy_repository.dart";
@@ -24,15 +25,17 @@ class SettingsService extends ChangeNotifier {
     notifyListeners();
   }
 
-  double get energyTarget => _settingsRepository.energyTarget;
-  set energyTarget(double target) {
-    _settingsRepository.energyTarget = target;
-    notifyListeners();
-  }
+  int get targetEnergy => _settingsRepository.energyUnit == EnergyUnit.kilojoules
+      ? _settingsRepository.energyTarget.toInt()
+      : (_settingsRepository.energyTarget * constants.energyConversionFactor).toInt();
 
-  double get weightTarget => _settingsRepository.weightTarget;
-  set weightTarget(double target) {
-    _settingsRepository.weightTarget = target;
+  double get targetWeight => weightUnit == WeightUnit.kilograms
+      ? _settingsRepository.weightTarget
+      : _settingsRepository.weightTarget * constants.weightConversionFactor;
+
+  set targetWeight(double target) {
+    _settingsRepository.weightTarget =
+        weightUnit == WeightUnit.kilograms ? target : target / constants.weightConversionFactor;
     notifyListeners();
   }
 

@@ -1,6 +1,7 @@
 import 'package:dart_date/dart_date.dart';
 import "package:flutter/foundation.dart";
 import "package:snacktrack/src/constants.dart" as constants;
+import "package:snacktrack/src/extensions/datetime.dart";
 import "package:snacktrack/src/extensions/iterable.dart";
 import "package:snacktrack/src/features/health/domain/energy.dart";
 import "package:snacktrack/src/features/health/domain/energy_unit.dart";
@@ -17,23 +18,14 @@ class HealthService extends ChangeNotifier {
 
   HealthService(this._energyRepository, this._weightRepository, this._settingsRepository);
 
-  DateTime get today => DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-
-  int get targetEnergy => _settingsRepository.energyUnit == EnergyUnit.kilojoules
-      ? _settingsRepository.energyTarget.toInt()
-      : (_settingsRepository.energyTarget * constants.energyConversionFactor).toInt();
-
   int get currentEnergyTotal {
-    final Iterable<Energy> values = _energyRepository.getAll().where((record) => record.time.isAfter(today));
+    final Iterable<Energy> values =
+        _energyRepository.getAll().where((record) => record.time.isAfter(DateTime.now().date));
     double total = values.fold(0, (sum, item) => sum + item.energy);
 
     total = _settingsRepository.energyUnit == EnergyUnit.kilojoules ? total : total * constants.energyConversionFactor;
     return total.toInt();
   }
-
-  EnergyUnit get energyUnit => _settingsRepository.energyUnit;
-
-  WeightUnit get weightUnit => _settingsRepository.weightUnit;
 
   List<Weight> get recentDailyWeights {
     return getLatest(7)
@@ -49,7 +41,7 @@ class HealthService extends ChangeNotifier {
   List<Weight> getLatest(int days) {
     final List<Weight> weights = _weightRepository
         .getAllRecords()
-        .where((record) => record.time.isAfter(today.subtract(Duration(days: days))))
+        .where((record) => record.time.isAfter(DateTime.now().date.subtract(Duration(days: days))))
         .toList();
     if (_settingsRepository.weightUnit == WeightUnit.pounds) {
       for (final Weight weightObj in weights) {
@@ -77,31 +69,22 @@ class HealthService extends ChangeNotifier {
     notifyListeners();
   }
 
-  int get weightMinSelectable => weightUnit == WeightUnit.kilograms ? 40 : 80;
-  int get weightMaxSelectable => weightUnit == WeightUnit.kilograms ? 200 : 400;
+  int get weightMinSelectable => _settingsRepository.weightUnit == WeightUnit.kilograms ? 40 : 80;
+  int get weightMaxSelectable => _settingsRepository.weightUnit == WeightUnit.kilograms ? 200 : 400;
 
-  DateTime get minChartDate => today.addMonths(-2).addDays(-10);
-  DateTime get maxChartDate => today.addDays(8);
+  DateTime get minChartDate => DateTime.now().date.addMonths(-2).addDays(-10);
+  DateTime get maxChartDate => DateTime.now().date.addDays(8);
 
-  double get currentWeight => weightUnit == WeightUnit.kilograms
+  double get currentWeight => _settingsRepository.weightUnit == WeightUnit.kilograms
       ? _weightRepository.currentWeight
       : _weightRepository.currentWeight * constants.weightConversionFactor;
 
   set currentWeight(double amount) {
     _weightRepository.currentWeight =
-        weightUnit == WeightUnit.kilograms ? amount : amount / constants.weightConversionFactor;
+        _settingsRepository.weightUnit == WeightUnit.kilograms ? amount : amount / constants.weightConversionFactor;
     notifyListeners();
   }
 
-  double get targetWeight => weightUnit == WeightUnit.kilograms
-      ? _settingsRepository.weightTarget
-      : _settingsRepository.weightTarget * constants.weightConversionFactor;
-
-  set targetWeight(double target) {
-    _settingsRepository.weightTarget =
-        weightUnit == WeightUnit.kilograms ? target : target / constants.weightConversionFactor;
-    notifyListeners();
-  }
-
-  double get energyCurrentTotalClamped => (currentEnergyTotal.toDouble() / targetEnergy).clamp(0.0, 1.0).toDouble();
+  double get energyCurrentTotalClamped =>
+      (currentEnergyTotal.toDouble() / _settingsRepository.energyTarget).clamp(0.0, 1.0).toDouble();
 }
