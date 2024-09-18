@@ -6,8 +6,8 @@ import "package:intl/intl.dart";
 import "package:percent_indicator/circular_percent_indicator.dart";
 import "package:provider/provider.dart";
 import "package:snacktrack/src/models/weight.dart";
-import "package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart";
-import "package:snacktrack/src/viewmodels/interfaces/i_settings_viewmodel.dart";
+import "package:snacktrack/src/viewmodels/overview_viewmodel.dart";
+import "package:snacktrack/src/viewmodels/settings_viewmodel.dart";
 import "package:snacktrack/src/views/overview/energy_form.dart";
 import "package:snacktrack/src/views/overview/weight_form.dart";
 import "package:syncfusion_flutter_charts/charts.dart";
@@ -46,7 +46,7 @@ class OverviewScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        var currentWeight = context.read<IOverviewViewModel>().currentWeight;
+                        var currentWeight = context.read<OverviewViewModel>().currentWeight;
                         return WeightForm(currentWeight: currentWeight);
                       },
                     ),
@@ -59,7 +59,7 @@ class OverviewScreen extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Record ${context.watch<ISettingsViewmodel>().energyUnit.longName}',
+                'Record ${context.watch<SettingsViewModel>().energyUnit.longName}',
               ),
               const SizedBox(width: 16),
               FloatingActionButton.small(
@@ -85,7 +85,7 @@ class OverviewScreen extends StatelessWidget {
             const SizedBox(
               height: 24,
             ),
-            Consumer<IOverviewViewModel>(
+            Consumer<OverviewViewModel>(
               builder: (context, overviewModel, child) {
                 return Ink(
                   width: 260,
@@ -138,7 +138,7 @@ class OverviewScreen extends StatelessWidget {
                 );
               },
             ),
-            Center(child: Consumer<IOverviewViewModel>(
+            Center(child: Consumer<OverviewViewModel>(
               builder: (context, model, child) {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -189,7 +189,7 @@ class OverviewScreen extends StatelessWidget {
               child: Container(
                 height: 160,
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0, 12.0, 8.0),
-                child: Consumer<IOverviewViewModel>(
+                child: Consumer<OverviewViewModel>(
                   builder: (context, model, child) {
                     return SfCartesianChart(
                       primaryXAxis: DateTimeAxis(

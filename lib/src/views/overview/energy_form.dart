@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:snacktrack/src/extensions/datetime.dart';
-import 'package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart';
+import 'package:snacktrack/src/viewmodels/overview_viewmodel.dart';
 import 'package:snacktrack/src/widgets/big_heading.dart';
 
 class EnergyForm extends StatefulWidget {
@@ -31,7 +31,7 @@ class _EnergyFormState extends State<EnergyForm> {
       ),
       body: Form(
         key: formKey,
-        child: Consumer<IOverviewViewModel>(
+        child: Consumer<OverviewViewModel>(
           builder: (context, model, child) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,

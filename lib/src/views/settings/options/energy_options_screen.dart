@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "package:snacktrack/src/models/energy_unit.dart";
-import "package:snacktrack/src/viewmodels/interfaces/i_settings_viewmodel.dart";
+import "package:snacktrack/src/viewmodels/settings_viewmodel.dart";
 import "package:snacktrack/src/widgets/big_heading.dart";
 
 class EnergyOptionsScreen extends StatelessWidget {
@@ -9,7 +9,7 @@ class EnergyOptionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ISettingsViewmodel>(
+    return Consumer<SettingsViewModel>(
       builder: (context, model, child) {
         return Scaffold(
           appBar: AppBar(),
@@ -30,7 +30,7 @@ class EnergyOptionsScreen extends StatelessWidget {
                   title: const Text("Calories"),
                   onTap: () {
                     model.energyUnit = EnergyUnit.calories;
-                    Provider.of<ISettingsViewmodel>(context, listen: false).energyUnit = EnergyUnit.calories;
+                    Provider.of<SettingsViewModel>(context, listen: false).energyUnit = EnergyUnit.calories;
                   },
                   trailing: model.energyUnit == EnergyUnit.calories ? const Icon(Icons.check) : null,
                   contentPadding: EdgeInsets.zero,

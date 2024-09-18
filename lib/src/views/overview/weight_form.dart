@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 import 'package:snacktrack/src/extensions/datetime.dart';
-import 'package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart';
+import 'package:snacktrack/src/viewmodels/overview_viewmodel.dart';
 import 'package:snacktrack/src/widgets/big_heading.dart';
 
 class WeightForm extends StatefulWidget {
@@ -33,7 +33,7 @@ class _WeightFormState extends State<WeightForm> {
       ),
       body: Form(
         key: _formKey,
-        child: Consumer<IOverviewViewModel>(
+        child: Consumer<OverviewViewModel>(
           builder: (context, model, child) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,

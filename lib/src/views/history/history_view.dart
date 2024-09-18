@@ -1,7 +1,5 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
-import "package:snacktrack/src/viewmodels/interfaces/i_history_viewmodel.dart";
-//import "package:syncfusion_flutter_calendar/calendar.dart";
 
 class HistoryScreen extends StatefulWidget {
   @override
@@ -15,7 +13,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Consumer<IHistoryViewModel>(
+        Consumer(
           builder: (context, model, child) {
             return SizedBox(
               height: 400,

@@ -2,17 +2,12 @@ import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 import "package:hive/hive.dart";
 import "package:provider/provider.dart";
-import "package:snacktrack/src/repositories/interfaces/i_settings_repository.dart";
 import "package:snacktrack/src/repositories/settings_repository.dart";
-import "package:snacktrack/src/viewmodels/history_viewmodel.dart";
-import "package:snacktrack/src/viewmodels/interfaces/i_history_viewmodel.dart";
-import "package:snacktrack/src/viewmodels/interfaces/i_settings_viewmodel.dart";
 import "package:snacktrack/src/viewmodels/overview_viewmodel.dart";
 import "package:snacktrack/src/viewmodels/settings_viewmodel.dart";
 
 import "repositories/energy_repository.dart";
 import "repositories/weight_repository.dart";
-import "viewmodels/interfaces/i_overview_viewmodel.dart";
 import "views/navigation.dart";
 
 class App extends StatelessWidget {
@@ -30,13 +25,10 @@ class App extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<IOverviewViewModel>(
+        ChangeNotifierProvider<OverviewViewModel>(
           create: (_) => OverviewViewModel(energyRepository, weightRepository, settingsRepository),
         ),
-        ChangeNotifierProvider<IHistoryViewModel>(
-          create: (_) => HistoryViewModel(energyRepository, weightRepository, settingsRepository),
-        ),
-        ChangeNotifierProvider<ISettingsViewmodel>(
+        ChangeNotifierProvider<SettingsViewModel>(
           create: (_) => SettingsViewModel(energyRepository, weightRepository, settingsRepository),
         ),
       ],
@@ -70,7 +62,7 @@ class App extends StatelessWidget {
 }
 
 class ThemeNotifier extends ChangeNotifier {
-  final ISettingsRepository _settingsRepository;
+  final SettingsRepository _settingsRepository;
   ThemeNotifier(this._settingsRepository);
 
   ThemeMode get themeMode => _settingsRepository.themeMode;
