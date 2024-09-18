@@ -48,18 +48,6 @@ class OverviewViewModel extends ChangeNotifier implements IOverviewViewModel {
           (w) => Weight(w.weight, w.time),
         )
         .toList();
-    // return [
-    //   Weight(80.6, today.add(const Duration(days: -9))),
-    //   Weight(80.5, today.add(const Duration(days: -8))),
-    //   Weight(80.5, today.add(const Duration(days: -7))),
-    //   Weight(80.4, today.add(const Duration(days: -6))),
-    //   Weight(80.35, today.add(const Duration(days: -5))),
-    //   Weight(80.3, today.add(const Duration(days: -4))),
-    //   Weight(80.4, today.add(const Duration(days: -3))),
-    //   //Weight(80.3, today.add(const Duration(days: -2))),
-    //   Weight(80.1, today.add(const Duration(days: -1))),
-    //   Weight(80, today)
-    // ];
   }
 
   @override

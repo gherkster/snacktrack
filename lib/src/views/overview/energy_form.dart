@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:snacktrack/src/extensions/datetime.dart';
 import 'package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart';
+import 'package:snacktrack/src/widgets/big_heading.dart';
 
 class EnergyForm extends StatefulWidget {
   const EnergyForm({super.key});
@@ -33,12 +34,11 @@ class _EnergyFormState extends State<EnergyForm> {
         child: Consumer<IOverviewViewModel>(
           builder: (context, model, child) {
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: fieldPadding.add(const EdgeInsets.only(bottom: 12)),
-                  child: Row(
-                    children: [Text("Add energy", style: Theme.of(context).textTheme.headlineMedium)],
-                  ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: BigHeading(title: "Add energy"),
                 ),
                 const Divider(),
                 Padding(
@@ -121,24 +121,26 @@ class _EnergyFormState extends State<EnergyForm> {
                   ),
                 ),
                 const Divider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: FilledButton(
-                    onPressed: () {
-                      if (formKey.currentState?.validate() == true) {
-                        var energy = int.tryParse(energyInputController.text);
-                        // Energy should always be valid as the keyboard filter only allows for integer input
-                        // However we should still avoid storing empty values
-                        if (energy != null && energy > 0) {
-                          model.addEnergyRecord(energy, date.addTime(time));
-                        }
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: FilledButton(
+                      onPressed: () {
+                        if (formKey.currentState?.validate() == true) {
+                          var energy = int.tryParse(energyInputController.text);
+                          // Energy should always be valid as the keyboard filter only allows for integer input
+                          // However we should still avoid storing empty values
+                          if (energy != null && energy > 0) {
+                            model.addEnergyRecord(energy, date.addTime(time));
+                          }
 
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: Padding(
-                      padding: fieldPadding,
-                      child: const Text("Add energy"),
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Padding(
+                        padding: fieldPadding,
+                        child: const Text("Add energy"),
+                      ),
                     ),
                   ),
                 ),

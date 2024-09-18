@@ -5,6 +5,7 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 import 'package:snacktrack/src/extensions/datetime.dart';
 import 'package:snacktrack/src/viewmodels/interfaces/i_overview_viewmodel.dart';
+import 'package:snacktrack/src/widgets/big_heading.dart';
 
 class WeightForm extends StatefulWidget {
   const WeightForm({super.key, required this.currentWeight});
@@ -35,12 +36,11 @@ class _WeightFormState extends State<WeightForm> {
         child: Consumer<IOverviewViewModel>(
           builder: (context, model, child) {
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: fieldPadding.add(const EdgeInsets.only(bottom: 12)),
-                  child: Row(
-                    children: [Text("Add weight", style: Theme.of(context).textTheme.headlineMedium)],
-                  ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: BigHeading(title: "Add weight"),
                 ),
                 const Divider(),
                 Padding(
@@ -122,19 +122,21 @@ class _WeightFormState extends State<WeightForm> {
                   ),
                 ),
                 const Divider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: FilledButton(
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() == true) {
-                        model.addWeightRecord(weight, date.addTime(time));
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: FilledButton(
+                      onPressed: () {
+                        if (_formKey.currentState?.validate() == true) {
+                          model.addWeightRecord(weight, date.addTime(time));
 
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: Padding(
-                      padding: fieldPadding,
-                      child: const Text("Add weight"),
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Padding(
+                        padding: fieldPadding,
+                        child: const Text("Add weight"),
+                      ),
                     ),
                   ),
                 ),
