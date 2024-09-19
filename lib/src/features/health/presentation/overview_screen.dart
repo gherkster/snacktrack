@@ -1,10 +1,12 @@
 import "dart:math";
 
+import "package:dart_date/dart_date.dart";
 import "package:flutter/material.dart";
 import "package:flutter_expandable_fab/flutter_expandable_fab.dart";
 import "package:intl/intl.dart";
 import "package:percent_indicator/circular_percent_indicator.dart";
 import "package:provider/provider.dart";
+import "package:snacktrack/src/extensions/datetime.dart";
 import "package:snacktrack/src/features/health/domain/weight.dart";
 import "package:snacktrack/src/features/health/domain/weight_unit.dart";
 import "package:snacktrack/src/features/health/services/health_service.dart";
@@ -33,6 +35,7 @@ class OverviewScreen extends StatelessWidget {
         type: ExpandableFabType.up,
         childrenAnimation: ExpandableFabAnimation.none,
         overlayStyle: ExpandableFabOverlayStyle(
+          // TODO: Get from theme
           color: Colors.white.withOpacity(0.85),
         ),
         openButtonBuilder: DefaultFloatingActionButtonBuilder(
@@ -209,8 +212,8 @@ class OverviewScreen extends StatelessWidget {
                     intervalType: DateTimeIntervalType.months,
                     //interval: 1,
                     rangePadding: ChartRangePadding.auto,
-                    minimum: healthService.minChartDate,
-                    maximum: healthService.maxChartDate,
+                    minimum: DateTime.now().date.addMonths(-2).addDays(-10),
+                    maximum: DateTime.now().date.addDays(8),
                     axisLabelFormatter: (axisLabelRenderArgs) {
                       var text = DateFormat("MMM")
                           .format(DateTime.fromMillisecondsSinceEpoch(axisLabelRenderArgs.value.toInt()));

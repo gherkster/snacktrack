@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 import 'package:snacktrack/src/extensions/datetime.dart';
+import 'package:snacktrack/src/features/health/domain/weight_unit.dart';
 import 'package:snacktrack/src/features/health/services/health_service.dart';
 import 'package:snacktrack/src/features/settings/services/settings_service.dart';
 import 'package:snacktrack/src/widgets/big_heading.dart';
@@ -111,8 +112,8 @@ class _WeightFormState extends State<WeightForm> {
                     alignment: Alignment.center,
                     children: [
                       DecimalNumberPicker(
-                        minValue: healthService.weightMinSelectable,
-                        maxValue: healthService.weightMaxSelectable,
+                        minValue: settingsService.weightUnit == WeightUnit.kilograms ? 40 : 80,
+                        maxValue: settingsService.weightUnit == WeightUnit.kilograms ? 200 : 400,
                         value: weight,
                         onChanged: (value) => setState(() => weight = value),
                         itemWidth: 64,

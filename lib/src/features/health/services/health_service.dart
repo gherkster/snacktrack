@@ -1,11 +1,8 @@
-import 'package:dart_date/dart_date.dart';
 import "package:flutter/foundation.dart";
 import "package:snacktrack/src/extensions/datetime.dart";
 import "package:snacktrack/src/extensions/iterable.dart";
 import "package:snacktrack/src/features/health/domain/energy.dart";
-import "package:snacktrack/src/features/health/domain/energy_unit.dart";
 import "package:snacktrack/src/features/health/domain/weight.dart";
-import "package:snacktrack/src/features/health/domain/weight_unit.dart";
 import "package:snacktrack/src/features/health/data/energy_repository.dart";
 import "package:snacktrack/src/features/settings/data/settings_repository.dart";
 import "package:snacktrack/src/features/health/data/weight_repository.dart";
@@ -60,12 +57,6 @@ class HealthService extends ChangeNotifier {
     );
     notifyListeners();
   }
-
-  int get weightMinSelectable => _settingsRepository.weightUnit == WeightUnit.kilograms ? 40 : 80;
-  int get weightMaxSelectable => _settingsRepository.weightUnit == WeightUnit.kilograms ? 200 : 400;
-
-  DateTime get minChartDate => DateTime.now().date.addMonths(-2).addDays(-10);
-  DateTime get maxChartDate => DateTime.now().date.addDays(8);
 
   double? get currentWeight {
     final weight = _weightRepository.currentWeightKg;
