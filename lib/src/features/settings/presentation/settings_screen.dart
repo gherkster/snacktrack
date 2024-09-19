@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
+import "package:snacktrack/src/features/settings/presentation/options/delete_all_data_confirmation_options.dart";
 import "package:snacktrack/src/features/settings/presentation/options/energy_target_options.dart";
 import "package:snacktrack/src/features/settings/presentation/options/energy_unit_options.dart";
 import "package:snacktrack/src/features/settings/presentation/options/theme_options.dart";
@@ -101,8 +102,12 @@ class SettingsScreen extends StatelessWidget {
                 ListTile(
                   title: const Text("Delete all data"),
                   contentPadding: EdgeInsets.zero,
-                  // TODO: Add confirmation
-                  onTap: () => model.deleteDeviceData(),
+                  onTap: () => {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => const DeleteAllDataConfirmationOptions(),
+                    ),
+                  },
                 )
               ],
             ),
