@@ -8,6 +8,8 @@ import "package:provider/provider.dart";
 import "package:snacktrack/src/features/health/domain/weight.dart";
 import "package:snacktrack/src/features/health/domain/weight_unit.dart";
 import "package:snacktrack/src/features/health/services/health_service.dart";
+import "package:snacktrack/src/features/settings/presentation/options/energy_target_options.dart";
+import "package:snacktrack/src/features/settings/presentation/options/weight_target_options.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
 import "package:snacktrack/src/features/health/presentation/forms/energy_form.dart";
 import "package:snacktrack/src/features/health/presentation/forms/weight_form.dart";
@@ -119,13 +121,15 @@ class OverviewScreen extends StatelessWidget {
                   center: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(healthService.currentEnergyTotal.toString(),
-                          style: const TextStyle(
-                            fontSize: 44,
-                            fontWeight: FontWeight.w700,
-                            height: 1.1,
-                            color: Color.fromRGBO(70, 100, 159, 1),
-                          )),
+                      Text(
+                        healthService.currentEnergyTotal.toString(),
+                        style: const TextStyle(
+                          fontSize: 44,
+                          fontWeight: FontWeight.w700,
+                          height: 1.1,
+                          color: Color.fromRGBO(70, 100, 159, 1),
+                        ),
+                      ),
                       Text(
                         settingsService.energyUnit.longName,
                         style: const TextStyle(
@@ -145,7 +149,12 @@ class OverviewScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => const EnergyTargetOptions(),
+                      );
+                    },
                     child: Column(
                       children: [
                         Text(
@@ -161,7 +170,12 @@ class OverviewScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 20),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => const WeightTargetOptions(),
+                      );
+                    },
                     child: Column(
                       children: [
                         Text(

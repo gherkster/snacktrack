@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "package:snacktrack/src/app.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
-import "package:snacktrack/src/widgets/big_heading.dart";
 
 class DeviceThemeOptions extends StatelessWidget {
   const DeviceThemeOptions({super.key});
