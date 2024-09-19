@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
-import "package:snacktrack/src/constants.dart" as constants;
 import "package:snacktrack/src/features/health/domain/energy_unit.dart";
 import "package:snacktrack/src/features/health/domain/weight_unit.dart";
 import "package:snacktrack/src/features/health/data/energy_repository.dart";
 import "package:snacktrack/src/features/settings/data/settings_repository.dart";
 import "package:snacktrack/src/features/health/data/weight_repository.dart";
+import "package:snacktrack/src/utilities/unit_conversion.dart";
 
 class SettingsService extends ChangeNotifier {
   final EnergyRepository _energyRepository;
@@ -25,17 +25,12 @@ class SettingsService extends ChangeNotifier {
     notifyListeners();
   }
 
-  int get targetEnergy => _settingsRepository.energyUnit == EnergyUnit.kilojoules
-      ? _settingsRepository.energyTarget.toInt()
-      : (_settingsRepository.energyTarget * constants.energyConversionFactor).toInt();
+  int get targetEnergy => convertKilojoulesToPreferredUnits(_settingsRepository.targetDailyEnergyKj, energyUnit);
 
-  double get targetWeight => weightUnit == WeightUnit.kilograms
-      ? _settingsRepository.weightTarget
-      : _settingsRepository.weightTarget * constants.weightConversionFactor;
+  double get targetWeight => convertKilogramsToPreferredUnits(_settingsRepository.targetWeightKg, weightUnit);
 
   set targetWeight(double target) {
-    _settingsRepository.weightTarget =
-        weightUnit == WeightUnit.kilograms ? target : target / constants.weightConversionFactor;
+    _settingsRepository.targetWeightKg = convertWeightToKilograms(target, weightUnit);
     notifyListeners();
   }
 

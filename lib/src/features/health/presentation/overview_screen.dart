@@ -6,6 +6,7 @@ import "package:intl/intl.dart";
 import "package:percent_indicator/circular_percent_indicator.dart";
 import "package:provider/provider.dart";
 import "package:snacktrack/src/features/health/domain/weight.dart";
+import "package:snacktrack/src/features/health/domain/weight_unit.dart";
 import "package:snacktrack/src/features/health/services/health_service.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
 import "package:snacktrack/src/features/health/presentation/forms/energy_form.dart";
@@ -50,7 +51,9 @@ class OverviewScreen extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) {
                         var currentWeight = context.read<HealthService>().currentWeight;
-                        return WeightForm(currentWeight: currentWeight);
+                        return WeightForm(
+                          currentWeight: currentWeight ?? (settingsService.weightUnit == WeightUnit.pounds ? 150 : 70),
+                        );
                       },
                     ),
                   );

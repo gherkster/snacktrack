@@ -10,7 +10,7 @@ class EnergyRepository {
 
   ValueListenable<Box<dynamic>> get stream => _box.listenable();
 
-  void add(double amount, DateTime time) => _box.add(Energy(amount.roundToPrecision(2), time));
+  void addKj(double amount, DateTime time) => _box.add(Energy(amount.roundToPrecision(2), time));
 
   Iterable<Energy> getAll() => _box.values as Iterable<Energy>;
 

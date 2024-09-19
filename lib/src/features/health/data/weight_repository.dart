@@ -8,24 +8,18 @@ class WeightRepository {
 
   WeightRepository(this._box);
 
-  DateTime get _today => DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-
   ValueListenable<Box<dynamic>> get stream => _box.listenable();
 
-  void add(double amount, DateTime time) => _box.add(Weight(amount.roundToPrecision(2), time));
+  void addKg(double amount, DateTime time) => _box.add(Weight(amount.roundToPrecision(2), time));
 
-  void put(double amount, DateTime time) =>
-      _box.put(time.millisecondsSinceEpoch.toString(), Weight(amount.roundToPrecision(2), time));
+  double? get currentWeightKg => _getLatest();
 
-  double get currentWeight => _getLatest();
-  set currentWeight(double amount) => put(amount, _today);
+  Iterable<Weight> getAllKgRecords() => _box.values as Iterable<Weight>;
 
-  Iterable<Weight> getAllRecords() => _box.values as Iterable<Weight>;
-
-  double _getLatest() {
+  double? _getLatest() {
     final int lastIndex = _box.toMap().length - 1;
     if (lastIndex < 0) {
-      return 70.0;
+      return null;
     } else {
       final Weight latest = _box.values.toList()[lastIndex] as Weight;
       return latest.weight;
