@@ -26,6 +26,10 @@ class SettingsService extends ChangeNotifier {
   }
 
   int get targetEnergy => convertKilojoulesToPreferredUnits(_settingsRepository.targetDailyEnergyKj, energyUnit);
+  set targetEnergy(int target) {
+    _settingsRepository.targetDailyEnergyKj = convertEnergyToKilojoules(target, energyUnit);
+    notifyListeners();
+  }
 
   double get targetWeight => convertKilogramsToPreferredUnits(_settingsRepository.targetWeightKg, weightUnit);
 

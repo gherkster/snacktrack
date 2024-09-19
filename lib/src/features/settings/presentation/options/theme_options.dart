@@ -1,48 +1,47 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "package:snacktrack/src/app.dart";
+import "package:snacktrack/src/features/settings/services/settings_service.dart";
 import "package:snacktrack/src/widgets/big_heading.dart";
 
-class DeviceThemeOptionsScreen extends StatelessWidget {
-  const DeviceThemeOptionsScreen({super.key});
+class DeviceThemeOptions extends StatelessWidget {
+  const DeviceThemeOptions({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final settingsService = context.watch<SettingsService>();
     return Consumer<ThemeNotifier>(
-      builder: (context, model, child) {
-        return Scaffold(
-          appBar: AppBar(),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ListView(
-              children: [
-                const BigHeading(title: "Theme"),
-                ListTile(
-                  title: const Text("System theme"),
-                  onTap: () {
-                    model.themeMode = ThemeMode.system;
-                  },
-                  trailing: model.themeMode == ThemeMode.system ? const Icon(Icons.check) : null,
-                  contentPadding: EdgeInsets.zero,
-                ),
-                ListTile(
-                  title: const Text("Light theme"),
-                  onTap: () {
-                    model.themeMode = ThemeMode.light;
-                  },
-                  trailing: model.themeMode == ThemeMode.light ? const Icon(Icons.check) : null,
-                  contentPadding: EdgeInsets.zero,
-                ),
-                ListTile(
-                  title: const Text("Dark theme"),
-                  onTap: () {
-                    model.themeMode = ThemeMode.dark;
-                  },
-                  trailing: model.themeMode == ThemeMode.dark ? const Icon(Icons.check) : null,
-                  contentPadding: EdgeInsets.zero,
-                ),
-              ],
-            ),
+      builder: (context, themeService, child) {
+        return AlertDialog(
+          title: const Text("Theme"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text("System theme"),
+                onTap: () {
+                  themeService.themeMode = ThemeMode.system;
+                },
+                trailing: settingsService.themeMode == ThemeMode.system ? const Icon(Icons.check) : null,
+                contentPadding: EdgeInsets.zero,
+              ),
+              ListTile(
+                title: const Text("Light theme"),
+                onTap: () {
+                  themeService.themeMode = ThemeMode.light;
+                },
+                trailing: settingsService.themeMode == ThemeMode.light ? const Icon(Icons.check) : null,
+                contentPadding: EdgeInsets.zero,
+              ),
+              ListTile(
+                title: const Text("Dark theme"),
+                onTap: () {
+                  themeService.themeMode = ThemeMode.dark;
+                },
+                trailing: settingsService.themeMode == ThemeMode.dark ? const Icon(Icons.check) : null,
+                contentPadding: EdgeInsets.zero,
+              ),
+            ],
           ),
         );
       },
