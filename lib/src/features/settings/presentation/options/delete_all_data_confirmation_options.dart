@@ -29,9 +29,11 @@ class DeleteAllDataConfirmationOptions extends StatelessWidget {
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
               child: const Text('Delete'),
-              onPressed: () {
-                settingsService.deleteDeviceData();
-                Navigator.of(context).pop();
+              onPressed: () async {
+                await settingsService.deleteDeviceData();
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
               },
             ),
           ],

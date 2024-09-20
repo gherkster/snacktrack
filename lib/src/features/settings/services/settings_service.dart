@@ -40,10 +40,10 @@ class SettingsService extends ChangeNotifier {
 
   ThemeMode get themeMode => _settingsRepository.themeMode;
 
-  void deleteDeviceData() {
-    _energyRepository.deleteAll();
-    _weightRepository.deleteAll();
-    _settingsRepository.deleteAll();
+  Future<void> deleteDeviceData() async {
+    await _energyRepository.deleteAll();
+    await _weightRepository.deleteAll();
+    await _settingsRepository.deleteAll();
     notifyListeners();
   }
 }

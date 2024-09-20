@@ -14,5 +14,5 @@ class EnergyRepository {
 
   Iterable<Energy> getAll() => _box.values as Iterable<Energy>;
 
-  void deleteAll() => _box.clear();
+  Future<void> deleteAll() async => await _box.clear();
 }

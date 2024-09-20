@@ -26,5 +26,5 @@ class WeightRepository {
     }
   }
 
-  void deleteAll() => _box.clear();
+  Future<void> deleteAll() async => await _box.clear();
 }

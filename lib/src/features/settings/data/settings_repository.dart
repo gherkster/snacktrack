@@ -27,5 +27,5 @@ class SettingsRepository {
   ThemeMode get themeMode => _box.get("themeMode") as ThemeMode? ?? ThemeMode.system;
   set themeMode(ThemeMode mode) => _box.put("themeMode", mode);
 
-  void deleteAll() => _box.clear();
+  Future<void> deleteAll() async => await _box.clear();
 }
