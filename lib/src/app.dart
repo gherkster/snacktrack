@@ -32,42 +32,28 @@ class App extends StatelessWidget {
           create: (_) => SettingsService(energyRepository, weightRepository, settingsRepository),
         ),
       ],
-      child: ChangeNotifierProvider<ThemeNotifier>(
-        create: (context) => ThemeNotifier(settingsRepository),
-        child: Consumer<ThemeNotifier>(
-          builder: (context, provider, child) => MaterialApp(
-            home: const NavBar(),
-            theme: ThemeData(
-              fontFamily: GoogleFonts.openSans().fontFamily,
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.blueAccent,
-              ).copyWith(
-                surface: Colors.grey[50],
-              ),
-              textTheme: TextTheme(
-                titleLarge: TextStyle(
-                  color: Colors.blue[700],
-                  fontWeight: FontWeight.bold,
-                ),
+      child: Consumer<SettingsService>(
+        builder: (context, provider, child) => MaterialApp(
+          home: const NavBar(),
+          theme: ThemeData(
+            fontFamily: GoogleFonts.openSans().fontFamily,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blueAccent,
+            ).copyWith(
+              surface: Colors.grey[50],
+            ),
+            textTheme: TextTheme(
+              titleLarge: TextStyle(
+                color: Colors.blue[700],
+                fontWeight: FontWeight.bold,
               ),
             ),
-            darkTheme: ThemeData.dark(),
-            themeMode: Provider.of<ThemeNotifier>(context).themeMode,
-            debugShowCheckedModeBanner: false,
           ),
+          darkTheme: ThemeData.dark(),
+          themeMode: Provider.of<SettingsService>(context).themeMode,
+          debugShowCheckedModeBanner: false,
         ),
       ),
     );
-  }
-}
-
-class ThemeNotifier extends ChangeNotifier {
-  final SettingsRepository _settingsRepository;
-  ThemeNotifier(this._settingsRepository);
-
-  ThemeMode get themeMode => _settingsRepository.themeMode;
-  set themeMode(ThemeMode mode) {
-    _settingsRepository.themeMode = mode;
-    notifyListeners();
   }
 }

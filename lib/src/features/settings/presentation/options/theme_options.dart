@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
-import "package:snacktrack/src/app.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
 
 class DeviceThemeOptions extends StatelessWidget {
@@ -9,7 +8,7 @@ class DeviceThemeOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settingsService = context.watch<SettingsService>();
-    return Consumer<ThemeNotifier>(
+    return Consumer<SettingsService>(
       builder: (context, themeService, child) {
         return AlertDialog(
           title: const Text("Theme"),
