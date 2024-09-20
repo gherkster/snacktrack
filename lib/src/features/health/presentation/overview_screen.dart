@@ -238,14 +238,16 @@ class OverviewScreen extends StatelessWidget {
                         borderColor: Colors.blue,
                         opacity: 0.5,
                         text: '${settingsService.targetWeight} ${settingsService.weightUnit.shortName}',
+                        // Default to displaying under the line when there are no recent weights,
+                        // as the target line will be positioned at the top of the chart
                         verticalTextAlignment: healthService.maximumRecentWeight != null &&
-                                settingsService.targetWeight >= healthService.maximumRecentWeight!
-                            ? TextAnchor.start
-                            : TextAnchor.end,
+                                settingsService.targetWeight < healthService.maximumRecentWeight!
+                            ? TextAnchor.end
+                            : TextAnchor.start,
                         verticalTextPadding: healthService.maximumRecentWeight != null &&
-                                settingsService.targetWeight >= healthService.maximumRecentWeight!
-                            ? "-4px"
-                            : "8px",
+                                settingsService.targetWeight < healthService.maximumRecentWeight!
+                            ? "8px"
+                            : "-4px",
                         horizontalTextAlignment: TextAnchor.start,
                         horizontalTextPadding: "8px",
                       ),
