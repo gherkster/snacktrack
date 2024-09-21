@@ -1,31 +1,41 @@
-import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
-import "package:hive_flutter/hive_flutter.dart";
-import "package:snacktrack/src/extensions/num.dart";
+import "package:shared_preferences/shared_preferences.dart";
 import "package:snacktrack/src/features/health/domain/energy_unit.dart";
 import "package:snacktrack/src/features/health/domain/weight_unit.dart";
+import "package:snacktrack/src/utilities/constants.dart";
 
 class SettingsRepository {
-  final Box _box;
+  final SharedPreferencesWithCache _prefs;
 
-  SettingsRepository(this._box);
+  SettingsRepository(this._prefs);
 
-  ValueListenable<Box<dynamic>> get stream => _box.listenable();
+  EnergyUnit getEnergyUnit() {
+    final value = _prefs.getInt("energyUnit");
+    return value != null ? EnergyUnit.fromValue(value) ?? defaultEnergyUnit : defaultEnergyUnit;
+  }
 
-  EnergyUnit get energyUnit => _box.get("energyUnit") as EnergyUnit? ?? EnergyUnit.kilojoules;
-  set energyUnit(EnergyUnit unit) => _box.put("energyUnit", unit);
+  Future<void> setEnergyUnit(EnergyUnit unit) => _prefs.setInt("energyUnit", unit.value);
 
-  double get targetDailyEnergyKj => _box.get("energyTarget") as double? ?? 8500.0;
-  set targetDailyEnergyKj(double target) => _box.put("energyTarget", target.roundToPrecision(2));
+  double getTargetDailyEnergyKj() => _prefs.getDouble("energyTarget") ?? defaultEnergyTargetKj;
+  Future<void> setTargetDailyEnergyKj(double target) => _prefs.setDouble("energyTarget", target);
 
-  WeightUnit get weightUnit => _box.get("weightUnit") as WeightUnit? ?? WeightUnit.kilograms;
-  set weightUnit(WeightUnit unit) => _box.put("weightUnit", unit);
+  WeightUnit getWeightUnit() {
+    final value = _prefs.getInt("weightUnit");
+    return value != null ? WeightUnit.fromValue(value) ?? defaultWeightUnit : defaultWeightUnit;
+  }
 
-  double get targetWeightKg => _box.get("weightTarget") as double? ?? 70.0;
-  set targetWeightKg(double target) => _box.put("weightTarget", target.roundToPrecision(2));
+  Future<void> setWeightUnit(WeightUnit unit) => _prefs.setInt("weightUnit", unit.value);
 
-  ThemeMode get themeMode => _box.get("themeMode") as ThemeMode? ?? ThemeMode.system;
-  set themeMode(ThemeMode mode) => _box.put("themeMode", mode);
+  double getTargetWeightKg() => _prefs.getDouble("weightTarget") ?? defaultWeightTargetKg;
 
-  Future<void> deleteAll() async => await _box.clear();
+  Future<void> setTargetWeightKg(double target) => _prefs.setDouble("weightTarget", target);
+
+  ThemeMode getThemeMode() {
+    final value = _prefs.getInt("themeMode");
+    return value != null ? ThemeMode.values.where((v) => v.index == value).firstOrNull ?? defaultTheme : defaultTheme;
+  }
+
+  Future<void> setThemeMode(ThemeMode mode) => _prefs.setInt("themeMode", mode.index);
+
+  Future<void> deleteAll() async => await _prefs.clear();
 }

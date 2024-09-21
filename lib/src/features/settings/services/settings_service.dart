@@ -13,35 +13,32 @@ class SettingsService extends ChangeNotifier {
 
   SettingsService(this._energyRepository, this._weightRepository, this._settingsRepository);
 
-  EnergyUnit get energyUnit => _settingsRepository.energyUnit;
+  EnergyUnit get energyUnit => _settingsRepository.getEnergyUnit();
   set energyUnit(EnergyUnit unit) {
-    _settingsRepository.energyUnit = unit;
-    notifyListeners();
+    _settingsRepository.setEnergyUnit(unit).then((_) => notifyListeners());
   }
 
-  WeightUnit get weightUnit => _settingsRepository.weightUnit;
+  WeightUnit get weightUnit => _settingsRepository.getWeightUnit();
   set weightUnit(WeightUnit unit) {
-    _settingsRepository.weightUnit = unit;
-    notifyListeners();
+    _settingsRepository.setWeightUnit(unit).then((_) => notifyListeners());
   }
 
-  int get targetEnergy => convertKilojoulesToPreferredUnits(_settingsRepository.targetDailyEnergyKj, energyUnit);
+  int get targetEnergy => convertKilojoulesToPreferredUnits(_settingsRepository.getTargetDailyEnergyKj(), energyUnit);
   set targetEnergy(int target) {
-    _settingsRepository.targetDailyEnergyKj = convertEnergyToKilojoules(target, energyUnit);
-    notifyListeners();
+    _settingsRepository
+        .setTargetDailyEnergyKj(convertEnergyToKilojoules(target, energyUnit))
+        .then((_) => notifyListeners());
   }
 
-  double get targetWeight => convertKilogramsToPreferredUnits(_settingsRepository.targetWeightKg, weightUnit);
+  double get targetWeight => convertKilogramsToPreferredUnits(_settingsRepository.getTargetWeightKg(), weightUnit);
 
   set targetWeight(double target) {
-    _settingsRepository.targetWeightKg = convertWeightToKilograms(target, weightUnit);
-    notifyListeners();
+    _settingsRepository.setTargetWeightKg(convertWeightToKilograms(target, weightUnit)).then((_) => notifyListeners());
   }
 
-  ThemeMode get themeMode => _settingsRepository.themeMode;
+  ThemeMode get themeMode => _settingsRepository.getThemeMode();
   set themeMode(ThemeMode theme) {
-    _settingsRepository.themeMode = theme;
-    notifyListeners();
+    _settingsRepository.setThemeMode(theme).then((_) => notifyListeners());
   }
 
   Future<void> deleteDeviceData() async {

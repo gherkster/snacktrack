@@ -20,7 +20,7 @@ class HealthService extends ChangeNotifier {
         _energyRepository.getAll().where((record) => record.time.isAfter(DateTime.now().date));
     double total = values.fold(0, (sum, item) => sum + item.energy);
 
-    return convertKilojoulesToPreferredUnits(total, _settingsRepository.energyUnit);
+    return convertKilojoulesToPreferredUnits(total, _settingsRepository.getEnergyUnit());
   }
 
   List<Weight> get recentDailyWeights {
@@ -35,7 +35,7 @@ class HealthService extends ChangeNotifier {
         .getAllKgRecords()
         .where((record) => record.time.isAfter(DateTime.now().date.subtract(Duration(days: days))))
         .toList();
-    final weightUnit = _settingsRepository.weightUnit;
+    final weightUnit = _settingsRepository.getWeightUnit();
     for (final Weight record in weights) {
       record.weight = convertKilogramsToPreferredUnits(record.weight, weightUnit);
     }
@@ -44,7 +44,7 @@ class HealthService extends ChangeNotifier {
 
   void addEnergyRecord(int amount, [DateTime? dateTime]) {
     _energyRepository.addKj(
-      convertEnergyToKilojoules(amount, _settingsRepository.energyUnit),
+      convertEnergyToKilojoules(amount, _settingsRepository.getEnergyUnit()),
       dateTime ?? DateTime.now(),
     );
     notifyListeners();
@@ -52,7 +52,7 @@ class HealthService extends ChangeNotifier {
 
   void addWeightRecord(double amount, [DateTime? dateTime]) {
     _weightRepository.addKg(
-      convertWeightToKilograms(amount, _settingsRepository.weightUnit),
+      convertWeightToKilograms(amount, _settingsRepository.getWeightUnit()),
       dateTime ?? DateTime.now(),
     );
     notifyListeners();
@@ -64,9 +64,9 @@ class HealthService extends ChangeNotifier {
       return null;
     }
 
-    return convertWeightToKilograms(weight, _settingsRepository.weightUnit);
+    return convertWeightToKilograms(weight, _settingsRepository.getWeightUnit());
   }
 
   double get energyCurrentTotalClamped =>
-      (currentEnergyTotal / _settingsRepository.targetDailyEnergyKj).clamp(0.0, 1.0).toDouble();
+      (currentEnergyTotal / (_settingsRepository.getTargetDailyEnergyKj())).clamp(0.0, 1.0).toDouble();
 }
