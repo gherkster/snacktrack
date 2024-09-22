@@ -21,6 +21,10 @@ version: 1.0.0+1
 environment:
   sdk: '>=3.4.4 <4.0.0'
 
+scripts:
+  # https://docs.objectbox.io/getting-started#generate-objectbox-code
+  objectbox_generate: dart run build_runner build
+
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
