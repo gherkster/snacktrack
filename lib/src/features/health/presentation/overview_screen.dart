@@ -7,7 +7,7 @@ import "package:intl/intl.dart";
 import "package:percent_indicator/circular_percent_indicator.dart";
 import "package:provider/provider.dart";
 import "package:snacktrack/src/extensions/datetime.dart";
-import "package:snacktrack/src/features/health/domain/weight.dart";
+import "package:snacktrack/src/features/health/domain/weight_measurement.dart";
 import "package:snacktrack/src/features/health/domain/weight_unit.dart";
 import "package:snacktrack/src/features/health/services/health_service.dart";
 import "package:snacktrack/src/features/settings/presentation/options/energy_target_options.dart";
@@ -264,10 +264,11 @@ class OverviewScreen extends StatelessWidget {
                     format: "point.y ${settingsService.weightUnit.shortName}",
                   ),
                   series: <CartesianSeries>[
-                    SplineSeries<Weight, DateTime>(
+                    SplineSeries<WeightMeasurement, DateTime>(
                       dataSource: healthService.recentDailyWeights,
-                      xValueMapper: (Weight weights, _) => weights.time,
-                      yValueMapper: (Weight weights, _) => weights.weight,
+                      xValueMapper: (WeightMeasurement weight, _) => weight.time,
+                      yValueMapper: (WeightMeasurement weight, _) =>
+                          weight.inPreferredUnits(settingsService.weightUnit),
                       emptyPointSettings: const EmptyPointSettings(
                         mode: EmptyPointMode.average,
                       ),

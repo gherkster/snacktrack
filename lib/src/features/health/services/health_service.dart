@@ -1,9 +1,9 @@
+import "package:dart_date/dart_date.dart";
 import "package:flutter/foundation.dart";
 import "package:snacktrack/src/extensions/datetime.dart";
 import "package:snacktrack/src/extensions/iterable.dart";
-import "package:snacktrack/src/features/health/domain/energy.dart";
-import "package:snacktrack/src/features/health/domain/weight.dart";
 import "package:snacktrack/src/features/health/data/energy_repository.dart";
+import "package:snacktrack/src/features/health/domain/weight_measurement.dart";
 import "package:snacktrack/src/features/settings/data/settings_repository.dart";
 import "package:snacktrack/src/features/health/data/weight_repository.dart";
 import "package:snacktrack/src/utilities/unit_conversion.dart";
@@ -16,31 +16,22 @@ class HealthService extends ChangeNotifier {
   HealthService(this._energyRepository, this._weightRepository, this._settingsRepository);
 
   int get currentEnergyTotal {
-    final Iterable<Energy> values =
-        _energyRepository.getAll().where((record) => record.time.isAfter(DateTime.now().date));
-    double total = values.fold(0, (sum, item) => sum + item.energy);
+    final values = _energyRepository.getSince(DateTime.now().date);
+    double total = values.fold(0, (sum, item) => sum + item.kilojoules);
 
     return convertKilojoulesToPreferredUnits(total, _settingsRepository.getEnergyUnit());
   }
 
-  List<Weight> get recentDailyWeights {
+  List<WeightMeasurement> get recentDailyWeights {
     return getLatest(7);
   }
 
-  double? get maximumRecentWeight => recentDailyWeights.isNotEmpty ? recentDailyWeights.map((w) => w.weight).max : null;
-  double? get minimumRecentWeight => recentDailyWeights.isNotEmpty ? recentDailyWeights.map((w) => w.weight).min : null;
+  double? get maximumRecentWeight =>
+      recentDailyWeights.isNotEmpty ? recentDailyWeights.map((w) => w.kilograms).max : null;
+  double? get minimumRecentWeight =>
+      recentDailyWeights.isNotEmpty ? recentDailyWeights.map((w) => w.kilograms).min : null;
 
-  List<Weight> getLatest(int days) {
-    final List<Weight> weights = _weightRepository
-        .getAllKgRecords()
-        .where((record) => record.time.isAfter(DateTime.now().date.subtract(Duration(days: days))))
-        .toList();
-    final weightUnit = _settingsRepository.getWeightUnit();
-    for (final Weight record in weights) {
-      record.weight = convertKilogramsToPreferredUnits(record.weight, weightUnit);
-    }
-    return weights;
-  }
+  List<WeightMeasurement> getLatest(int days) => _weightRepository.getSince(DateTime.now().date.subDays(days));
 
   void addEnergyRecord(int amount, [DateTime? dateTime]) {
     _energyRepository.addKj(
@@ -59,12 +50,12 @@ class HealthService extends ChangeNotifier {
   }
 
   double? get currentWeight {
-    final weight = _weightRepository.currentWeightKg;
+    final weight = _weightRepository.getLatest();
     if (weight == null) {
       return null;
     }
 
-    return convertWeightToKilograms(weight, _settingsRepository.getWeightUnit());
+    return weight.inPreferredUnits(_settingsRepository.getWeightUnit());
   }
 
   double get energyCurrentTotalClamped =>

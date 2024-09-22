@@ -1,21 +1,19 @@
 import "package:flutter/material.dart";
-import "package:hive_flutter/hive_flutter.dart";
 import "package:shared_preferences/shared_preferences.dart";
-import "package:snacktrack/src/features/health/domain/energy.dart";
-import "package:snacktrack/src/features/settings/domain/theme_setting.dart";
-import "package:snacktrack/src/features/health/domain/weight.dart";
+import "package:snacktrack/objectbox.g.dart";
+import "package:snacktrack/src/features/health/data/models/energy_intake_measurement_dto.dart";
+import "package:snacktrack/src/features/health/data/models/weight_measurement_dto.dart";
 
 import "src/app.dart";
 
 Future<void> main() async {
-  await Hive.initFlutter();
+  // This is required so ObjectBox can get the application directory
+  // to store the database in.
+  WidgetsFlutterBinding.ensureInitialized();
 
-  Hive.registerAdapter(EnergyAdapter());
-  Hive.registerAdapter(WeightAdapter());
-  Hive.registerAdapter(ThemeModeAdapter());
-
-  final energyBox = await Hive.openBox<Energy>("Energy");
-  final weightBox = await Hive.openBox<Weight>("Weight");
+  final Store store = await openStore();
+  final energyBox = store.box<EnergyIntakeMeasurementDto>();
+  final weightBox = store.box<WeightMeasurementDto>();
 
   final sharedPreferences =
       await SharedPreferencesWithCache.create(cacheOptions: const SharedPreferencesWithCacheOptions());

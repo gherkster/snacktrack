@@ -1,30 +1,28 @@
-import "package:flutter/foundation.dart";
-import "package:hive_flutter/hive_flutter.dart";
+import "package:snacktrack/objectbox.g.dart";
 import "package:snacktrack/src/extensions/num.dart";
-import "package:snacktrack/src/features/health/domain/weight.dart";
+import "package:snacktrack/src/features/health/data/models/weight_measurement_dto.dart";
+import "package:snacktrack/src/features/health/domain/weight_measurement.dart";
 
 class WeightRepository {
-  final Box _box;
+  final Box<WeightMeasurementDto> _box;
 
   WeightRepository(this._box);
 
-  ValueListenable<Box<dynamic>> get stream => _box.listenable();
+  void addKg(double amount, DateTime time) =>
+      _box.put(WeightMeasurementDto(kilograms: amount.roundToPrecision(2), time: time));
 
-  void addKg(double amount, DateTime time) => _box.add(Weight(amount.roundToPrecision(2), time));
-
-  double? get currentWeightKg => _getLatest();
-
-  Iterable<Weight> getAllKgRecords() => _box.values as Iterable<Weight>;
-
-  double? _getLatest() {
-    final int lastIndex = _box.toMap().length - 1;
-    if (lastIndex < 0) {
-      return null;
-    } else {
-      final Weight latest = _box.values.toList()[lastIndex] as Weight;
-      return latest.weight;
-    }
+  WeightMeasurement? getLatest() =>
+      _box.query().order(WeightMeasurementDto_.time, flags: Order.descending).build().findFirst()?.mapToDomain();
+  List<WeightMeasurement> getSince(DateTime time) {
+    var results = _box.query(WeightMeasurementDto_.time.greaterOrEqualDate(time)).build().find();
+    return results.map((r) => r.mapToDomain()).toList();
   }
 
-  Future<void> deleteAll() async => await _box.clear();
+  Future<void> deleteAll() async => await _box.removeAllAsync();
+}
+
+extension Mapping on WeightMeasurementDto {
+  WeightMeasurement mapToDomain() {
+    return WeightMeasurement(kilograms: kilograms, time: time);
+  }
 }
