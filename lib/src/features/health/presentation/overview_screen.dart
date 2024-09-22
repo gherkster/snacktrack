@@ -35,8 +35,9 @@ class OverviewScreen extends StatelessWidget {
         type: ExpandableFabType.up,
         childrenAnimation: ExpandableFabAnimation.none,
         overlayStyle: ExpandableFabOverlayStyle(
-          // TODO: Get from theme
-          color: Colors.white.withOpacity(0.85),
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.black.withOpacity(0.85)
+              : Colors.white.withOpacity(0.85),
         ),
         openButtonBuilder: DefaultFloatingActionButtonBuilder(
           child: const Icon(Icons.add),
@@ -210,7 +211,6 @@ class OverviewScreen extends StatelessWidget {
                   primaryXAxis: DateTimeAxis(
                     majorGridLines: const MajorGridLines(width: 0),
                     intervalType: DateTimeIntervalType.months,
-                    //interval: 1,
                     rangePadding: ChartRangePadding.auto,
                     minimum: DateTime.now().date.addMonths(-2).addDays(-10),
                     maximum: DateTime.now().date.addDays(8),
