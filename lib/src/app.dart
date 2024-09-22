@@ -36,7 +36,7 @@ class App extends StatelessWidget {
         ),
       ],
       child: Consumer<SettingsService>(
-        builder: (context, provider, child) => MaterialApp(
+        builder: (context, settingsService, child) => MaterialApp(
           home: const NavBar(),
           theme: ThemeData(
             fontFamily: GoogleFonts.openSans().fontFamily,
@@ -52,8 +52,12 @@ class App extends StatelessWidget {
               ),
             ),
           ),
-          darkTheme: ThemeData.dark(),
-          themeMode: Provider.of<SettingsService>(context).themeMode,
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            fontFamily: GoogleFonts.openSans().fontFamily,
+            colorSchemeSeed: Colors.deepPurple,
+          ),
+          themeMode: settingsService.themeMode,
           debugShowCheckedModeBanner: false,
         ),
       ),

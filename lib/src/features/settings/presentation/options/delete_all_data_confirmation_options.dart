@@ -19,7 +19,7 @@ class DeleteAllDataConfirmationOptions extends StatelessWidget {
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: const Text('Cancel'),
+              child: Text('Cancel', style: Theme.of(context).textTheme.bodyMedium),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -28,7 +28,8 @@ class DeleteAllDataConfirmationOptions extends StatelessWidget {
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: const Text('Delete'),
+              child: Text('Delete',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.error)),
               onPressed: () async {
                 await settingsService.deleteDeviceData();
                 if (context.mounted) {
