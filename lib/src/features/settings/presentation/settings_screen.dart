@@ -63,7 +63,7 @@ class SettingsScreen extends StatelessWidget {
                   onTap: () => {
                     showDialog(
                       context: context,
-                      builder: (BuildContext context) => const EnergyTargetOptions(),
+                      builder: (BuildContext context) => EnergyTargetOptions(targetEnergy: model.targetEnergy),
                     ),
                   },
                 ),
@@ -74,7 +74,7 @@ class SettingsScreen extends StatelessWidget {
                   onTap: () => {
                     showDialog(
                       context: context,
-                      builder: (BuildContext context) => const WeightTargetOptions(),
+                      builder: (BuildContext context) => WeightTargetOptions(targetWeight: model.targetWeight),
                     ),
                   },
                 ),

@@ -156,7 +156,9 @@ class OverviewScreen extends StatelessWidget {
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (BuildContext context) => const EnergyTargetOptions(),
+                        builder: (BuildContext context) => EnergyTargetOptions(
+                          targetEnergy: settingsService.targetEnergy,
+                        ),
                       );
                     },
                     child: Column(
@@ -177,7 +179,8 @@ class OverviewScreen extends StatelessWidget {
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (BuildContext context) => const WeightTargetOptions(),
+                        builder: (BuildContext context) =>
+                            WeightTargetOptions(targetWeight: settingsService.targetWeight),
                       );
                     },
                     child: Column(

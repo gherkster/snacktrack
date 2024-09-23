@@ -40,7 +40,12 @@ class _NavBarState extends State<NavBar> {
         selectedIndex: _selectedTabIndex,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
-      body: _availableTabs[_selectedTabIndex],
+      // Use an indexed stack to avoid widget rebuilds when switching between tabs,
+      // by keeping them alive after navigating away
+      body: IndexedStack(
+        index: _selectedTabIndex,
+        children: _availableTabs,
+      ),
     );
   }
 }

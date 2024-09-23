@@ -4,8 +4,20 @@ import "package:provider/provider.dart";
 import "package:snacktrack/src/features/health/domain/weight_unit.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
 
-class WeightTargetOptions extends StatelessWidget {
-  const WeightTargetOptions({super.key});
+class WeightTargetOptions extends StatefulWidget {
+  const WeightTargetOptions({super.key, required this.targetWeight});
+
+  // Use a stateful widget to track the new in-progress target value,
+  // as modifying the provider state directly on input would lead to the overview page
+  // rebuilding every frame as the picker is scrolled, due to the IndexedStack
+  final double targetWeight;
+
+  @override
+  State<WeightTargetOptions> createState() => _WeightTargetOptionsState();
+}
+
+class _WeightTargetOptionsState extends State<WeightTargetOptions> {
+  late double targetWeight = widget.targetWeight;
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +28,31 @@ class WeightTargetOptions extends StatelessWidget {
           content: DecimalNumberPicker(
             minValue: service.weightUnit == WeightUnit.kilograms ? 50 : 100,
             maxValue: service.weightUnit == WeightUnit.kilograms ? 200 : 400,
-            value: service.targetWeight,
-            onChanged: (value) => service.targetWeight = value,
+            value: targetWeight,
+            onChanged: (value) => setState(() => targetWeight = value),
             itemWidth: 64,
           ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: Text('Cancel', style: Theme.of(context).textTheme.bodyMedium),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: Text('Confirm', style: Theme.of(context).textTheme.bodyMedium),
+              onPressed: () {
+                service.targetWeight = targetWeight;
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         );
       },
     );
