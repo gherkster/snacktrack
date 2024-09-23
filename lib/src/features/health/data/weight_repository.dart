@@ -23,6 +23,6 @@ class WeightRepository {
 
 extension Mapping on WeightMeasurementDto {
   WeightMeasurement mapToDomain() {
-    return WeightMeasurement(kilograms: kilograms, time: time);
+    return WeightMeasurement(id: id, kilograms: kilograms, time: time);
   }
 }

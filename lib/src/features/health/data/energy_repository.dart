@@ -21,6 +21,6 @@ class EnergyRepository {
 
 extension Mapping on EnergyIntakeMeasurementDto {
   EnergyIntakeMeasurement mapToDomain() {
-    return EnergyIntakeMeasurement(kilojoules: kilojoules, time: time);
+    return EnergyIntakeMeasurement(id: id, kilojoules: kilojoules, time: time);
   }
 }
