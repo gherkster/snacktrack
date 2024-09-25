@@ -213,12 +213,13 @@ class OverviewScreen extends StatelessWidget {
                 child: SfCartesianChart(
                   primaryXAxis: DateTimeAxis(
                     majorGridLines: const MajorGridLines(width: 0),
-                    intervalType: DateTimeIntervalType.months,
+                    intervalType: DateTimeIntervalType.days,
+                    interval: 7,
                     rangePadding: ChartRangePadding.auto,
-                    minimum: DateTime.now().date.addMonths(-2).addDays(-10),
-                    maximum: DateTime.now().date.addDays(8),
+                    minimum: DateTime.now().date.addDays(-28),
+                    maximum: DateTime.now().date.addDays(3),
                     axisLabelFormatter: (axisLabelRenderArgs) {
-                      var text = DateFormat("MMM")
+                      var text = DateFormat("dd MMM")
                           .format(DateTime.fromMillisecondsSinceEpoch(axisLabelRenderArgs.value.toInt()));
                       return ChartAxisLabel(text, null);
                     },

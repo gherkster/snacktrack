@@ -35,8 +35,8 @@ double convertWeightToKilograms(double amount, WeightUnit units) {
 convertKilogramsToPreferredUnits(double amount, WeightUnit preferredUnits) {
   switch (preferredUnits) {
     case WeightUnit.pounds:
-      return (amount * weightConversionFactor).roundToPrecision(2);
+      return (amount * weightConversionFactor).roundToPrecision(1);
     case WeightUnit.kilograms:
-      return amount.roundToPrecision(2);
+      return amount.roundToPrecision(1);
   }
 }
