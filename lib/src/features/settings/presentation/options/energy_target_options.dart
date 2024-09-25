@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:numberpicker/numberpicker.dart";
+import "package:flutter/services.dart";
 import "package:provider/provider.dart";
 import "package:snacktrack/src/features/health/domain/energy_unit.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
@@ -17,19 +17,58 @@ class EnergyTargetOptions extends StatefulWidget {
 }
 
 class _EnergyTargetOptionsState extends State<EnergyTargetOptions> {
-  late int targetEnergy = widget.targetEnergy;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final energyTargetInputController = TextEditingController();
+
+  @override
+  void initState() {
+    energyTargetInputController.text = widget.targetEnergy.toString();
+    return super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<SettingsService>(builder: (context, service, child) {
       return AlertDialog(
         title: const Text("Target energy intake"),
-        content: NumberPicker(
-          minValue: service.energyUnit == EnergyUnit.kilojoules ? 4000 : 1000,
-          maxValue: service.energyUnit == EnergyUnit.kilojoules ? 20000 : 5000,
-          value: targetEnergy,
-          onChanged: (value) => setState(() => targetEnergy = value),
-          step: service.energyUnit == EnergyUnit.kilojoules ? 100 : 25,
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("Daily limit"),
+            Row(
+              children: [
+                SizedBox(
+                  width: 72,
+                  child: Form(
+                    key: formKey,
+                    child: TextFormField(
+                      controller: energyTargetInputController,
+                      autofocus: true,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value == "") {
+                          return "Required";
+                        }
+
+                        final numberValue = int.parse(value);
+                        if (numberValue < (service.energyUnit == EnergyUnit.kilojoules ? 4000 : 1000)) {
+                          return "Too low";
+                        }
+
+                        if (numberValue > (service.energyUnit == EnergyUnit.kilojoules ? 20000 : 5000)) {
+                          return "Too high";
+                        }
+
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                Text(service.energyUnit.shortName),
+              ],
+            ),
+          ],
         ),
         actions: <Widget>[
           TextButton(
@@ -47,7 +86,16 @@ class _EnergyTargetOptionsState extends State<EnergyTargetOptions> {
             ),
             child: Text('Confirm', style: Theme.of(context).textTheme.bodyMedium),
             onPressed: () {
-              service.targetEnergy = targetEnergy;
+              if (formKey.currentState?.validate() == false) {
+                return;
+              }
+
+              var energyTarget = int.tryParse(energyTargetInputController.text);
+              // Energy should always be valid as the keyboard filter only allows for integer input
+              // However we should still avoid storing empty values
+              if (energyTarget != null && energyTarget > 0) {
+                service.targetEnergy = energyTarget;
+              }
               Navigator.of(context).pop();
             },
           ),
