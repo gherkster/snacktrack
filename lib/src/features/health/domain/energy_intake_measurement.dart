@@ -5,7 +5,7 @@ class EnergyIntakeMeasurement {
   int id;
 
   final double _kilojoules;
-  DateTime time;
+  final DateTime time;
 
   int get kilojoules => convertKilojoulesToPreferredUnits(_kilojoules, EnergyUnit.kilojoules);
   int get calories => convertKilojoulesToPreferredUnits(_kilojoules, EnergyUnit.calories);

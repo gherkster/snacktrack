@@ -8,7 +8,7 @@ class BigHeading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 40, 0, 12),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Text(title, style: Theme.of(context).textTheme.headlineMedium),
     );
   }

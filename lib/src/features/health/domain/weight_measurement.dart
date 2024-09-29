@@ -2,9 +2,9 @@ import 'package:snacktrack/src/features/health/domain/weight_unit.dart';
 import 'package:snacktrack/src/utilities/unit_conversion.dart';
 
 class WeightMeasurement {
-  int id;
+  final int id;
   final double _kilograms;
-  DateTime time;
+  final DateTime time;
 
   double get kilograms => convertKilogramsToPreferredUnits(_kilograms, WeightUnit.kilograms);
   double get pounds => convertKilogramsToPreferredUnits(_kilograms, WeightUnit.pounds);

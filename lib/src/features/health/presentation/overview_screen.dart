@@ -46,7 +46,7 @@ class OverviewScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Text("Record Weight"),
+              const Text("Log Weight"),
               const SizedBox(width: 16),
               FloatingActionButton.small(
                 heroTag: null,
@@ -71,7 +71,7 @@ class OverviewScreen extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Record ${context.watch<SettingsService>().energyUnit.longName}',
+                'Log ${context.watch<SettingsService>().energyUnit.longName}',
               ),
               const SizedBox(width: 16),
               FloatingActionButton.small(
