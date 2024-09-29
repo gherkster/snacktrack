@@ -5,6 +5,10 @@ import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:snacktrack/src/features/health/data/models/energy_intake_measurement_dto.dart";
 import "package:snacktrack/src/features/health/data/models/weight_measurement_dto.dart";
+import "package:snacktrack/src/features/meals/data/meal_repository.dart";
+import "package:snacktrack/src/features/meals/data/models/food_dto.dart";
+import "package:snacktrack/src/features/meals/data/models/meal_dto.dart";
+import "package:snacktrack/src/features/meals/services/meal_service.dart";
 import "package:snacktrack/src/features/settings/data/settings_repository.dart";
 import "package:snacktrack/src/features/health/services/health_service.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
@@ -16,20 +20,33 @@ import "routing/navigation.dart";
 class App extends StatelessWidget {
   final Box<EnergyIntakeMeasurementDto> energyBox;
   final Box<WeightMeasurementDto> weightBox;
+  final Box<MealDto> mealBox;
+  final Box<FoodDto> foodBox;
   final SharedPreferencesWithCache sharedPreferences;
 
-  const App({super.key, required this.energyBox, required this.weightBox, required this.sharedPreferences});
+  const App({
+    super.key,
+    required this.energyBox,
+    required this.weightBox,
+    required this.mealBox,
+    required this.foodBox,
+    required this.sharedPreferences,
+  });
 
   @override
   Widget build(BuildContext context) {
     final energyRepository = EnergyRepository(energyBox);
     final weightRepository = WeightRepository(weightBox);
+    final mealRepository = MealRepository(mealBox);
     final settingsRepository = SettingsRepository(sharedPreferences);
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<HealthService>(
           create: (_) => HealthService(energyRepository, weightRepository, settingsRepository),
+        ),
+        ChangeNotifierProvider<MealService>(
+          create: (_) => MealService(mealRepository),
         ),
         ChangeNotifierProvider<SettingsService>(
           create: (_) => SettingsService(energyRepository, weightRepository, settingsRepository),

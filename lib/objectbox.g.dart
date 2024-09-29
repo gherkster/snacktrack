@@ -16,6 +16,8 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'src/features/health/data/models/energy_intake_measurement_dto.dart';
 import 'src/features/health/data/models/weight_measurement_dto.dart';
+import 'src/features/meals/data/models/food_dto.dart';
+import 'src/features/meals/data/models/meal_dto.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
@@ -67,6 +69,94 @@ final _entities = <obx_int.ModelEntity>[
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(5, 85335504140270996),
+      name: 'FoodDto',
+      lastPropertyId: const obx_int.IdUid(8, 1513817894262437979),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 3298661564981860235),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 4309344742687750294),
+            name: 'name',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 8875979415062534847),
+            name: 'kilojoulesPerUnit',
+            type: 8,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 8824245873327734273),
+            name: 'unit',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 448520072291422795),
+            name: 'quantity',
+            type: 8,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 8204999655354497367),
+            name: 'isCustom',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(7, 8617427106112997553),
+            name: 'createdAt',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(8, 1513817894262437979),
+            name: 'updatedAt',
+            type: 10,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(6, 1853866419130782432),
+      name: 'MealDto',
+      lastPropertyId: const obx_int.IdUid(5, 9152627012042832030),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 6182809114061310298),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 5213079710916563334),
+            name: 'name',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 366905812608668367),
+            name: 'description',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 2406834141976730954),
+            name: 'createdAt',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 9152627012042832030),
+            name: 'updatedAt',
+            type: 10,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[
+        obx_int.ModelRelation(
+            id: const obx_int.IdUid(1, 2805857721606206038),
+            name: 'foods',
+            targetId: const obx_int.IdUid(5, 85335504140270996))
+      ],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -105,9 +195,9 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(4, 8606834510209458067),
+      lastEntityId: const obx_int.IdUid(6, 1853866419130782432),
       lastIndexId: const obx_int.IdUid(0, 0),
-      lastRelationId: const obx_int.IdUid(0, 0),
+      lastRelationId: const obx_int.IdUid(1, 2805857721606206038),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [2088190156517773895, 4475029639873160576],
       retiredIndexUids: const [],
@@ -185,6 +275,105 @@ obx_int.ModelDefinition getObjectBoxModel() {
               id: idParam, kilograms: kilogramsParam, time: timeParam);
 
           return object;
+        }),
+    FoodDto: obx_int.EntityDefinition<FoodDto>(
+        model: _entities[2],
+        toOneRelations: (FoodDto object) => [],
+        toManyRelations: (FoodDto object) => {},
+        getId: (FoodDto object) => object.id,
+        setId: (FoodDto object, int id) {
+          object.id = id;
+        },
+        objectToFB: (FoodDto object, fb.Builder fbb) {
+          final nameOffset = fbb.writeString(object.name);
+          final unitOffset = fbb.writeString(object.unit);
+          fbb.startTable(9);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, nameOffset);
+          fbb.addFloat64(2, object.kilojoulesPerUnit);
+          fbb.addOffset(3, unitOffset);
+          fbb.addFloat64(4, object.quantity);
+          fbb.addBool(5, object.isCustom);
+          fbb.addInt64(6, object.createdAt.millisecondsSinceEpoch);
+          fbb.addInt64(7, object.updatedAt.millisecondsSinceEpoch);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final nameParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final kilojoulesPerUnitParam =
+              const fb.Float64Reader().vTableGet(buffer, rootOffset, 8, 0);
+          final unitParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 10, '');
+          final quantityParam =
+              const fb.Float64Reader().vTableGet(buffer, rootOffset, 12, 0);
+          final isCustomParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 14, false);
+          final createdAtParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0));
+          final updatedAtParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0));
+          final object = FoodDto(
+              id: idParam,
+              name: nameParam,
+              kilojoulesPerUnit: kilojoulesPerUnitParam,
+              unit: unitParam,
+              quantity: quantityParam,
+              isCustom: isCustomParam,
+              createdAt: createdAtParam,
+              updatedAt: updatedAtParam);
+
+          return object;
+        }),
+    MealDto: obx_int.EntityDefinition<MealDto>(
+        model: _entities[3],
+        toOneRelations: (MealDto object) => [],
+        toManyRelations: (MealDto object) =>
+            {obx_int.RelInfo<MealDto>.toMany(1, object.id): object.foods},
+        getId: (MealDto object) => object.id,
+        setId: (MealDto object, int id) {
+          object.id = id;
+        },
+        objectToFB: (MealDto object, fb.Builder fbb) {
+          final nameOffset = fbb.writeString(object.name);
+          final descriptionOffset = fbb.writeString(object.description);
+          fbb.startTable(6);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, nameOffset);
+          fbb.addOffset(2, descriptionOffset);
+          fbb.addInt64(3, object.createdAt.millisecondsSinceEpoch);
+          fbb.addInt64(4, object.updatedAt.millisecondsSinceEpoch);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final nameParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final descriptionParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 8, '');
+          final createdAtParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0));
+          final updatedAtParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0));
+          final object = MealDto(
+              id: idParam,
+              name: nameParam,
+              description: descriptionParam,
+              createdAt: createdAtParam,
+              updatedAt: updatedAtParam);
+          obx_int.InternalToManyAccess.setRelInfo<MealDto>(object.foods, store,
+              obx_int.RelInfo<MealDto>.toMany(1, object.id));
+          return object;
         })
   };
 
@@ -219,4 +408,66 @@ class WeightMeasurementDto_ {
   /// See [WeightMeasurementDto.time].
   static final time =
       obx.QueryDateProperty<WeightMeasurementDto>(_entities[1].properties[2]);
+}
+
+/// [FoodDto] entity fields to define ObjectBox queries.
+class FoodDto_ {
+  /// See [FoodDto.id].
+  static final id =
+      obx.QueryIntegerProperty<FoodDto>(_entities[2].properties[0]);
+
+  /// See [FoodDto.name].
+  static final name =
+      obx.QueryStringProperty<FoodDto>(_entities[2].properties[1]);
+
+  /// See [FoodDto.kilojoulesPerUnit].
+  static final kilojoulesPerUnit =
+      obx.QueryDoubleProperty<FoodDto>(_entities[2].properties[2]);
+
+  /// See [FoodDto.unit].
+  static final unit =
+      obx.QueryStringProperty<FoodDto>(_entities[2].properties[3]);
+
+  /// See [FoodDto.quantity].
+  static final quantity =
+      obx.QueryDoubleProperty<FoodDto>(_entities[2].properties[4]);
+
+  /// See [FoodDto.isCustom].
+  static final isCustom =
+      obx.QueryBooleanProperty<FoodDto>(_entities[2].properties[5]);
+
+  /// See [FoodDto.createdAt].
+  static final createdAt =
+      obx.QueryDateProperty<FoodDto>(_entities[2].properties[6]);
+
+  /// See [FoodDto.updatedAt].
+  static final updatedAt =
+      obx.QueryDateProperty<FoodDto>(_entities[2].properties[7]);
+}
+
+/// [MealDto] entity fields to define ObjectBox queries.
+class MealDto_ {
+  /// See [MealDto.id].
+  static final id =
+      obx.QueryIntegerProperty<MealDto>(_entities[3].properties[0]);
+
+  /// See [MealDto.name].
+  static final name =
+      obx.QueryStringProperty<MealDto>(_entities[3].properties[1]);
+
+  /// See [MealDto.description].
+  static final description =
+      obx.QueryStringProperty<MealDto>(_entities[3].properties[2]);
+
+  /// See [MealDto.createdAt].
+  static final createdAt =
+      obx.QueryDateProperty<MealDto>(_entities[3].properties[3]);
+
+  /// See [MealDto.updatedAt].
+  static final updatedAt =
+      obx.QueryDateProperty<MealDto>(_entities[3].properties[4]);
+
+  /// see [MealDto.foods]
+  static final foods =
+      obx.QueryRelationToMany<MealDto, FoodDto>(_entities[3].relations[0]);
 }

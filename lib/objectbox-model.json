@@ -50,11 +50,100 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "5:85335504140270996",
+      "lastPropertyId": "8:1513817894262437979",
+      "name": "FoodDto",
+      "properties": [
+        {
+          "id": "1:3298661564981860235",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4309344742687750294",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:8875979415062534847",
+          "name": "kilojoulesPerUnit",
+          "type": 8
+        },
+        {
+          "id": "4:8824245873327734273",
+          "name": "unit",
+          "type": 9
+        },
+        {
+          "id": "5:448520072291422795",
+          "name": "quantity",
+          "type": 8
+        },
+        {
+          "id": "6:8204999655354497367",
+          "name": "isCustom",
+          "type": 1
+        },
+        {
+          "id": "7:8617427106112997553",
+          "name": "createdAt",
+          "type": 10
+        },
+        {
+          "id": "8:1513817894262437979",
+          "name": "updatedAt",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:1853866419130782432",
+      "lastPropertyId": "5:9152627012042832030",
+      "name": "MealDto",
+      "properties": [
+        {
+          "id": "1:6182809114061310298",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5213079710916563334",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:366905812608668367",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:2406834141976730954",
+          "name": "createdAt",
+          "type": 10
+        },
+        {
+          "id": "5:9152627012042832030",
+          "name": "updatedAt",
+          "type": 10
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:2805857721606206038",
+          "name": "foods",
+          "targetId": "5:85335504140270996"
+        }
+      ]
     }
   ],
-  "lastEntityId": "4:8606834510209458067",
+  "lastEntityId": "6:1853866419130782432",
   "lastIndexId": "0:0",
-  "lastRelationId": "0:0",
+  "lastRelationId": "1:2805857721606206038",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,

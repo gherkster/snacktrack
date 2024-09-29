@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:snacktrack/src/features/meals/presentation/meals_screen.dart";
 
 import "../features/health/presentation/overview_screen.dart";
 import "../features/settings/presentation/settings_screen.dart";
@@ -14,6 +15,7 @@ class _NavBarState extends State<NavBar> {
   int _selectedTabIndex = 0;
   final List<Widget> _availableTabs = [
     OverviewScreen(),
+    MealsScreen(),
     const SettingsScreen(),
   ];
 
@@ -26,6 +28,10 @@ class _NavBarState extends State<NavBar> {
           NavigationDestination(
             icon: Icon(Icons.home),
             label: "Overview",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.fastfood),
+            label: "Meals",
           ),
           NavigationDestination(
             icon: Icon(Icons.settings),
