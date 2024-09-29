@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
+import "package:snacktrack/src/features/meals/presentation/forms/create_meal_form.dart";
 import "package:snacktrack/src/features/meals/services/meal_service.dart";
 import "package:snacktrack/src/widgets/big_heading.dart";
 
@@ -43,7 +44,16 @@ class MealsScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         label: const Text("Create meal"),
         icon: const Icon(Icons.add),
-        onPressed: () => {},
+        onPressed: () => {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const CreateMealForm();
+              },
+            ),
+          )
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),

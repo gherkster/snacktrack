@@ -6,7 +6,6 @@ class MealDto {
   @Id()
   int id;
   String name;
-  String description;
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -15,7 +14,6 @@ class MealDto {
   MealDto({
     this.id = 0,
     required this.name,
-    required this.description,
     required this.createdAt,
     required this.updatedAt,
   });

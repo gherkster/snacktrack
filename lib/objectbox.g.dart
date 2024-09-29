@@ -136,11 +136,6 @@ final _entities = <obx_int.ModelEntity>[
             type: 9,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(3, 366905812608668367),
-            name: 'description',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
             id: const obx_int.IdUid(4, 2406834141976730954),
             name: 'createdAt',
             type: 10,
@@ -207,7 +202,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
         8975347538675101929,
         2592802322490414320,
         7108020444210493539,
-        4103772333176250963
+        4103772333176250963,
+        366905812608668367
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -341,11 +337,9 @@ obx_int.ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (MealDto object, fb.Builder fbb) {
           final nameOffset = fbb.writeString(object.name);
-          final descriptionOffset = fbb.writeString(object.description);
           fbb.startTable(6);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
-          fbb.addOffset(2, descriptionOffset);
           fbb.addInt64(3, object.createdAt.millisecondsSinceEpoch);
           fbb.addInt64(4, object.updatedAt.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
@@ -358,9 +352,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           final nameParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 6, '');
-          final descriptionParam =
-              const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, '');
           final createdAtParam = DateTime.fromMillisecondsSinceEpoch(
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0));
           final updatedAtParam = DateTime.fromMillisecondsSinceEpoch(
@@ -368,7 +359,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final object = MealDto(
               id: idParam,
               name: nameParam,
-              description: descriptionParam,
               createdAt: createdAtParam,
               updatedAt: updatedAtParam);
           obx_int.InternalToManyAccess.setRelInfo<MealDto>(object.foods, store,
@@ -455,17 +445,13 @@ class MealDto_ {
   static final name =
       obx.QueryStringProperty<MealDto>(_entities[3].properties[1]);
 
-  /// See [MealDto.description].
-  static final description =
-      obx.QueryStringProperty<MealDto>(_entities[3].properties[2]);
-
   /// See [MealDto.createdAt].
   static final createdAt =
-      obx.QueryDateProperty<MealDto>(_entities[3].properties[3]);
+      obx.QueryDateProperty<MealDto>(_entities[3].properties[2]);
 
   /// See [MealDto.updatedAt].
   static final updatedAt =
-      obx.QueryDateProperty<MealDto>(_entities[3].properties[4]);
+      obx.QueryDateProperty<MealDto>(_entities[3].properties[3]);
 
   /// see [MealDto.foods]
   static final foods =

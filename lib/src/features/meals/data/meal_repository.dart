@@ -22,7 +22,6 @@ extension MealMapping on MealDto {
     return Meal(
         id: id,
         name: name,
-        description: description,
         foods: foods.map((f) => f.mapToDomain()).toList(),
         createdAt: createdAt,
         updatedAt: updatedAt);
