@@ -15,7 +15,11 @@ class WeightRepository {
       _box.query().order(WeightMeasurementDto_.time, flags: Order.descending).build().findFirst()?.mapToDomain();
 
   List<WeightMeasurement> getSince(DateTime time) {
-    var results = _box.query(WeightMeasurementDto_.time.greaterOrEqualDate(time)).build().find();
+    var query = _box.query(WeightMeasurementDto_.time.greaterOrEqualDate(time)).build();
+
+    var results = query.find();
+    query.close();
+
     return results.map((r) => r.mapToDomain()).toList();
   }
 

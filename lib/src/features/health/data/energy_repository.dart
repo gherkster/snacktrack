@@ -12,7 +12,11 @@ class EnergyRepository {
       _box.put(EnergyIntakeMeasurementDto(kilojoules: amount.roundToPrecision(2), time: time));
 
   List<EnergyIntakeMeasurement> getSince(DateTime time) {
-    var results = _box.query(EnergyIntakeMeasurementDto_.time.greaterOrEqualDate(time)).build().find();
+    var query = _box.query(EnergyIntakeMeasurementDto_.time.greaterOrEqualDate(time)).build();
+
+    var results = query.find();
+    query.close();
+
     return results.map((r) => r.mapToDomain()).toList();
   }
 
