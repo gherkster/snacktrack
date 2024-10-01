@@ -20,7 +20,6 @@ class SettingsScreen extends StatelessWidget {
     return Consumer<SettingsService>(
       builder: (context, model, child) {
         return Scaffold(
-          appBar: AppBar(),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SingleChildScrollView(
@@ -110,7 +109,7 @@ class SettingsScreen extends StatelessWidget {
                         builder: (BuildContext context) => const DeleteAllDataConfirmationOptions(),
                       ),
                     },
-                  )
+                  ),
                 ],
               ),
             ),
