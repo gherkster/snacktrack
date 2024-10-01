@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snacktrack/src/extensions/datetime.dart';
-import 'package:snacktrack/src/features/health/services/health_service.dart';
-import 'package:snacktrack/src/features/settings/services/settings_service.dart';
+import 'package:snacktrack/src/features/meals/services/meal_service.dart';
 import 'package:snacktrack/src/widgets/big_heading.dart';
 
 class CreateMealForm extends StatefulWidget {
@@ -23,8 +22,7 @@ class _CreateMealFormState extends State<CreateMealForm> {
 
   @override
   Widget build(BuildContext context) {
-    final healthService = context.watch<HealthService>();
-    final settingsService = context.watch<SettingsService>();
+    final mealService = context.watch<MealService>();
 
     return Scaffold(
       appBar: AppBar(
@@ -50,19 +48,45 @@ class _CreateMealFormState extends State<CreateMealForm> {
                   ),
                 ),
               ),
+              Padding(
+                padding: fieldPadding,
+                child: SearchAnchor(
+                  builder: (BuildContext context, SearchController controller) {
+                    return SearchBar(
+                      controller: controller,
+                      hintText: "Search foods",
+                      padding: const WidgetStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16.0)),
+                      onTap: () => controller.openView(),
+                      onChanged: (_) => controller.openView(),
+                      leading: const Icon(Icons.search),
+                    );
+                  },
+                  suggestionsBuilder: (BuildContext context, SearchController controller) {
+                    return List<ListTile>.generate(
+                      5,
+                      (int index) {
+                        final String item = 'item $index';
+                        return ListTile(
+                          title: Text(item),
+                          onTap: () {
+                            setState(() {
+                              controller.closeView(item);
+                              // Clear the input field to allow searching for more foods
+                              controller.text = "";
+                            });
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: FilledButton(
                     onPressed: () {
                       if (formKey.currentState?.validate() == true) {
-                        var energy = int.tryParse(energyInputController.text);
-                        // Energy should always be valid as the keyboard filter only allows for integer input
-                        // However we should still avoid storing empty values
-                        if (energy != null && energy > 0) {
-                          healthService.addEnergyRecord(energy, date.addTime(time));
-                        }
-
                         Navigator.pop(context);
                       }
                     },
