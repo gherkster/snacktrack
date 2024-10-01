@@ -50,6 +50,7 @@ dependencies:
   objectbox: ^4.0.2
   objectbox_flutter_libs: any
   shared_preferences: ^2.3.2
+  dropdown_search: ^6.0.1
 
 dev_dependencies:
   flutter_test:

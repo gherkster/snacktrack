@@ -1,6 +1,6 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:snacktrack/src/extensions/datetime.dart';
 import 'package:snacktrack/src/features/meals/services/meal_service.dart';
 import 'package:snacktrack/src/widgets/big_heading.dart';
 
@@ -12,13 +12,10 @@ class CreateMealForm extends StatefulWidget {
 }
 
 class _CreateMealFormState extends State<CreateMealForm> {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final energyInputController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final dropDownKey = GlobalKey<DropdownSearchState>();
 
   final fieldPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
-
-  var date = DateTime.now().date;
-  var time = TimeOfDay.now();
 
   @override
   Widget build(BuildContext context) {
@@ -50,35 +47,53 @@ class _CreateMealFormState extends State<CreateMealForm> {
               ),
               Padding(
                 padding: fieldPadding,
-                child: SearchAnchor(
-                  builder: (BuildContext context, SearchController controller) {
-                    return SearchBar(
-                      controller: controller,
-                      hintText: "Search foods",
-                      padding: const WidgetStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16.0)),
-                      onTap: () => controller.openView(),
-                      onChanged: (_) => controller.openView(),
-                      leading: const Icon(Icons.search),
+                child: DropdownSearch<String>.multiSelection(
+                  key: dropDownKey,
+                  items: (filter, s) => ["Test", "Test 2"],
+                  decoratorProps: const DropDownDecoratorProps(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      label: Text("Ingredients"),
+                    ),
+                  ),
+                  dropdownBuilder: (context, selectedItems) {
+                    return Wrap(
+                      spacing: 12,
+                      children: selectedItems
+                          .map(
+                            (item) => InputChip(
+                              label: Text(item),
+                              onSelected: (value) => {},
+                              onDeleted: () => dropDownKey.currentState?.removeItem(item),
+                            ),
+                          )
+                          .toList(),
                     );
                   },
-                  suggestionsBuilder: (BuildContext context, SearchController controller) {
-                    return List<ListTile>.generate(
-                      5,
-                      (int index) {
-                        final String item = 'item $index';
-                        return ListTile(
-                          title: Text(item),
-                          onTap: () {
-                            setState(() {
-                              controller.closeView(item);
-                              // Clear the input field to allow searching for more foods
-                              controller.text = "";
-                            });
-                          },
-                        );
-                      },
-                    );
-                  },
+                  popupProps: PopupPropsMultiSelection.bottomSheet(
+                    bottomSheetProps: const BottomSheetProps(showDragHandle: true),
+                    showSearchBox: true,
+                    searchFieldProps: const TextFieldProps(
+                      autofocus: true,
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        label: Text("Search for ingredients"),
+                      ),
+                    ),
+                    listViewProps: const ListViewProps(
+                      padding: EdgeInsets.only(left: 16, right: 16, top: 16),
+                    ),
+                    // Select immediately on click, without requiring a separate confirmation.
+                    onItemAdded: (selectedItems, addedItem) {
+                      dropDownKey.currentState?.changeSelectedItems(selectedItems);
+                    },
+                    onItemRemoved: (selectedItems, removedItem) {
+                      dropDownKey.currentState?.changeSelectedItems(selectedItems);
+                    },
+                    // Hide the default confirmation button
+                    validationBuilder: (context, items) => Container(),
+                  ),
                 ),
               ),
               Center(
