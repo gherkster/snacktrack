@@ -1,6 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:snacktrack/src/features/meals/domain/food.dart';
 import 'package:snacktrack/src/features/meals/services/meal_service.dart';
 import 'package:snacktrack/src/widgets/big_heading.dart';
 
@@ -47,9 +48,16 @@ class _CreateMealFormState extends State<CreateMealForm> {
               ),
               Padding(
                 padding: fieldPadding,
-                child: DropdownSearch<String>.multiSelection(
+                child: DropdownSearch<Food>.multiSelection(
+                  compareFn: (item1, item2) => item1.id == item2.id,
                   key: dropDownKey,
-                  items: (filter, s) => ["Test", "Test 2"],
+                  items: (filter, s) async {
+                    if (filter != "") {
+                      return mealService.searchFoods(filter);
+                    }
+                    return [];
+                  },
+                  itemAsString: (food) => food.name,
                   decoratorProps: const DropDownDecoratorProps(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -59,10 +67,11 @@ class _CreateMealFormState extends State<CreateMealForm> {
                   dropdownBuilder: (context, selectedItems) {
                     return Wrap(
                       spacing: 12,
+                      runSpacing: 6,
                       children: selectedItems
                           .map(
                             (item) => InputChip(
-                              label: Text(item),
+                              label: Text(item.name),
                               onSelected: (value) => {},
                               onDeleted: () => dropDownKey.currentState?.removeItem(item),
                             ),
@@ -73,6 +82,7 @@ class _CreateMealFormState extends State<CreateMealForm> {
                   popupProps: PopupPropsMultiSelection.bottomSheet(
                     bottomSheetProps: const BottomSheetProps(showDragHandle: true),
                     showSearchBox: true,
+                    searchDelay: const Duration(milliseconds: 250),
                     searchFieldProps: const TextFieldProps(
                       autofocus: true,
                       padding: EdgeInsets.symmetric(horizontal: 16),
@@ -84,6 +94,11 @@ class _CreateMealFormState extends State<CreateMealForm> {
                     listViewProps: const ListViewProps(
                       padding: EdgeInsets.only(left: 16, right: 16, top: 16),
                     ),
+                    itemBuilder: (context, item, isDisabled, isSelected) {
+                      return ListTile(
+                        title: Text(item.name),
+                      );
+                    },
                     // Select immediately on click, without requiring a separate confirmation.
                     onItemAdded: (selectedItems, addedItem) {
                       dropDownKey.currentState?.changeSelectedItems(selectedItems);

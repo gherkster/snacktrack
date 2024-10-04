@@ -15,7 +15,7 @@ class _NavBarState extends State<NavBar> {
   int _selectedTabIndex = 0;
   final List<Widget> _availableTabs = [
     OverviewScreen(),
-    MealsScreen(),
+    const MealsScreen(),
     const SettingsScreen(),
   ];
 
