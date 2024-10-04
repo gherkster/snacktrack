@@ -4,15 +4,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:excel/excel.dart';
-import 'package:snacktrack/src/features/health/data/data_sources/energy_record.dart';
-import 'package:snacktrack/src/features/health/data/data_sources/nutrition_output.dart';
+import 'package:snacktrack/src/features/meals/data/data_sources/nutrition_record.dart';
+import 'package:snacktrack/src/features/meals/data/data_sources/nutrition_output.dart';
 
 void main(List<String> arguments) {
   final dataRows = importDataset();
   saveOutput(dataRows);
 }
 
-List<EnergyRecord> importDataset() {
+List<NutritionRecord> importDataset() {
   var bytes = File("./datasets/dataset.xlsx").readAsBytesSync();
   var excel = Excel.decodeBytes(bytes);
 
@@ -22,7 +22,7 @@ List<EnergyRecord> importDataset() {
   }
 
   print("${dataSheet.rows.length} rows found");
-  final List<EnergyRecord> outputRows = [];
+  final List<NutritionRecord> outputRows = [];
 
   for (var row in dataSheet.rows.skip(1)) {
     final externalId = (row[0]!.value as TextCellValue).value.text!;
@@ -41,14 +41,14 @@ List<EnergyRecord> importDataset() {
     }
 
     outputRows.add(
-      EnergyRecord(externalId: externalId, name: name, kilojoules: kilojoules, protein: protein),
+      NutritionRecord(externalId: externalId, name: name, kilojoules: kilojoules, protein: protein),
     );
   }
 
   return outputRows;
 }
 
-void saveOutput(List<EnergyRecord> records) {
+void saveOutput(List<NutritionRecord> records) {
   final output = NutritionOutput(records: records);
 
   final file = File("../../assets/nutrition.json");

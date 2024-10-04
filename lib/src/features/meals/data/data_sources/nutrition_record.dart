@@ -1,4 +1,4 @@
-class EnergyRecord {
+class NutritionRecord {
   final String externalId;
   final String name;
 
@@ -8,9 +8,9 @@ class EnergyRecord {
   /// Protein in grams per 100g of food
   final double protein;
 
-  EnergyRecord({required this.externalId, required this.name, required this.kilojoules, required this.protein});
+  NutritionRecord({required this.externalId, required this.name, required this.kilojoules, required this.protein});
 
-  EnergyRecord.fromJson(Map<String, dynamic> json)
+  NutritionRecord.fromJson(Map<String, dynamic> json)
       : externalId = json["externalId"],
         name = json["name"],
         kilojoules = json["kilojoules"],
