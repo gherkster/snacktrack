@@ -37,5 +37,8 @@ class SettingsRepository {
 
   Future<void> setThemeMode(ThemeMode mode) => _prefs.setInt("themeMode", mode.index);
 
+  String? getFoodDatabaseHash() => _prefs.getString("foodDatabaseHash");
+  void setFoodDatabaseHash(String hash) => _prefs.setString("foodDatabaseHash", hash);
+
   Future<void> deleteAll() async => await _prefs.clear();
 }

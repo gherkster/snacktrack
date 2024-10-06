@@ -2,18 +2,15 @@ import 'nutrition_record.dart';
 
 class NutritionOutput {
   final List<NutritionRecord> records;
-  final String hash;
 
-  NutritionOutput({required this.records, required this.hash});
+  NutritionOutput({required this.records});
 
   NutritionOutput.fromJson(Map<String, dynamic> json)
-      : records = (json["records"] as List).map((r) => NutritionRecord.fromJson(r)).toList(),
-        hash = json["hash"];
+      : records = (json["records"] as List).map((r) => NutritionRecord.fromJson(r)).toList();
 
   Map<String, dynamic> toJson() {
     return {
       "records": records,
-      "hash": hash,
     };
   }
 }

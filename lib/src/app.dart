@@ -41,10 +41,14 @@ class App extends StatelessWidget {
     final foodRepository = FoodRepository(foodBox);
     final settingsRepository = SettingsRepository(sharedPreferences);
 
-    if (foodRepository.count() == 0) {
-      // Load default foods from dataset asynchronously
-      foodRepository.loadDatasetFoods();
-    }
+    final currentFoodDatabaseHash = settingsRepository.getFoodDatabaseHash();
+    foodRepository.getLatestDatabaseHash().then((hash) {
+      if (currentFoodDatabaseHash != hash) {
+        // Load default foods from dataset asynchronously
+        foodRepository.loadDatasetFoods();
+        settingsRepository.setFoodDatabaseHash(hash);
+      }
+    });
 
     return MultiProvider(
       providers: [

@@ -23,6 +23,10 @@ class FoodRepository {
 
   int count() => _box.count();
 
+  Future<String> getLatestDatabaseHash() async {
+    return await rootBundle.loadString("assets/nutrition-hash.txt");
+  }
+
   Future<void> loadDatasetFoods() async {
     final json = await rootBundle.loadString("assets/nutrition.json");
     final map = jsonDecode(json);

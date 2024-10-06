@@ -44,3 +44,4 @@ app.*.map.json
 
 # Transient assets
 assets/nutrition.json
+assets/nutrition-hash.txt

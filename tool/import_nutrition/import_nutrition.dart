@@ -65,11 +65,14 @@ List<NutritionRecord> importDataset() {
 
 void saveOutput(List<NutritionRecord> records) {
   final hash = md5.convert(utf8.encode(jsonEncode(records))).toString();
-  final output = NutritionOutput(records: records, hash: hash);
+  final nutritionHashFile = File("../../assets/nutrition-hash.txt");
+  nutritionHashFile.createSync(recursive: true);
+  nutritionHashFile.writeAsStringSync(hash);
 
-  final file = File("../../assets/nutrition.json");
-  file.createSync(recursive: true);
-  file.writeAsString(jsonEncode(output));
+  final output = NutritionOutput(records: records);
+  final nutritionFile = File("../../assets/nutrition.json");
+  nutritionFile.createSync(recursive: true);
+  nutritionFile.writeAsStringSync(jsonEncode(output));
 
-  print("Wrote ${records.length} records to ${file.path}. Document hash $hash.");
+  print("Wrote ${records.length} records to ${nutritionFile.path}. Document hash $hash.");
 }
