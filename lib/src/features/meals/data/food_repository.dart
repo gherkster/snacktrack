@@ -13,7 +13,7 @@ class FoodRepository {
   FoodRepository(this._box);
 
   Future<List<Food>> searchFoods(String queryText, [int limit = 10]) async {
-    final query = _box.query(FoodDto_.name.contains(queryText)).build();
+    final query = _box.query(FoodDto_.name.contains(queryText, caseSensitive: false)).build();
     query.limit = limit;
 
     final results = await query.findAsync();
@@ -42,6 +42,7 @@ extension FoodMapping on FoodDto {
     return Food(
       id: id,
       name: name,
+      category: category,
       kilojoulesPerUnit: kilojoulesPerUnit,
       quantity: quantity,
       // TODO: Map to enum
@@ -57,8 +58,8 @@ extension NutritionMapping on NutritionRecord {
   FoodDto mapToDto() {
     final now = DateTime.now();
     return FoodDto(
-      externalId: externalId,
       name: name,
+      category: category,
       kilojoulesPerUnit: kilojoules.toDouble(),
       proteinPerUnit: protein,
       quantity: 100,

@@ -1,5 +1,6 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:snacktrack/src/features/meals/domain/food.dart';
 import 'package:snacktrack/src/features/meals/services/meal_service.dart';
@@ -71,8 +72,33 @@ class _CreateMealFormState extends State<CreateMealForm> {
                       children: selectedItems
                           .map(
                             (item) => InputChip(
-                              label: Text(item.name),
-                              onSelected: (value) => {},
+                              label: Text("${item.quantity} ${item.unit} ${item.name}"),
+                              onSelected: (value) async => {
+                                await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return SimpleDialog(
+                                      title: Text(item.name),
+                                      children: [
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 72,
+                                              child: TextFormField(
+                                                autofocus: true,
+                                                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                                keyboardType: TextInputType.number,
+                                                initialValue: item.quantity.toString(),
+                                              ),
+                                            ),
+                                            Text(item.unit),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                )
+                              },
                               onDeleted: () => dropDownKey.currentState?.removeItem(item),
                             ),
                           )
@@ -97,6 +123,7 @@ class _CreateMealFormState extends State<CreateMealForm> {
                     itemBuilder: (context, item, isDisabled, isSelected) {
                       return ListTile(
                         title: Text(item.name),
+                        subtitle: Text(item.category),
                       );
                     },
                     // Select immediately on click, without requiring a separate confirmation.

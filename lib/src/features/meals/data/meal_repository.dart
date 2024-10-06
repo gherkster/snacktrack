@@ -33,6 +33,7 @@ extension FoodMapping on FoodDto {
     return Food(
       id: id,
       name: name,
+      category: category,
       kilojoulesPerUnit: kilojoulesPerUnit,
       quantity: quantity,
       // TODO: Map to enum

@@ -73,7 +73,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(5, 85335504140270996),
       name: 'FoodDto',
-      lastPropertyId: const obx_int.IdUid(8, 1513817894262437979),
+      lastPropertyId: const obx_int.IdUid(11, 1056744640792942680),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -99,7 +99,7 @@ final _entities = <obx_int.ModelEntity>[
         obx_int.ModelProperty(
             id: const obx_int.IdUid(5, 448520072291422795),
             name: 'quantity',
-            type: 8,
+            type: 6,
             flags: 0),
         obx_int.ModelProperty(
             id: const obx_int.IdUid(6, 8204999655354497367),
@@ -115,6 +115,16 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(8, 1513817894262437979),
             name: 'updatedAt',
             type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(10, 4762585705289965042),
+            name: 'proteinPerUnit',
+            type: 8,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(11, 1056744640792942680),
+            name: 'category',
+            type: 9,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
@@ -203,7 +213,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
         2592802322490414320,
         7108020444210493539,
         4103772333176250963,
-        366905812608668367
+        366905812608668367,
+        1602452085467312779
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -283,15 +294,18 @@ obx_int.ModelDefinition getObjectBoxModel() {
         objectToFB: (FoodDto object, fb.Builder fbb) {
           final nameOffset = fbb.writeString(object.name);
           final unitOffset = fbb.writeString(object.unit);
-          fbb.startTable(9);
+          final categoryOffset = fbb.writeString(object.category);
+          fbb.startTable(12);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
           fbb.addFloat64(2, object.kilojoulesPerUnit);
           fbb.addOffset(3, unitOffset);
-          fbb.addFloat64(4, object.quantity);
+          fbb.addInt64(4, object.quantity);
           fbb.addBool(5, object.isCustom);
           fbb.addInt64(6, object.createdAt.millisecondsSinceEpoch);
           fbb.addInt64(7, object.updatedAt.millisecondsSinceEpoch);
+          fbb.addFloat64(9, object.proteinPerUnit);
+          fbb.addOffset(10, categoryOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -302,12 +316,16 @@ obx_int.ModelDefinition getObjectBoxModel() {
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           final nameParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 6, '');
+          final categoryParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 24, '');
           final kilojoulesPerUnitParam =
               const fb.Float64Reader().vTableGet(buffer, rootOffset, 8, 0);
+          final proteinPerUnitParam = const fb.Float64Reader()
+              .vTableGetNullable(buffer, rootOffset, 22);
           final unitParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 10, '');
           final quantityParam =
-              const fb.Float64Reader().vTableGet(buffer, rootOffset, 12, 0);
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           final isCustomParam =
               const fb.BoolReader().vTableGet(buffer, rootOffset, 14, false);
           final createdAtParam = DateTime.fromMillisecondsSinceEpoch(
@@ -317,7 +335,9 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final object = FoodDto(
               id: idParam,
               name: nameParam,
+              category: categoryParam,
               kilojoulesPerUnit: kilojoulesPerUnitParam,
+              proteinPerUnit: proteinPerUnitParam,
               unit: unitParam,
               quantity: quantityParam,
               isCustom: isCustomParam,
@@ -420,7 +440,7 @@ class FoodDto_ {
 
   /// See [FoodDto.quantity].
   static final quantity =
-      obx.QueryDoubleProperty<FoodDto>(_entities[2].properties[4]);
+      obx.QueryIntegerProperty<FoodDto>(_entities[2].properties[4]);
 
   /// See [FoodDto.isCustom].
   static final isCustom =
@@ -433,6 +453,14 @@ class FoodDto_ {
   /// See [FoodDto.updatedAt].
   static final updatedAt =
       obx.QueryDateProperty<FoodDto>(_entities[2].properties[7]);
+
+  /// See [FoodDto.proteinPerUnit].
+  static final proteinPerUnit =
+      obx.QueryDoubleProperty<FoodDto>(_entities[2].properties[8]);
+
+  /// See [FoodDto.category].
+  static final category =
+      obx.QueryStringProperty<FoodDto>(_entities[2].properties[9]);
 }
 
 /// [MealDto] entity fields to define ObjectBox queries.

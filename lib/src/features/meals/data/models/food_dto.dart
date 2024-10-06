@@ -4,20 +4,20 @@ import 'package:objectbox/objectbox.dart';
 class FoodDto {
   @Id()
   int id;
-  String? externalId;
   String name;
+  String category;
   double kilojoulesPerUnit;
   double? proteinPerUnit;
   String unit;
-  double quantity;
+  int quantity;
   bool isCustom;
   DateTime createdAt;
   DateTime updatedAt;
 
   FoodDto({
     this.id = 0,
-    this.externalId,
     required this.name,
+    required this.category,
     required this.kilojoulesPerUnit,
     this.proteinPerUnit,
     required this.unit,

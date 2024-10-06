@@ -1,5 +1,5 @@
-# Australian Food Composition Database 
+# Food Nutritional Facts Dataset 
 
-Original file name - `Release 2 - Nutrient file.xlsx`
+Original file name - `foodstruct_nutritional_facts.csv`
 
-Source - https://www.foodstandards.gov.au/science-data/monitoringnutrients/afcd/australian-food-composition-database-download-excel-files
+Source - https://www.kaggle.com/datasets/beridzeg45/food-nutritional-facts
