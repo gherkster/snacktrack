@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:snacktrack/src/features/meals/domain/food.dart';
 import 'package:snacktrack/src/features/meals/services/meal_service.dart';
+import 'package:snacktrack/src/features/settings/services/settings_service.dart';
+import 'package:snacktrack/src/utilities/unit_conversion.dart';
 import 'package:snacktrack/src/widgets/big_heading.dart';
 
 class CreateMealForm extends StatefulWidget {
@@ -22,6 +24,7 @@ class _CreateMealFormState extends State<CreateMealForm> {
   @override
   Widget build(BuildContext context) {
     final mealService = context.watch<MealService>();
+    final settingsService = context.watch<SettingsService>();
 
     return Scaffold(
       appBar: AppBar(
@@ -77,24 +80,54 @@ class _CreateMealFormState extends State<CreateMealForm> {
                                 await showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return SimpleDialog(
+                                    return AlertDialog(
                                       title: Text(item.name),
-                                      children: [
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 72,
-                                              child: TextFormField(
-                                                autofocus: true,
-                                                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                                keyboardType: TextInputType.number,
-                                                initialValue: item.quantity.toString(),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text("Weight"),
+                                              Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 56,
+                                                    child: TextFormField(
+                                                      autofocus: true,
+                                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                                      keyboardType: TextInputType.number,
+                                                      initialValue: item.quantity.toString(),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 12,
+                                                  ),
+                                                  Text(item.unit),
+                                                ],
                                               ),
-                                            ),
-                                            Text(item.unit),
-                                          ],
-                                        ),
-                                      ],
+                                            ],
+                                          ),
+                                          SizedBox(height: 24),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text("Energy per 100g"),
+                                              Row(
+                                                children: [
+                                                  Text(convertKilojoulesToPreferredUnits(
+                                                          item.kilojoulesPerUnit, settingsService.energyUnit)
+                                                      .toString()),
+                                                  const SizedBox(
+                                                    width: 12,
+                                                  ),
+                                                  Text(settingsService.energyUnit.shortName),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     );
                                   },
                                 )
