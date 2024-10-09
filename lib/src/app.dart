@@ -45,8 +45,9 @@ class App extends StatelessWidget {
     foodRepository.getLatestDatabaseHash().then((hash) {
       if (currentFoodDatabaseHash != hash) {
         // Load default foods from dataset asynchronously
-        foodRepository.loadDatasetFoods();
-        settingsRepository.setFoodDatabaseHash(hash);
+        foodRepository.loadDatasetFoods().then((_) {
+          settingsRepository.setFoodDatabaseHash(hash);
+        });
       }
     });
 
