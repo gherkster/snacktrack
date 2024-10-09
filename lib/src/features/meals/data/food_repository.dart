@@ -5,7 +5,9 @@ import 'package:snacktrack/objectbox.g.dart';
 import 'package:snacktrack/src/features/meals/data/data_sources/nutrition_output.dart';
 import 'package:snacktrack/src/features/meals/data/data_sources/nutrition_record.dart';
 import 'package:snacktrack/src/features/meals/data/models/food_dto.dart';
+import 'package:snacktrack/src/features/meals/data/models/token_dto.dart';
 import 'package:snacktrack/src/features/meals/domain/food.dart';
+import 'package:snacktrack/src/utilities/tokens.dart';
 
 class FoodRepository {
   final Box<FoodDto> _box;
@@ -13,7 +15,16 @@ class FoodRepository {
   FoodRepository(this._box);
 
   Future<List<Food>> searchFoods(String queryText, [int limit = 10]) async {
-    final query = _box.query(FoodDto_.name.contains(queryText, caseSensitive: false)).build();
+    // TODO: Limit the number of tokens for performance?
+    final queryTokens = tokenize(queryText);
+    final queryBuilder = _box.query();
+
+    // Perform a substring search on each token linked to a food item
+    for (final token in queryTokens) {
+      queryBuilder.linkMany(FoodDto_.tokens, TokenDto_.text.contains(token, caseSensitive: false));
+    }
+
+    final query = queryBuilder.build();
     query.limit = limit;
 
     final results = await query.findAsync();
@@ -34,6 +45,7 @@ class FoodRepository {
 
     final nutritionRecords = dataset.records.map((r) => r.mapToDto()).toList();
 
+    // TODO: Run in transaction
     // Remove all stored dataset foods
     await _box.query(FoodDto_.isCustom.equals(false)).build().removeAsync();
     // Insert all dataset foods
@@ -61,7 +73,7 @@ extension FoodMapping on FoodDto {
 extension NutritionMapping on NutritionRecord {
   FoodDto mapToDto() {
     final now = DateTime.now();
-    return FoodDto(
+    final dto = FoodDto(
       name: name,
       category: category,
       kilojoulesPerUnit: kilojoules.toDouble(),
@@ -72,5 +84,7 @@ extension NutritionMapping on NutritionRecord {
       createdAt: now,
       updatedAt: now,
     );
+    dto.tokens.addAll(tokens.map((t) => TokenDto(text: t)));
+    return dto;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:objectbox/objectbox.dart';
+import 'package:snacktrack/src/features/meals/data/models/token_dto.dart';
 
 @Entity()
 class FoodDto {
@@ -11,6 +12,7 @@ class FoodDto {
   String unit;
   int quantity;
   bool isCustom;
+  final tokens = ToMany<TokenDto>();
   DateTime createdAt;
   DateTime updatedAt;
 

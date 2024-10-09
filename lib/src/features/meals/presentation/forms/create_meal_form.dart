@@ -57,7 +57,7 @@ class _CreateMealFormState extends State<CreateMealForm> {
                   key: dropDownKey,
                   items: (filter, s) async {
                     if (filter != "") {
-                      return mealService.searchFoods(filter);
+                      return await mealService.searchFoods(filter);
                     }
                     return [];
                   },
@@ -141,6 +141,8 @@ class _CreateMealFormState extends State<CreateMealForm> {
                   popupProps: PopupPropsMultiSelection.bottomSheet(
                     bottomSheetProps: const BottomSheetProps(showDragHandle: true),
                     showSearchBox: true,
+                    // Filtering is done in the database query, this disables the substring based default filtering
+                    disableFilter: true,
                     searchDelay: const Duration(milliseconds: 250),
                     searchFieldProps: const TextFieldProps(
                       autofocus: true,

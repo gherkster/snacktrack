@@ -7,6 +7,7 @@ import 'package:crypto/crypto.dart';
 import 'package:excel/excel.dart';
 import 'package:snacktrack/src/features/meals/data/data_sources/nutrition_record.dart';
 import 'package:snacktrack/src/features/meals/data/data_sources/nutrition_output.dart';
+import 'package:snacktrack/src/utilities/tokens.dart';
 
 void main(List<String> arguments) {
   final dataRows = importDataset();
@@ -78,6 +79,7 @@ List<NutritionRecord> importDataset() {
         category: category,
         kilojoules: kilojoules,
         protein: protein,
+        tokens: tokenize(name),
       ),
     );
   }

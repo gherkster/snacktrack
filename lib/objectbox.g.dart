@@ -18,6 +18,7 @@ import 'src/features/health/data/models/energy_intake_measurement_dto.dart';
 import 'src/features/health/data/models/weight_measurement_dto.dart';
 import 'src/features/meals/data/models/food_dto.dart';
 import 'src/features/meals/data/models/meal_dto.dart';
+import 'src/features/meals/data/models/token_dto.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
@@ -73,7 +74,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(5, 85335504140270996),
       name: 'FoodDto',
-      lastPropertyId: const obx_int.IdUid(11, 1056744640792942680),
+      lastPropertyId: const obx_int.IdUid(12, 2625934051187557699),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -127,7 +128,12 @@ final _entities = <obx_int.ModelEntity>[
             type: 9,
             flags: 0)
       ],
-      relations: <obx_int.ModelRelation>[],
+      relations: <obx_int.ModelRelation>[
+        obx_int.ModelRelation(
+            id: const obx_int.IdUid(2, 5691717756668899230),
+            name: 'tokens',
+            targetId: const obx_int.IdUid(7, 2561818947711512952))
+      ],
       backlinks: <obx_int.ModelBacklink>[]),
   obx_int.ModelEntity(
       id: const obx_int.IdUid(6, 1853866419130782432),
@@ -162,6 +168,25 @@ final _entities = <obx_int.ModelEntity>[
             name: 'foods',
             targetId: const obx_int.IdUid(5, 85335504140270996))
       ],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(7, 2561818947711512952),
+      name: 'TokenDto',
+      lastPropertyId: const obx_int.IdUid(2, 374475286833708285),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 8065299793314490541),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 374475286833708285),
+            name: 'text',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -200,9 +225,9 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(6, 1853866419130782432),
+      lastEntityId: const obx_int.IdUid(7, 2561818947711512952),
       lastIndexId: const obx_int.IdUid(0, 0),
-      lastRelationId: const obx_int.IdUid(1, 2805857721606206038),
+      lastRelationId: const obx_int.IdUid(2, 5691717756668899230),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [2088190156517773895, 4475029639873160576],
       retiredIndexUids: const [],
@@ -214,7 +239,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
         7108020444210493539,
         4103772333176250963,
         366905812608668367,
-        1602452085467312779
+        1602452085467312779,
+        2625934051187557699
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -286,7 +312,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
     FoodDto: obx_int.EntityDefinition<FoodDto>(
         model: _entities[2],
         toOneRelations: (FoodDto object) => [],
-        toManyRelations: (FoodDto object) => {},
+        toManyRelations: (FoodDto object) =>
+            {obx_int.RelInfo<FoodDto>.toMany(2, object.id): object.tokens},
         getId: (FoodDto object) => object.id,
         setId: (FoodDto object, int id) {
           object.id = id;
@@ -295,7 +322,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final nameOffset = fbb.writeString(object.name);
           final unitOffset = fbb.writeString(object.unit);
           final categoryOffset = fbb.writeString(object.category);
-          fbb.startTable(12);
+          fbb.startTable(13);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
           fbb.addFloat64(2, object.kilojoulesPerUnit);
@@ -343,7 +370,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
               isCustom: isCustomParam,
               createdAt: createdAtParam,
               updatedAt: updatedAtParam);
-
+          obx_int.InternalToManyAccess.setRelInfo<FoodDto>(object.tokens, store,
+              obx_int.RelInfo<FoodDto>.toMany(2, object.id));
           return object;
         }),
     MealDto: obx_int.EntityDefinition<MealDto>(
@@ -383,6 +411,33 @@ obx_int.ModelDefinition getObjectBoxModel() {
               updatedAt: updatedAtParam);
           obx_int.InternalToManyAccess.setRelInfo<MealDto>(object.foods, store,
               obx_int.RelInfo<MealDto>.toMany(1, object.id));
+          return object;
+        }),
+    TokenDto: obx_int.EntityDefinition<TokenDto>(
+        model: _entities[4],
+        toOneRelations: (TokenDto object) => [],
+        toManyRelations: (TokenDto object) => {},
+        getId: (TokenDto object) => object.id,
+        setId: (TokenDto object, int id) {
+          object.id = id;
+        },
+        objectToFB: (TokenDto object, fb.Builder fbb) {
+          final textOffset = fbb.writeString(object.text);
+          fbb.startTable(3);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, textOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final textParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final object = TokenDto(id: idParam, text: textParam);
+
           return object;
         })
   };
@@ -461,6 +516,10 @@ class FoodDto_ {
   /// See [FoodDto.category].
   static final category =
       obx.QueryStringProperty<FoodDto>(_entities[2].properties[9]);
+
+  /// see [FoodDto.tokens]
+  static final tokens =
+      obx.QueryRelationToMany<FoodDto, TokenDto>(_entities[2].relations[0]);
 }
 
 /// [MealDto] entity fields to define ObjectBox queries.
@@ -484,4 +543,15 @@ class MealDto_ {
   /// see [MealDto.foods]
   static final foods =
       obx.QueryRelationToMany<MealDto, FoodDto>(_entities[3].relations[0]);
+}
+
+/// [TokenDto] entity fields to define ObjectBox queries.
+class TokenDto_ {
+  /// See [TokenDto.id].
+  static final id =
+      obx.QueryIntegerProperty<TokenDto>(_entities[4].properties[0]);
+
+  /// See [TokenDto.text].
+  static final text =
+      obx.QueryStringProperty<TokenDto>(_entities[4].properties[1]);
 }
