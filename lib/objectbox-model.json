@@ -165,14 +165,16 @@
         {
           "id": "2:374475286833708285",
           "name": "text",
-          "type": 9
+          "type": 9,
+          "flags": 2048,
+          "indexId": "1:8004466284732580000"
         }
       ],
       "relations": []
     }
   ],
   "lastEntityId": "7:2561818947711512952",
-  "lastIndexId": "0:0",
+  "lastIndexId": "1:8004466284732580000",
   "lastRelationId": "2:5691717756668899230",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

@@ -4,6 +4,7 @@ import 'package:objectbox/objectbox.dart';
 class TokenDto {
   @Id()
   int id;
+  @Index()
   String text;
 
   TokenDto({

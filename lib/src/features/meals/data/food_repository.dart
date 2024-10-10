@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:fuzzywuzzy/algorithms/weighted_ratio.dart';
+import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:snacktrack/objectbox.g.dart';
 import 'package:snacktrack/src/features/meals/data/data_sources/nutrition_output.dart';
 import 'package:snacktrack/src/features/meals/data/data_sources/nutrition_record.dart';
@@ -15,13 +17,14 @@ class FoodRepository {
   FoodRepository(this._box);
 
   Future<List<Food>> searchFoods(String queryText, [int limit = 10]) async {
-    // TODO: Limit the number of tokens for performance?
-    final queryTokens = tokenize(queryText);
+    // Limit the number of tokens so that performance is not impacted by excessive search conditions
+    final queryTokens = tokenize(queryText).take(5).toList();
     final queryBuilder = _box.query();
 
-    // Perform a substring search on each token linked to a food item
+    // Perform a startsWith search on each token linked to a food item,
+    // to retrieve any food items that contain one of the search tokens
     for (final token in queryTokens) {
-      queryBuilder.linkMany(FoodDto_.tokens, TokenDto_.text.contains(token, caseSensitive: false));
+      queryBuilder.linkMany(FoodDto_.tokens, TokenDto_.text.startsWith(token, caseSensitive: false));
     }
 
     final query = queryBuilder.build();
@@ -29,7 +32,15 @@ class FoodRepository {
 
     final results = await query.findAsync();
     query.close();
-    return results.map((r) => r.mapToDomain()).toList();
+
+    var sortedResults = extractAllSorted(
+      query: queryText,
+      choices: results,
+      getter: (food) => food.name,
+      ratio: const WeightedRatio(),
+    );
+
+    return sortedResults.map((r) => r.choice.mapToDomain()).toList();
   }
 
   int count() => _box.count();
