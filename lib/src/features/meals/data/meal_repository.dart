@@ -5,9 +5,10 @@ import 'package:snacktrack/src/features/meals/domain/food.dart';
 import 'package:snacktrack/src/features/meals/domain/meal.dart';
 
 class MealRepository {
+  final Store store;
   final Box<MealDto> _box;
 
-  MealRepository(this._box);
+  MealRepository(this.store) : _box = store.box<MealDto>();
 
   List<Meal> getMeals() {
     var results = _box.getAll();

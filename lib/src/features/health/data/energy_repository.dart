@@ -4,9 +4,10 @@ import "package:snacktrack/src/features/health/data/models/energy_intake_measure
 import "package:snacktrack/src/features/health/domain/energy_intake_measurement.dart";
 
 class EnergyRepository {
+  final Store store;
   final Box<EnergyIntakeMeasurementDto> _box;
 
-  EnergyRepository(this._box);
+  EnergyRepository(this.store) : _box = store.box<EnergyIntakeMeasurementDto>();
 
   void addKj(double amount, DateTime time) =>
       _box.put(EnergyIntakeMeasurementDto(kilojoules: amount.roundToPrecision(2), time: time));

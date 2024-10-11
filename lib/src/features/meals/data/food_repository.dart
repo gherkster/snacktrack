@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/services.dart';
 import 'package:fuzzywuzzy/algorithms/weighted_ratio.dart';
@@ -12,9 +13,10 @@ import 'package:snacktrack/src/features/meals/domain/food.dart';
 import 'package:snacktrack/src/utilities/tokens.dart';
 
 class FoodRepository {
+  final Store store;
   final Box<FoodDto> _box;
 
-  FoodRepository(this._box);
+  FoodRepository(this.store) : _box = store.box<FoodDto>();
 
   Future<List<Food>> searchFoods(String queryText, [int limit = 10]) async {
     // Limit the number of tokens so that performance is not impacted by excessive search conditions
@@ -56,11 +58,13 @@ class FoodRepository {
 
     final nutritionRecords = dataset.records.map((r) => r.mapToDto()).toList();
 
-    // TODO: Run in transaction
-    // Remove all stored dataset foods
-    await _box.query(FoodDto_.isCustom.equals(false)).build().removeAsync();
-    // Insert all dataset foods
-    await _box.putManyAsync(nutritionRecords, mode: PutMode.insert);
+    store.runInTransaction(TxMode.write, () {
+      // Remove all stored dataset foods
+      _box.query(FoodDto_.isCustom.equals(false)).build().remove();
+      // Insert all dataset foods
+      _box.putMany(nutritionRecords, mode: PutMode.insert);
+    });
+    log("Refreshed the food database with ${nutritionRecords.length} foods");
   }
 }
 

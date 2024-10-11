@@ -3,12 +3,8 @@ import "package:google_fonts/google_fonts.dart";
 import "package:objectbox/objectbox.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
-import "package:snacktrack/src/features/health/data/models/energy_intake_measurement_dto.dart";
-import "package:snacktrack/src/features/health/data/models/weight_measurement_dto.dart";
 import "package:snacktrack/src/features/meals/data/food_repository.dart";
 import "package:snacktrack/src/features/meals/data/meal_repository.dart";
-import "package:snacktrack/src/features/meals/data/models/food_dto.dart";
-import "package:snacktrack/src/features/meals/data/models/meal_dto.dart";
 import "package:snacktrack/src/features/meals/services/meal_service.dart";
 import "package:snacktrack/src/features/settings/data/settings_repository.dart";
 import "package:snacktrack/src/features/health/services/health_service.dart";
@@ -30,15 +26,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final energyBox = store.box<EnergyIntakeMeasurementDto>();
-    final weightBox = store.box<WeightMeasurementDto>();
-    final mealBox = store.box<MealDto>();
-    final foodBox = store.box<FoodDto>();
-
-    final energyRepository = EnergyRepository(energyBox);
-    final weightRepository = WeightRepository(weightBox);
-    final mealRepository = MealRepository(mealBox);
-    final foodRepository = FoodRepository(foodBox);
+    final energyRepository = EnergyRepository(store);
+    final weightRepository = WeightRepository(store);
+    final mealRepository = MealRepository(store);
+    final foodRepository = FoodRepository(store);
     final settingsRepository = SettingsRepository(sharedPreferences);
 
     final currentFoodDatabaseHash = settingsRepository.getFoodDatabaseHash();

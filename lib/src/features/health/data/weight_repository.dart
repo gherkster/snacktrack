@@ -4,9 +4,10 @@ import "package:snacktrack/src/features/health/data/models/weight_measurement_dt
 import "package:snacktrack/src/features/health/domain/weight_measurement.dart";
 
 class WeightRepository {
+  final Store store;
   final Box<WeightMeasurementDto> _box;
 
-  WeightRepository(this._box);
+  WeightRepository(this.store) : _box = store.box<WeightMeasurementDto>();
 
   void addKg(double amount, DateTime time) =>
       _box.put(WeightMeasurementDto(kilograms: amount.roundToPrecision(2), time: time));
