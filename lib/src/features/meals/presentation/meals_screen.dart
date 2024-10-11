@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
+import "package:snacktrack/src/features/meals/domain/meal.dart";
 import "package:snacktrack/src/features/meals/presentation/forms/create_meal_form.dart";
 import "package:snacktrack/src/features/meals/services/meal_service.dart";
 import "package:snacktrack/src/widgets/big_heading.dart";
@@ -62,13 +63,31 @@ class MealsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const BigHeading(title: "Meals"),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: mealService.mealCount,
-                itemBuilder: (context, index) {
-                  return ListTile();
+              FutureBuilder<List<Meal>>(
+                future: mealService.getMeals(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return const CircularProgressIndicator();
+                    default:
+                      if (snapshot.hasError) {
+                        return Text("Error ${snapshot.error}");
+                      } else {
+                        var meals = snapshot.data ?? [];
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: meals.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(meals[index].name),
+                              subtitle: Text(meals[index].foods.map((f) => f.name).toList().toString()),
+                            );
+                          },
+                        );
+                      }
+                  }
                 },
-              )
+              ),
             ],
           ),
         ),

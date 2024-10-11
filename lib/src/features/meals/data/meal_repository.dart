@@ -10,12 +10,20 @@ class MealRepository {
 
   MealRepository(this.store) : _box = store.box<MealDto>();
 
-  List<Meal> getMeals() {
-    var results = _box.getAll();
+  Future<List<Meal>> getMeals() async {
+    var results = await _box.getAllAsync();
     return results.map((r) => r.mapToDomain()).toList();
   }
 
   int count() => _box.count();
+
+  Future<void> createMeal(String name, List<Food> foods) async {
+    final now = DateTime.now();
+    final mealDto = MealDto(name: name, createdAt: now, updatedAt: now);
+    mealDto.foods.addAll(foods.map((f) => f.mapToDto()));
+
+    await _box.putAsync(mealDto);
+  }
 }
 
 extension MealMapping on MealDto {
@@ -29,7 +37,7 @@ extension MealMapping on MealDto {
   }
 }
 
-extension FoodMapping on FoodDto {
+extension FoodDomainMapping on FoodDto {
   Food mapToDomain() {
     return Food(
       id: id,
@@ -39,6 +47,21 @@ extension FoodMapping on FoodDto {
       quantity: quantity,
       // TODO: Map to enum
       unit: unit,
+      isCustom: isCustom,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+}
+
+extension FoodDataMapping on Food {
+  FoodDto mapToDto() {
+    return FoodDto(
+      name: name,
+      category: category,
+      kilojoulesPerUnit: kilojoulesPerUnit,
+      unit: unit,
+      quantity: quantity,
       isCustom: isCustom,
       createdAt: createdAt,
       updatedAt: updatedAt,

@@ -17,9 +17,11 @@ class CreateMealForm extends StatefulWidget {
 
 class _CreateMealFormState extends State<CreateMealForm> {
   final formKey = GlobalKey<FormState>();
-  final dropDownKey = GlobalKey<DropdownSearchState>();
+  final dropDownKey = GlobalKey<DropdownSearchState<Food>>();
 
   final fieldPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
+
+  String name = "";
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +46,17 @@ class _CreateMealFormState extends State<CreateMealForm> {
               Padding(
                 padding: fieldPadding,
                 child: TextFormField(
+                  onSaved: (value) => name = value ?? "",
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     label: Text("Name"),
                   ),
+                  validator: (value) {
+                    if (value == null || value == "") {
+                      return "Name is required";
+                    }
+                    return null;
+                  },
                 ),
               ),
               Padding(
@@ -62,6 +71,12 @@ class _CreateMealFormState extends State<CreateMealForm> {
                     return [];
                   },
                   itemAsString: (food) => food.name,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Ingredients are required";
+                    }
+                    return null;
+                  },
                   decoratorProps: const DropDownDecoratorProps(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -108,7 +123,7 @@ class _CreateMealFormState extends State<CreateMealForm> {
                                               ),
                                             ],
                                           ),
-                                          SizedBox(height: 24),
+                                          const SizedBox(height: 24),
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
@@ -177,9 +192,15 @@ class _CreateMealFormState extends State<CreateMealForm> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: FilledButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (formKey.currentState?.validate() == true) {
-                        Navigator.pop(context);
+                        formKey.currentState!.save();
+                        var foods = dropDownKey.currentState?.getSelectedItems ?? [];
+                        await mealService.createMeal(name, foods);
+
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
                       }
                     },
                     child: Padding(
