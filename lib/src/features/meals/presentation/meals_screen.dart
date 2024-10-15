@@ -81,6 +81,16 @@ class MealsScreen extends StatelessWidget {
                             return ListTile(
                               title: Text(meals[index].name),
                               subtitle: Text(meals[index].foods.map((f) => f.name).toList().toString()),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return CreateMealForm(meal: meals[index]);
+                                    },
+                                  ),
+                                );
+                              },
                             );
                           },
                         );

@@ -21,6 +21,11 @@ class MealService extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateMeal(int id, String name, List<Food> foods) async {
+    await _mealRepository.updateMeal(id, name, foods);
+    notifyListeners();
+  }
+
   Future<List<Food>> searchFoods(String queryText, [int limit = 10]) async {
     return await _foodRepository.searchFoods(queryText, limit);
   }

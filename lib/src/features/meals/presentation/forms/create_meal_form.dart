@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:snacktrack/src/features/meals/domain/food.dart';
+import 'package:snacktrack/src/features/meals/domain/meal.dart';
 import 'package:snacktrack/src/features/meals/services/meal_service.dart';
 import 'package:snacktrack/src/features/settings/services/settings_service.dart';
 import 'package:snacktrack/src/utilities/unit_conversion.dart';
 import 'package:snacktrack/src/widgets/big_heading.dart';
 
 class CreateMealForm extends StatefulWidget {
-  const CreateMealForm({super.key});
+  const CreateMealForm({super.key, this.meal});
+
+  final Meal? meal;
 
   @override
   State<CreateMealForm> createState() => _CreateMealFormState();
@@ -22,6 +25,15 @@ class _CreateMealFormState extends State<CreateMealForm> {
   final fieldPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
 
   String name = "";
+
+  @override
+  initState() {
+    if (widget.meal != null) {
+      /// Prefill name for editing scenario. Foods are prefilled below in `selectedItems`.
+      name = widget.meal!.name;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +58,13 @@ class _CreateMealFormState extends State<CreateMealForm> {
               Padding(
                 padding: fieldPadding,
                 child: TextFormField(
+                  initialValue: name,
                   onSaved: (value) => name = value ?? "",
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     label: Text("Name"),
                   ),
+                  textCapitalization: TextCapitalization.sentences,
                   validator: (value) {
                     if (value == null || value == "") {
                       return "Name is required";
@@ -71,6 +85,8 @@ class _CreateMealFormState extends State<CreateMealForm> {
                     return [];
                   },
                   itemAsString: (food) => food.name,
+                  // Prefill foods for an edit scenario
+                  selectedItems: widget.meal?.foods ?? [],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Ingredients are required";
@@ -196,7 +212,12 @@ class _CreateMealFormState extends State<CreateMealForm> {
                       if (formKey.currentState?.validate() == true) {
                         formKey.currentState!.save();
                         var foods = dropDownKey.currentState?.getSelectedItems ?? [];
-                        await mealService.createMeal(name, foods);
+
+                        if (widget.meal != null) {
+                          await mealService.updateMeal(widget.meal!.id, name, foods);
+                        } else {
+                          await mealService.createMeal(name, foods);
+                        }
 
                         if (context.mounted) {
                           Navigator.pop(context);

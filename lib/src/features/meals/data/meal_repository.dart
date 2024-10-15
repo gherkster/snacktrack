@@ -19,21 +19,41 @@ class MealRepository {
 
   Future<void> createMeal(String name, List<Food> foods) async {
     final now = DateTime.now();
-    final mealDto = MealDto(name: name, createdAt: now, updatedAt: now);
+    final mealDto = MealDto(
+      name: name,
+      createdAt: now,
+      updatedAt: now,
+    );
     mealDto.foods.addAll(foods.map((f) => f.mapToDto()));
 
     await _box.putAsync(mealDto);
+  }
+
+  Future<void> updateMeal(int id, String name, List<Food> foods) async {
+    final storedMeal = await _box.getAsync(id);
+    if (storedMeal == null) {
+      return;
+    }
+
+    storedMeal.name = name;
+    // Remove all existing linked foods in case some need to be removed, and add the latest set
+    storedMeal.foods.clear();
+    storedMeal.foods.addAll(foods.map((f) => f.mapToDto()));
+    storedMeal.updatedAt = DateTime.now();
+
+    await _box.putAsync(storedMeal);
   }
 }
 
 extension MealMapping on MealDto {
   Meal mapToDomain() {
     return Meal(
-        id: id,
-        name: name,
-        foods: foods.map((f) => f.mapToDomain()).toList(),
-        createdAt: createdAt,
-        updatedAt: updatedAt);
+      id: id,
+      name: name,
+      foods: foods.map((f) => f.mapToDomain()).toList(),
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
   }
 }
 
@@ -57,6 +77,7 @@ extension FoodDomainMapping on FoodDto {
 extension FoodDataMapping on Food {
   FoodDto mapToDto() {
     return FoodDto(
+      id: id,
       name: name,
       category: category,
       kilojoulesPerUnit: kilojoulesPerUnit,
