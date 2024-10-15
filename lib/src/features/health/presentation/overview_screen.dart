@@ -58,7 +58,7 @@ class OverviewScreen extends StatelessWidget {
                       builder: (context) {
                         var currentWeight = context.read<HealthService>().currentWeight;
                         return WeightForm(
-                          currentWeight: currentWeight ?? (settingsService.weightUnit == WeightUnit.pounds ? 150 : 70),
+                          targetWeight: currentWeight ?? (settingsService.weightUnit == WeightUnit.pounds ? 150 : 70),
                         );
                       },
                     ),
@@ -256,7 +256,6 @@ class OverviewScreen extends StatelessWidget {
                         horizontalTextPadding: "8px",
                       ),
                     ],
-                    //minorTicksPerInterval: 1,
                   ),
                   // Both 2nd digit of min and max (ie min 40<-, max 80<-) need to be 5 or 0 if setting manually, can't be different
                   tooltipBehavior: TooltipBehavior(

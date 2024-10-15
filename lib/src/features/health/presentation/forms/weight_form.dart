@@ -10,9 +10,9 @@ import 'package:snacktrack/src/features/settings/services/settings_service.dart'
 import 'package:snacktrack/src/widgets/big_heading.dart';
 
 class WeightForm extends StatefulWidget {
-  const WeightForm({super.key, required this.currentWeight});
+  const WeightForm({super.key, required this.targetWeight});
 
-  final double currentWeight;
+  final double targetWeight;
 
   @override
   State<WeightForm> createState() => _WeightFormState();
@@ -25,7 +25,7 @@ class _WeightFormState extends State<WeightForm> {
 
   var date = DateTime.now().date;
   var time = TimeOfDay.now();
-  late double weight = widget.currentWeight;
+  late double weight = widget.targetWeight;
 
   @override
   Widget build(BuildContext context) {
