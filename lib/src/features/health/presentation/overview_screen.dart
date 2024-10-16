@@ -8,13 +8,14 @@ import "package:percent_indicator/circular_percent_indicator.dart";
 import "package:provider/provider.dart";
 import "package:snacktrack/src/extensions/datetime.dart";
 import "package:snacktrack/src/features/health/domain/weight_measurement.dart";
-import "package:snacktrack/src/features/health/domain/weight_unit.dart";
 import "package:snacktrack/src/features/health/services/health_service.dart";
 import "package:snacktrack/src/features/settings/presentation/options/energy_target_options.dart";
 import "package:snacktrack/src/features/settings/presentation/options/weight_target_options.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
 import "package:snacktrack/src/features/health/presentation/forms/energy_form.dart";
 import "package:snacktrack/src/features/health/presentation/forms/weight_form.dart";
+import "package:snacktrack/src/utilities/constants.dart";
+import "package:snacktrack/src/utilities/unit_conversion.dart";
 import "package:syncfusion_flutter_charts/charts.dart";
 
 class OverviewScreen extends StatelessWidget {
@@ -58,7 +59,8 @@ class OverviewScreen extends StatelessWidget {
                       builder: (context) {
                         var currentWeight = context.read<HealthService>().currentWeight;
                         return WeightForm(
-                          targetWeight: currentWeight ?? (settingsService.weightUnit == WeightUnit.pounds ? 150 : 70),
+                          targetWeight: currentWeight ??
+                              convertKilogramsToPreferredUnits(defaultWeightTargetKg, settingsService.weightUnit),
                         );
                       },
                     ),

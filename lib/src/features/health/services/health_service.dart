@@ -28,12 +28,12 @@ class HealthService extends ChangeNotifier {
 
   double? get maximumRecentWeight {
     final weightUnit = _settingsRepository.getWeightUnit();
-    return recentDailyWeights.isNotEmpty ? recentDailyWeights.map((w) => w.inPreferredUnits(weightUnit)).max : null;
+    return recentDailyWeights.isNotEmpty ? recentDailyWeights.map((w) => w.inPreferredUnits(weightUnit)).max() : null;
   }
 
   double? get minimumRecentWeight {
     final weightUnit = _settingsRepository.getWeightUnit();
-    return recentDailyWeights.isNotEmpty ? recentDailyWeights.map((w) => w.inPreferredUnits(weightUnit)).min : null;
+    return recentDailyWeights.isNotEmpty ? recentDailyWeights.map((w) => w.inPreferredUnits(weightUnit)).min() : null;
   }
 
   List<WeightMeasurement> getLatest(int days) => _weightRepository.getSince(DateTime.now().date.subDays(days));

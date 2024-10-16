@@ -1,8 +1,11 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
+import "package:snacktrack/src/extensions/iterable.dart";
 import "package:snacktrack/src/features/meals/domain/meal.dart";
 import "package:snacktrack/src/features/meals/presentation/forms/create_meal_form.dart";
 import "package:snacktrack/src/features/meals/services/meal_service.dart";
+import "package:snacktrack/src/features/settings/services/settings_service.dart";
+import "package:snacktrack/src/utilities/unit_conversion.dart";
 import "package:snacktrack/src/widgets/big_heading.dart";
 
 class MealsScreen extends StatelessWidget {
@@ -11,6 +14,7 @@ class MealsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mealService = context.watch<MealService>();
+    final settingsService = context.watch<SettingsService>();
 
     return Scaffold(
       appBar: AppBar(
@@ -78,9 +82,11 @@ class MealsScreen extends StatelessWidget {
                           shrinkWrap: true,
                           itemCount: meals.length,
                           itemBuilder: (context, index) {
+                            final mealEnergy = convertKilojoulesToPreferredUnits(
+                                meals[index].mealFoods.map((f) => f.totalKilojoules).sum(), settingsService.energyUnit);
                             return ListTile(
                               title: Text(meals[index].name),
-                              subtitle: Text(meals[index].mealFoods.map((f) => f.food.name).toList().toString()),
+                              subtitle: Text("$mealEnergy ${settingsService.energyUnit.longName}"),
                               onTap: () {
                                 Navigator.push(
                                   context,
