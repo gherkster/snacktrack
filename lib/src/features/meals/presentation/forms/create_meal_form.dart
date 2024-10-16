@@ -40,9 +40,78 @@ class _CreateMealFormState extends State<CreateMealForm> {
     final mealService = context.watch<MealService>();
     final settingsService = context.watch<SettingsService>();
 
+    final isEditMode = widget.meal != null;
+
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
+        actions: isEditMode
+            ? [
+                MenuAnchor(
+                  builder: (context, controller, child) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: IconButton(
+                        onPressed: () {
+                          if (controller.isOpen) {
+                            controller.close();
+                          } else {
+                            controller.open();
+                          }
+                        },
+                        icon: const Icon(Icons.more_vert),
+                      ),
+                    );
+                  },
+                  menuChildren: [
+                    MenuItemButton(
+                      child: const Text("Delete meal"),
+                      onPressed: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Delete '$name'"),
+                              content: const Text("Are you sure you want to delete this meal?"),
+                              actions: <Widget>[
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: Theme.of(context).textTheme.labelLarge,
+                                  ),
+                                  child: Text('Cancel', style: Theme.of(context).textTheme.bodyMedium),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: Theme.of(context).textTheme.labelLarge,
+                                  ),
+                                  child: Text('Delete',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(color: Theme.of(context).colorScheme.error)),
+                                  onPressed: () async {
+                                    await mealService.deleteMeal(widget.meal!.id);
+                                    if (context.mounted) {
+                                      // Return to main meal screen
+                                      Navigator.of(context)
+                                        ..pop()
+                                        ..pop();
+                                    }
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                )
+              ]
+            : null,
       ),
       body: Form(
         key: formKey,
@@ -50,9 +119,9 @@ class _CreateMealFormState extends State<CreateMealForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: BigHeading(title: "New meal"),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: BigHeading(title: isEditMode ? "Edit meal" : "New meal"),
               ),
               const Divider(),
               Padding(
@@ -213,7 +282,7 @@ class _CreateMealFormState extends State<CreateMealForm> {
                         formKey.currentState!.save();
                         var foods = dropDownKey.currentState?.getSelectedItems ?? [];
 
-                        if (widget.meal != null) {
+                        if (isEditMode) {
                           await mealService.updateMeal(widget.meal!.id, name, foods);
                         } else {
                           await mealService.createMeal(name, foods);

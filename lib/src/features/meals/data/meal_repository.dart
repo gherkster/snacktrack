@@ -43,6 +43,10 @@ class MealRepository {
 
     await _box.putAsync(storedMeal);
   }
+
+  Future<void> deleteMeal(int id) async {
+    await _box.removeAsync(id);
+  }
 }
 
 extension MealMapping on MealDto {

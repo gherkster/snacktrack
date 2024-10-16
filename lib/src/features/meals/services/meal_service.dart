@@ -26,6 +26,11 @@ class MealService extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> deleteMeal(int id) async {
+    await _mealRepository.deleteMeal(id);
+    notifyListeners();
+  }
+
   Future<List<Food>> searchFoods(String queryText, [int limit = 10]) async {
     return await _foodRepository.searchFoods(queryText, limit);
   }
