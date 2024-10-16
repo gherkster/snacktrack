@@ -69,8 +69,8 @@ class MealRepository {
 
     store.runInTransaction(TxMode.write, () {
       _mealFoodBox.putMany(mealFoodDtos); // Update any changed quantities etc
+      _mealFoodBox.query(MealFoodDto_.meal.isNull()).build().remove(); // Delete any orphaned mealFoods
       _mealBox.put(storedMeal); // Update a changed title etc
-      // TODO: Clear out orphaned mealFoods
     });
   }
 
