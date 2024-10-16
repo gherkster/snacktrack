@@ -4,8 +4,8 @@ import "package:provider/provider.dart";
 import "package:snacktrack/src/features/health/domain/weight_unit.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
 
-class WeightTargetOptions extends StatefulWidget {
-  const WeightTargetOptions({super.key, required this.targetWeight});
+class WeightTargetDialog extends StatefulWidget {
+  const WeightTargetDialog({super.key, required this.targetWeight});
 
   // Use a stateful widget to track the new in-progress target value,
   // as modifying the provider state directly on input would lead to the overview page
@@ -13,10 +13,10 @@ class WeightTargetOptions extends StatefulWidget {
   final double targetWeight;
 
   @override
-  State<WeightTargetOptions> createState() => _WeightTargetOptionsState();
+  State<WeightTargetDialog> createState() => _WeightTargetDialogState();
 }
 
-class _WeightTargetOptionsState extends State<WeightTargetOptions> {
+class _WeightTargetDialogState extends State<WeightTargetDialog> {
   late double targetWeight = widget.targetWeight;
 
   @override

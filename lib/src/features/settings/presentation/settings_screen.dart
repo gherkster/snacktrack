@@ -1,11 +1,11 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
-import "package:snacktrack/src/features/settings/presentation/options/delete_all_data_confirmation_options.dart";
-import "package:snacktrack/src/features/settings/presentation/options/energy_target_options.dart";
-import "package:snacktrack/src/features/settings/presentation/options/energy_unit_options.dart";
-import "package:snacktrack/src/features/settings/presentation/options/theme_options.dart";
-import "package:snacktrack/src/features/settings/presentation/options/weight_target_options.dart";
-import "package:snacktrack/src/features/settings/presentation/options/weight_unit_options.dart";
+import "package:snacktrack/src/features/settings/presentation/dialogs/delete_all_data_confirmation_dialog.dart";
+import "package:snacktrack/src/features/settings/presentation/dialogs/energy_target_dialog.dart";
+import "package:snacktrack/src/features/settings/presentation/dialogs/energy_unit_dialog.dart";
+import "package:snacktrack/src/features/settings/presentation/dialogs/device_theme_dialog.dart";
+import "package:snacktrack/src/features/settings/presentation/dialogs/weight_target_dialog.dart";
+import "package:snacktrack/src/features/settings/presentation/dialogs/weight_unit_dialog.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
 import "package:snacktrack/src/widgets/big_heading.dart";
 
@@ -38,7 +38,7 @@ class SettingsScreen extends StatelessWidget {
                     onTap: () => {
                       showDialog(
                         context: context,
-                        builder: (BuildContext context) => const EnergyUnitOptions(),
+                        builder: (BuildContext context) => const EnergyUnitDialog(),
                       )
                     },
                   ),
@@ -49,7 +49,7 @@ class SettingsScreen extends StatelessWidget {
                     onTap: () => {
                       showDialog(
                         context: context,
-                        builder: (BuildContext context) => const WeightUnitOptions(),
+                        builder: (BuildContext context) => const WeightUnitDialog(),
                       )
                     },
                   ),
@@ -64,7 +64,7 @@ class SettingsScreen extends StatelessWidget {
                     onTap: () => {
                       showDialog(
                         context: context,
-                        builder: (BuildContext context) => EnergyTargetOptions(targetEnergy: model.targetEnergy),
+                        builder: (BuildContext context) => EnergyTargetDialog(targetEnergy: model.targetEnergy),
                       ),
                     },
                   ),
@@ -75,7 +75,7 @@ class SettingsScreen extends StatelessWidget {
                     onTap: () => {
                       showDialog(
                         context: context,
-                        builder: (BuildContext context) => WeightTargetOptions(targetWeight: model.targetWeight),
+                        builder: (BuildContext context) => WeightTargetDialog(targetWeight: model.targetWeight),
                       ),
                     },
                   ),
@@ -96,7 +96,7 @@ class SettingsScreen extends StatelessWidget {
                     onTap: () => {
                       showDialog(
                         context: context,
-                        builder: (BuildContext context) => const DeviceThemeOptions(),
+                        builder: (BuildContext context) => const DeviceThemeDialog(),
                       ),
                     },
                   ),
@@ -106,7 +106,7 @@ class SettingsScreen extends StatelessWidget {
                     onTap: () => {
                       showDialog(
                         context: context,
-                        builder: (BuildContext context) => const DeleteAllDataConfirmationOptions(),
+                        builder: (BuildContext context) => const DeleteAllDataConfirmationDialog(),
                       ),
                     },
                   ),

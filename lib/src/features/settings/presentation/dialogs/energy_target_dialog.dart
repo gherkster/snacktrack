@@ -4,8 +4,8 @@ import "package:provider/provider.dart";
 import "package:snacktrack/src/features/health/domain/energy_unit.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
 
-class EnergyTargetOptions extends StatefulWidget {
-  const EnergyTargetOptions({super.key, required this.targetEnergy});
+class EnergyTargetDialog extends StatefulWidget {
+  const EnergyTargetDialog({super.key, required this.targetEnergy});
 
   // Use a stateful widget to track the new in-progress target value,
   // as modifying the provider state directly on input would lead to the overview page
@@ -13,10 +13,10 @@ class EnergyTargetOptions extends StatefulWidget {
   final int targetEnergy;
 
   @override
-  State<EnergyTargetOptions> createState() => _EnergyTargetOptionsState();
+  State<EnergyTargetDialog> createState() => _EnergyTargetDialogState();
 }
 
-class _EnergyTargetOptionsState extends State<EnergyTargetOptions> {
+class _EnergyTargetDialogState extends State<EnergyTargetDialog> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final energyTargetInputController = TextEditingController();
 

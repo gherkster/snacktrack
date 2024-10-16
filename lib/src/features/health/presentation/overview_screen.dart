@@ -9,8 +9,8 @@ import "package:provider/provider.dart";
 import "package:snacktrack/src/extensions/datetime.dart";
 import "package:snacktrack/src/features/health/domain/weight_measurement.dart";
 import "package:snacktrack/src/features/health/services/health_service.dart";
-import "package:snacktrack/src/features/settings/presentation/options/energy_target_options.dart";
-import "package:snacktrack/src/features/settings/presentation/options/weight_target_options.dart";
+import "package:snacktrack/src/features/settings/presentation/dialogs/energy_target_dialog.dart";
+import "package:snacktrack/src/features/settings/presentation/dialogs/weight_target_dialog.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
 import "package:snacktrack/src/features/health/presentation/forms/energy_form.dart";
 import "package:snacktrack/src/features/health/presentation/forms/weight_form.dart";
@@ -158,7 +158,7 @@ class OverviewScreen extends StatelessWidget {
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (BuildContext context) => EnergyTargetOptions(
+                        builder: (BuildContext context) => EnergyTargetDialog(
                           targetEnergy: settingsService.targetEnergy,
                         ),
                       );
@@ -182,7 +182,7 @@ class OverviewScreen extends StatelessWidget {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) =>
-                            WeightTargetOptions(targetWeight: settingsService.targetWeight),
+                            WeightTargetDialog(targetWeight: settingsService.targetWeight),
                       );
                     },
                     child: Column(

@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
 
-class DeleteAllDataConfirmationOptions extends StatelessWidget {
-  const DeleteAllDataConfirmationOptions({super.key});
+class DeleteAllDataConfirmationDialog extends StatelessWidget {
+  const DeleteAllDataConfirmationDialog({super.key});
 
   @override
   Widget build(BuildContext context) {

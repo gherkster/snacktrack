@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
 
-class DeviceThemeOptions extends StatelessWidget {
-  const DeviceThemeOptions({super.key});
+class DeviceThemeDialog extends StatelessWidget {
+  const DeviceThemeDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
