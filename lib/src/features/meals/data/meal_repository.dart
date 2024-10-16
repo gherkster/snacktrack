@@ -1,51 +1,89 @@
 import 'package:snacktrack/objectbox.g.dart';
 import 'package:snacktrack/src/features/meals/data/models/food_dto.dart';
 import 'package:snacktrack/src/features/meals/data/models/meal_dto.dart';
+import 'package:snacktrack/src/features/meals/data/models/meal_food_dto.dart';
 import 'package:snacktrack/src/features/meals/domain/food.dart';
 import 'package:snacktrack/src/features/meals/domain/meal.dart';
+import 'package:snacktrack/src/features/meals/domain/meal_food.dart';
 
 class MealRepository {
   final Store store;
-  final Box<MealDto> _box;
+  final Box<MealDto> _mealBox;
+  final Box<MealFoodDto> _mealFoodBox;
 
-  MealRepository(this.store) : _box = store.box<MealDto>();
+  MealRepository(this.store)
+      : _mealBox = store.box<MealDto>(),
+        _mealFoodBox = store.box<MealFoodDto>();
 
   Future<List<Meal>> getMeals() async {
-    var results = await _box.getAllAsync();
+    var results = await _mealBox.getAllAsync();
     return results.map((r) => r.mapToDomain()).toList();
   }
 
-  int count() => _box.count();
+  int count() => _mealBox.count();
 
-  Future<void> createMeal(String name, List<Food> foods) async {
+  Future<void> createMeal(String name, List<MealFood> mealFoods) async {
     final now = DateTime.now();
+
     final mealDto = MealDto(
       name: name,
       createdAt: now,
       updatedAt: now,
     );
-    mealDto.foods.addAll(foods.map((f) => f.mapToDto()));
 
-    await _box.putAsync(mealDto);
+    final mealFoodDtos = mealFoods.map((mealFood) {
+      final mealFoodDto = MealFoodDto(id: mealFood.id, quantity: mealFood.quantity);
+
+      mealFoodDto.food.target = mealFood.food.mapToDto();
+      mealFoodDto.meal.target = mealDto;
+
+      return mealFoodDto;
+    }).toList();
+
+    // Objectbox will also create either side of the M2M mealFoodDto in this operation,
+    // i.e. the MealDto and FoodDto
+    await _mealFoodBox.putManyAsync(mealFoodDtos);
   }
 
-  Future<void> updateMeal(int id, String name, List<Food> foods) async {
-    final storedMeal = await _box.getAsync(id);
+  Future<void> updateMeal(int id, String name, List<MealFood> mealFoods) async {
+    final storedMeal = await _mealBox.getAsync(id);
     if (storedMeal == null) {
       return;
     }
 
     storedMeal.name = name;
-    // Remove all existing linked foods in case some need to be removed, and add the latest set
-    storedMeal.foods.clear();
-    storedMeal.foods.addAll(foods.map((f) => f.mapToDto()));
     storedMeal.updatedAt = DateTime.now();
 
-    await _box.putAsync(storedMeal);
+    // Remove all existing linked foods to ensure that the meal is only linked to the current items
+    storedMeal.mealsFoods.clear();
+    final mealFoodDtos = mealFoods.map((mealFood) {
+      final mealFoodDto = MealFoodDto(id: mealFood.id, quantity: mealFood.quantity);
+
+      mealFoodDto.food.target = mealFood.food.mapToDto();
+      mealFoodDto.meal.target = storedMeal;
+
+      return mealFoodDto;
+    }).toList();
+
+    storedMeal.mealsFoods.addAll(mealFoodDtos);
+
+    store.runInTransaction(TxMode.write, () {
+      _mealFoodBox.putMany(mealFoodDtos); // Update any changed quantities etc
+      _mealBox.put(storedMeal); // Update a changed title etc
+      // TODO: Clear out orphaned mealFoods
+    });
   }
 
   Future<void> deleteMeal(int id) async {
-    await _box.removeAsync(id);
+    final storedMeal = await _mealBox.getAsync(id);
+    if (storedMeal == null) {
+      return;
+    }
+
+    store.runInTransaction(TxMode.write, () {
+      _mealBox.remove(storedMeal.id);
+      _mealFoodBox.removeMany(storedMeal.mealsFoods.map((mealFood) => mealFood.id).toList());
+    });
   }
 }
 
@@ -54,9 +92,19 @@ extension MealMapping on MealDto {
     return Meal(
       id: id,
       name: name,
-      foods: foods.map((f) => f.mapToDomain()).toList(),
+      mealFoods: mealsFoods.map((f) => f.mapToDomain()).toList(),
       createdAt: createdAt,
       updatedAt: updatedAt,
+    );
+  }
+}
+
+extension MealFoodDomainMapping on MealFoodDto {
+  MealFood mapToDomain() {
+    return MealFood(
+      id: id,
+      food: food.target!.mapToDomain(),
+      quantity: quantity,
     );
   }
 }
@@ -67,10 +115,7 @@ extension FoodDomainMapping on FoodDto {
       id: id,
       name: name,
       category: category,
-      kilojoulesPerUnit: kilojoulesPerUnit,
-      quantity: quantity,
-      // TODO: Map to enum
-      unit: unit,
+      kilojoulesPer100g: kilojoulesPer100g,
       isCustom: isCustom,
       createdAt: createdAt,
       updatedAt: updatedAt,
@@ -84,9 +129,7 @@ extension FoodDataMapping on Food {
       id: id,
       name: name,
       category: category,
-      kilojoulesPerUnit: kilojoulesPerUnit,
-      unit: unit,
-      quantity: quantity,
+      kilojoulesPer100g: kilojoulesPer100g,
       isCustom: isCustom,
       createdAt: createdAt,
       updatedAt: updatedAt,

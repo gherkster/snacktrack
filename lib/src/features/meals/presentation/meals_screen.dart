@@ -80,7 +80,7 @@ class MealsScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return ListTile(
                               title: Text(meals[index].name),
-                              subtitle: Text(meals[index].foods.map((f) => f.name).toList().toString()),
+                              subtitle: Text(meals[index].mealFoods.map((f) => f.food.name).toList().toString()),
                               onTap: () {
                                 Navigator.push(
                                   context,

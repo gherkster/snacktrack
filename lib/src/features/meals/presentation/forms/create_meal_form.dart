@@ -2,8 +2,8 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:snacktrack/src/features/meals/domain/food.dart';
 import 'package:snacktrack/src/features/meals/domain/meal.dart';
+import 'package:snacktrack/src/features/meals/domain/meal_food.dart';
 import 'package:snacktrack/src/features/meals/services/meal_service.dart';
 import 'package:snacktrack/src/features/settings/services/settings_service.dart';
 import 'package:snacktrack/src/utilities/unit_conversion.dart';
@@ -20,7 +20,7 @@ class CreateMealForm extends StatefulWidget {
 
 class _CreateMealFormState extends State<CreateMealForm> {
   final formKey = GlobalKey<FormState>();
-  final dropDownKey = GlobalKey<DropdownSearchState<Food>>();
+  final dropDownKey = GlobalKey<DropdownSearchState<MealFood>>();
 
   final fieldPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
 
@@ -67,6 +67,7 @@ class _CreateMealFormState extends State<CreateMealForm> {
                     MenuItemButton(
                       child: const Text("Delete meal"),
                       onPressed: () async {
+                        // TODO: Move into dialogs folder
                         await showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -144,18 +145,19 @@ class _CreateMealFormState extends State<CreateMealForm> {
               ),
               Padding(
                 padding: fieldPadding,
-                child: DropdownSearch<Food>.multiSelection(
-                  compareFn: (item1, item2) => item1.id == item2.id,
+                child: DropdownSearch<MealFood>.multiSelection(
+                  compareFn: (item1, item2) => item1.food.id == item2.food.id,
                   key: dropDownKey,
                   items: (filter, s) async {
                     if (filter != "") {
-                      return await mealService.searchFoods(filter);
+                      final foods = await mealService.searchFoods(filter);
+                      return foods.map((f) => MealFood(food: f, quantity: 100)).toList();
                     }
                     return [];
                   },
-                  itemAsString: (food) => food.name,
+                  itemAsString: (mealFood) => mealFood.food.name,
                   // Prefill foods for an edit scenario
-                  selectedItems: widget.meal?.foods ?? [],
+                  selectedItems: widget.meal?.mealFoods ?? [],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Ingredients are required";
@@ -175,13 +177,16 @@ class _CreateMealFormState extends State<CreateMealForm> {
                       children: selectedItems
                           .map(
                             (item) => InputChip(
-                              label: Text("${item.quantity} ${item.unit} ${item.name}"),
+                              label: Text("${item.quantity}g ${item.food.name}"),
                               onSelected: (value) async => {
                                 await showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
+                                    final quantityController = TextEditingController();
+                                    quantityController.text = item.quantity.toString();
+
                                     return AlertDialog(
-                                      title: Text(item.name),
+                                      title: Text(item.food.name),
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
@@ -194,16 +199,16 @@ class _CreateMealFormState extends State<CreateMealForm> {
                                                   SizedBox(
                                                     width: 56,
                                                     child: TextFormField(
+                                                      controller: quantityController,
                                                       autofocus: true,
                                                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                                       keyboardType: TextInputType.number,
-                                                      initialValue: item.quantity.toString(),
                                                     ),
                                                   ),
                                                   const SizedBox(
                                                     width: 12,
                                                   ),
-                                                  Text(item.unit),
+                                                  const Text("g"),
                                                 ],
                                               ),
                                             ],
@@ -216,7 +221,7 @@ class _CreateMealFormState extends State<CreateMealForm> {
                                               Row(
                                                 children: [
                                                   Text(convertKilojoulesToPreferredUnits(
-                                                          item.kilojoulesPerUnit, settingsService.energyUnit)
+                                                          item.food.kilojoulesPer100g, settingsService.energyUnit)
                                                       .toString()),
                                                   const SizedBox(
                                                     width: 12,
@@ -228,6 +233,46 @@ class _CreateMealFormState extends State<CreateMealForm> {
                                           ),
                                         ],
                                       ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          style: TextButton.styleFrom(
+                                            textStyle: Theme.of(context).textTheme.labelLarge,
+                                          ),
+                                          child: Text('Cancel', style: Theme.of(context).textTheme.bodyMedium),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        TextButton(
+                                          style: TextButton.styleFrom(
+                                            textStyle: Theme.of(context).textTheme.labelLarge,
+                                          ),
+                                          child: Text(
+                                            "Save",
+                                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                  color: Theme.of(context).colorScheme.primary,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                          ),
+                                          onPressed: () async {
+                                            if (dropDownKey.currentState != null) {
+                                              final selectedFoods = dropDownKey.currentState!.getSelectedItems;
+
+                                              final updatedFood = selectedFoods.firstWhere((f) => f.id == item.id);
+                                              // Only integers can be entered
+                                              updatedFood.quantity = int.parse(quantityController.text);
+
+                                              dropDownKey.currentState!.changeSelectedItems(selectedFoods);
+                                              // TODO: Is this needed?
+                                              item.quantity = int.parse(quantityController.text);
+                                            }
+
+                                            if (context.mounted) {
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                        ),
+                                      ],
                                     );
                                   },
                                 )
@@ -257,8 +302,8 @@ class _CreateMealFormState extends State<CreateMealForm> {
                     ),
                     itemBuilder: (context, item, isDisabled, isSelected) {
                       return ListTile(
-                        title: Text(item.name),
-                        subtitle: Text(item.category),
+                        title: Text(item.food.name),
+                        subtitle: Text(item.food.category),
                       );
                     },
                     // Select immediately on click, without requiring a separate confirmation.

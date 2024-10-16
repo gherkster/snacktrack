@@ -1,5 +1,5 @@
 import 'package:objectbox/objectbox.dart';
-import 'package:snacktrack/src/features/meals/data/models/food_dto.dart';
+import 'package:snacktrack/src/features/meals/data/models/meal_food_dto.dart';
 
 @Entity()
 class MealDto {
@@ -9,7 +9,9 @@ class MealDto {
   DateTime createdAt;
   DateTime updatedAt;
 
-  final foods = ToMany<FoodDto>();
+  /// Link to join table
+  @Backlink("meal")
+  final mealsFoods = ToMany<MealFoodDto>();
 
   MealDto({
     this.id = 0,

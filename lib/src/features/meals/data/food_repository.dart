@@ -74,10 +74,7 @@ extension FoodMapping on FoodDto {
       id: id,
       name: name,
       category: category,
-      kilojoulesPerUnit: kilojoulesPerUnit,
-      quantity: quantity,
-      // TODO: Map to enum
-      unit: unit,
+      kilojoulesPer100g: kilojoulesPer100g,
       isCustom: isCustom,
       createdAt: createdAt,
       updatedAt: updatedAt,
@@ -91,10 +88,8 @@ extension NutritionMapping on NutritionRecord {
     final dto = FoodDto(
       name: name,
       category: category,
-      kilojoulesPerUnit: kilojoules.toDouble(),
+      kilojoulesPer100g: kilojoules.toDouble(),
       proteinPerUnit: protein,
-      quantity: 100,
-      unit: "grams",
       isCustom: false,
       createdAt: now,
       updatedAt: now,
