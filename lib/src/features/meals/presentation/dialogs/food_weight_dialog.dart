@@ -17,8 +17,6 @@ class FoodWeightDialog extends StatefulWidget {
 }
 
 class _CreateFoodWeightDialogState extends State<FoodWeightDialog> {
-  final fieldPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
-
   @override
   Widget build(BuildContext context) {
     final settingsService = context.watch<SettingsService>();

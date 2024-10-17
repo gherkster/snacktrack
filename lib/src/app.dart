@@ -64,6 +64,13 @@ class App extends StatelessWidget {
             ).copyWith(
               surface: Colors.grey[50],
             ),
+            filledButtonTheme: FilledButtonThemeData(
+              style: FilledButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                ),
+              ),
+            ),
             textTheme: TextTheme(
               titleLarge: TextStyle(
                 color: Colors.blue[700],

@@ -14,6 +14,7 @@ import "package:snacktrack/src/features/settings/presentation/dialogs/weight_tar
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
 import "package:snacktrack/src/features/health/presentation/forms/energy_form.dart";
 import "package:snacktrack/src/features/health/presentation/forms/weight_form.dart";
+import "package:snacktrack/src/styles/layout.dart";
 import "package:snacktrack/src/utilities/constants.dart";
 import "package:snacktrack/src/utilities/unit_conversion.dart";
 import "package:syncfusion_flutter_charts/charts.dart";
@@ -206,13 +207,13 @@ class OverviewScreen extends StatelessWidget {
             ),
             Card(
               elevation: 1.0,
-              // TODO: Get from theme
-              color: Colors.grey[25],
-              margin: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              margin: const EdgeInsets.symmetric(horizontal: Spacing.large, vertical: Spacing.medium),
               child: Container(
                 height: 160,
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 12.0, 8.0),
+                padding: const EdgeInsets.only(top: Spacing.small),
                 child: SfCartesianChart(
+                  margin: const EdgeInsets.all(Spacing.small),
+                  plotAreaBorderWidth: 0,
                   primaryXAxis: DateTimeAxis(
                     majorGridLines: const MajorGridLines(width: 0),
                     intervalType: DateTimeIntervalType.days,
@@ -231,6 +232,7 @@ class OverviewScreen extends StatelessWidget {
                     maximum: max(settingsService.targetWeight,
                             healthService.maximumRecentWeight ?? settingsService.targetWeight) +
                         2,
+                    axisLine: const AxisLine(width: 0),
                     majorGridLines: const MajorGridLines(color: Colors.transparent),
                     majorTickLines: const MajorTickLines(color: Colors.transparent),
                     labelPosition: ChartDataLabelPosition.inside,

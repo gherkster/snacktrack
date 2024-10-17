@@ -6,6 +6,8 @@ import 'package:snacktrack/src/features/meals/domain/meal_food.dart';
 import 'package:snacktrack/src/features/meals/presentation/dialogs/delete_meal_dialog.dart';
 import 'package:snacktrack/src/features/meals/presentation/dialogs/food_weight_dialog.dart';
 import 'package:snacktrack/src/features/meals/services/meal_service.dart';
+import 'package:snacktrack/src/styles/layout.dart';
+import 'package:snacktrack/src/widgets/app_bar_menu.dart';
 import 'package:snacktrack/src/widgets/big_heading.dart';
 
 class CreateMealForm extends StatefulWidget {
@@ -20,8 +22,6 @@ class CreateMealForm extends StatefulWidget {
 class _CreateMealFormState extends State<CreateMealForm> {
   final formKey = GlobalKey<FormState>();
   final dropDownKey = GlobalKey<DropdownSearchState<MealFood>>();
-
-  final fieldPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
 
   String name = "";
 
@@ -44,23 +44,8 @@ class _CreateMealFormState extends State<CreateMealForm> {
         forceMaterialTransparency: true,
         actions: isEditMode
             ? [
-                MenuAnchor(
-                  builder: (context, controller, child) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: IconButton(
-                        onPressed: () {
-                          if (controller.isOpen) {
-                            controller.close();
-                          } else {
-                            controller.open();
-                          }
-                        },
-                        icon: const Icon(Icons.more_vert),
-                      ),
-                    );
-                  },
-                  menuChildren: [
+                AppBarMenu(
+                  menuItems: [
                     MenuItemButton(
                       child: const Text("Delete meal"),
                       onPressed: () {
@@ -95,7 +80,7 @@ class _CreateMealFormState extends State<CreateMealForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: Spacing.medium),
                 child: BigHeading(title: isEditMode ? "Edit meal" : "New meal"),
               ),
               const Divider(),
@@ -191,14 +176,14 @@ class _CreateMealFormState extends State<CreateMealForm> {
                     searchDelay: const Duration(milliseconds: 250),
                     searchFieldProps: const TextFieldProps(
                       autofocus: true,
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      padding: EdgeInsets.symmetric(horizontal: Spacing.medium),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         label: Text("Search for ingredients"),
                       ),
                     ),
                     listViewProps: const ListViewProps(
-                      padding: EdgeInsets.only(left: 16, right: 16, top: 16),
+                      padding: EdgeInsets.only(left: Spacing.medium, right: Spacing.medium, top: Spacing.medium),
                     ),
                     itemBuilder: (context, item, isDisabled, isSelected) {
                       return ListTile(
@@ -219,8 +204,9 @@ class _CreateMealFormState extends State<CreateMealForm> {
                 ),
               ),
               Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Container(
+                  width: double.infinity,
+                  padding: fieldPadding,
                   child: FilledButton(
                     onPressed: () async {
                       if (formKey.currentState?.validate() == true) {
@@ -238,10 +224,7 @@ class _CreateMealFormState extends State<CreateMealForm> {
                         }
                       }
                     },
-                    child: Padding(
-                      padding: fieldPadding,
-                      child: const Text("Save meal"),
-                    ),
+                    child: const Text("Save meal"),
                   ),
                 ),
               ),

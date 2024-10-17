@@ -5,7 +5,9 @@ import "package:snacktrack/src/features/meals/domain/meal.dart";
 import "package:snacktrack/src/features/meals/presentation/forms/create_meal_form.dart";
 import "package:snacktrack/src/features/meals/services/meal_service.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
+import "package:snacktrack/src/styles/layout.dart";
 import "package:snacktrack/src/utilities/unit_conversion.dart";
+import "package:snacktrack/src/widgets/app_bar_menu.dart";
 import "package:snacktrack/src/widgets/big_heading.dart";
 
 class MealsScreen extends StatelessWidget {
@@ -19,23 +21,8 @@ class MealsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          MenuAnchor(
-            builder: (context, controller, child) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: IconButton(
-                  onPressed: () {
-                    if (controller.isOpen) {
-                      controller.close();
-                    } else {
-                      controller.open();
-                    }
-                  },
-                  icon: const Icon(Icons.more_vert),
-                ),
-              );
-            },
-            menuChildren: [
+          AppBarMenu(
+            menuItems: [
               MenuItemButton(
                 child: const Text('Manage foods'),
                 onPressed: () {},
@@ -61,7 +48,7 @@ class MealsScreen extends StatelessWidget {
         },
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: Spacing.medium),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

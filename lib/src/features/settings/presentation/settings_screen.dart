@@ -7,13 +7,13 @@ import "package:snacktrack/src/features/settings/presentation/dialogs/device_the
 import "package:snacktrack/src/features/settings/presentation/dialogs/weight_target_dialog.dart";
 import "package:snacktrack/src/features/settings/presentation/dialogs/weight_unit_dialog.dart";
 import "package:snacktrack/src/features/settings/services/settings_service.dart";
+import "package:snacktrack/src/styles/layout.dart";
 import "package:snacktrack/src/widgets/big_heading.dart";
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
-  final fieldPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
-  final sectionPadding = const EdgeInsets.only(top: 24);
+  final sectionPadding = const EdgeInsets.only(top: Spacing.large);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class SettingsScreen extends StatelessWidget {
       builder: (context, model, child) {
         return Scaffold(
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: Spacing.medium),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
