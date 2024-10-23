@@ -1,15 +1,15 @@
-import 'package:dart_date/dart_date.dart';
-import 'package:flutter/material.dart';
-import 'package:numberpicker/numberpicker.dart';
-import 'package:provider/provider.dart';
-import 'package:snacktrack/src/extensions/datetime.dart';
-import 'package:snacktrack/src/features/health/domain/weight_unit.dart';
-import 'package:snacktrack/src/features/health/services/health_service.dart';
-import 'package:snacktrack/src/features/settings/services/settings_service.dart';
-import 'package:snacktrack/src/styles/layout.dart';
-import 'package:snacktrack/src/utilities/formatting.dart';
-import 'package:snacktrack/src/widgets/big_heading.dart';
-import 'package:snacktrack/src/widgets/form_row.dart';
+import "package:dart_date/dart_date.dart";
+import "package:flutter/material.dart";
+import "package:numberpicker/numberpicker.dart";
+import "package:provider/provider.dart";
+import "package:snacktrack/src/extensions/datetime.dart";
+import "package:snacktrack/src/features/health/domain/weight_unit.dart";
+import "package:snacktrack/src/features/health/services/health_service.dart";
+import "package:snacktrack/src/features/settings/services/settings_service.dart";
+import "package:snacktrack/src/styles/layout.dart";
+import "package:snacktrack/src/utilities/formatting.dart";
+import "package:snacktrack/src/widgets/big_heading.dart";
+import "package:snacktrack/src/widgets/form_row.dart";
 
 class WeightForm extends StatefulWidget {
   const WeightForm({super.key, required this.targetWeight});

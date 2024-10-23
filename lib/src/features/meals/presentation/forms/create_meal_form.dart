@@ -1,14 +1,14 @@
-import 'package:dropdown_search/dropdown_search.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:snacktrack/src/features/meals/domain/meal.dart';
-import 'package:snacktrack/src/features/meals/domain/meal_food.dart';
-import 'package:snacktrack/src/features/meals/presentation/dialogs/delete_meal_dialog.dart';
-import 'package:snacktrack/src/features/meals/presentation/dialogs/food_weight_dialog.dart';
-import 'package:snacktrack/src/features/meals/services/meal_service.dart';
-import 'package:snacktrack/src/styles/layout.dart';
-import 'package:snacktrack/src/widgets/app_bar_menu.dart';
-import 'package:snacktrack/src/widgets/big_heading.dart';
+import "package:dropdown_search/dropdown_search.dart";
+import "package:flutter/material.dart";
+import "package:provider/provider.dart";
+import "package:snacktrack/src/features/meals/domain/meal.dart";
+import "package:snacktrack/src/features/meals/domain/meal_food.dart";
+import "package:snacktrack/src/features/meals/presentation/dialogs/delete_meal_dialog.dart";
+import "package:snacktrack/src/features/meals/presentation/dialogs/food_weight_dialog.dart";
+import "package:snacktrack/src/features/meals/services/meal_service.dart";
+import "package:snacktrack/src/styles/layout.dart";
+import "package:snacktrack/src/widgets/app_bar_menu.dart";
+import "package:snacktrack/src/widgets/big_heading.dart";
 
 class CreateMealForm extends StatefulWidget {
   const CreateMealForm({super.key, this.meal});

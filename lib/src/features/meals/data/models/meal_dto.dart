@@ -1,5 +1,5 @@
-import 'package:objectbox/objectbox.dart';
-import 'package:snacktrack/src/features/meals/data/models/meal_food_dto.dart';
+import "package:objectbox/objectbox.dart";
+import "package:snacktrack/src/features/meals/data/models/meal_food_dto.dart";
 
 @Entity()
 class MealDto {

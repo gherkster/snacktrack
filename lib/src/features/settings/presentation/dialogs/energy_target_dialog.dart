@@ -75,7 +75,7 @@ class _EnergyTargetDialogState extends State<EnergyTargetDialog> {
             style: TextButton.styleFrom(
               textStyle: Theme.of(context).textTheme.labelLarge,
             ),
-            child: Text('Cancel', style: Theme.of(context).textTheme.bodyMedium),
+            child: Text("Cancel", style: Theme.of(context).textTheme.bodyMedium),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -84,7 +84,7 @@ class _EnergyTargetDialogState extends State<EnergyTargetDialog> {
             style: TextButton.styleFrom(
               textStyle: Theme.of(context).textTheme.labelLarge,
             ),
-            child: Text('Confirm', style: Theme.of(context).textTheme.bodyMedium),
+            child: Text("Confirm", style: Theme.of(context).textTheme.bodyMedium),
             onPressed: () {
               if (formKey.currentState?.validate() == false) {
                 return;

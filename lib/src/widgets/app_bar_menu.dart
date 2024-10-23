@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:snacktrack/src/styles/layout.dart';
+import "package:flutter/material.dart";
+import "package:snacktrack/src/styles/layout.dart";
 
 class AppBarMenu extends StatelessWidget {
   const AppBarMenu({super.key, required this.menuItems});

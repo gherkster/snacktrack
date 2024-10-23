@@ -1,6 +1,6 @@
-import 'package:snacktrack/src/extensions/num.dart';
-import 'package:snacktrack/src/features/health/domain/energy_unit.dart';
-import 'package:snacktrack/src/features/health/domain/weight_unit.dart';
+import "package:snacktrack/src/extensions/num.dart";
+import "package:snacktrack/src/features/health/domain/energy_unit.dart";
+import "package:snacktrack/src/features/health/domain/weight_unit.dart";
 
 const double energyConversionFactor = 0.239005736;
 const double weightConversionFactor = 2.204622622;

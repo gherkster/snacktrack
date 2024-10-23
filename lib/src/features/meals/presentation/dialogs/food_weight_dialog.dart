@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:snacktrack/src/features/meals/domain/food.dart';
-import 'package:snacktrack/src/features/settings/services/settings_service.dart';
-import 'package:snacktrack/src/utilities/unit_conversion.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:provider/provider.dart";
+import "package:snacktrack/src/features/meals/domain/food.dart";
+import "package:snacktrack/src/features/settings/services/settings_service.dart";
+import "package:snacktrack/src/utilities/unit_conversion.dart";
 
 class FoodWeightDialog extends StatefulWidget {
   const FoodWeightDialog({super.key, required this.initialQuantity, required this.food, required this.onConfirm});
@@ -76,7 +76,7 @@ class _CreateFoodWeightDialogState extends State<FoodWeightDialog> {
           style: TextButton.styleFrom(
             textStyle: Theme.of(context).textTheme.labelLarge,
           ),
-          child: Text('Cancel', style: Theme.of(context).textTheme.bodyMedium),
+          child: Text("Cancel", style: Theme.of(context).textTheme.bodyMedium),
           onPressed: () {
             Navigator.of(context).pop();
           },

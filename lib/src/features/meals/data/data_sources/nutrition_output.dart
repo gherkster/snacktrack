@@ -1,4 +1,4 @@
-import 'nutrition_record.dart';
+import "nutrition_record.dart";
 
 class NutritionOutput {
   final List<NutritionRecord> records;

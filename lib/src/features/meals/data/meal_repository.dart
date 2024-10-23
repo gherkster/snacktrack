@@ -1,10 +1,10 @@
-import 'package:snacktrack/objectbox.g.dart';
-import 'package:snacktrack/src/features/meals/data/models/food_dto.dart';
-import 'package:snacktrack/src/features/meals/data/models/meal_dto.dart';
-import 'package:snacktrack/src/features/meals/data/models/meal_food_dto.dart';
-import 'package:snacktrack/src/features/meals/domain/food.dart';
-import 'package:snacktrack/src/features/meals/domain/meal.dart';
-import 'package:snacktrack/src/features/meals/domain/meal_food.dart';
+import "package:snacktrack/objectbox.g.dart";
+import "package:snacktrack/src/features/meals/data/models/food_dto.dart";
+import "package:snacktrack/src/features/meals/data/models/meal_dto.dart";
+import "package:snacktrack/src/features/meals/data/models/meal_food_dto.dart";
+import "package:snacktrack/src/features/meals/domain/food.dart";
+import "package:snacktrack/src/features/meals/domain/meal.dart";
+import "package:snacktrack/src/features/meals/domain/meal_food.dart";
 
 class MealRepository {
   final Store store;

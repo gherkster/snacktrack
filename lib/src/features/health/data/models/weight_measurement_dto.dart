@@ -1,4 +1,4 @@
-import 'package:objectbox/objectbox.dart';
+import "package:objectbox/objectbox.dart";
 
 @Entity()
 class WeightMeasurementDto {

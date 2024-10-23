@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:snacktrack/src/features/meals/data/food_repository.dart';
-import 'package:snacktrack/src/features/meals/data/meal_repository.dart';
-import 'package:snacktrack/src/features/meals/domain/food.dart';
-import 'package:snacktrack/src/features/meals/domain/meal.dart';
-import 'package:snacktrack/src/features/meals/domain/meal_food.dart';
+import "package:flutter/material.dart";
+import "package:snacktrack/src/features/meals/data/food_repository.dart";
+import "package:snacktrack/src/features/meals/data/meal_repository.dart";
+import "package:snacktrack/src/features/meals/domain/food.dart";
+import "package:snacktrack/src/features/meals/domain/meal.dart";
+import "package:snacktrack/src/features/meals/domain/meal_food.dart";
 
 class MealService extends ChangeNotifier {
   final MealRepository _mealRepository;

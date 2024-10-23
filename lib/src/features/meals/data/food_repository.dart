@@ -1,16 +1,16 @@
-import 'dart:convert';
-import 'dart:developer';
+import "dart:convert";
+import "dart:developer";
 
-import 'package:flutter/services.dart';
-import 'package:fuzzywuzzy/algorithms/weighted_ratio.dart';
-import 'package:fuzzywuzzy/fuzzywuzzy.dart';
-import 'package:snacktrack/objectbox.g.dart';
-import 'package:snacktrack/src/features/meals/data/data_sources/nutrition_output.dart';
-import 'package:snacktrack/src/features/meals/data/data_sources/nutrition_record.dart';
-import 'package:snacktrack/src/features/meals/data/models/food_dto.dart';
-import 'package:snacktrack/src/features/meals/data/models/token_dto.dart';
-import 'package:snacktrack/src/features/meals/domain/food.dart';
-import 'package:snacktrack/src/utilities/tokens.dart';
+import "package:flutter/services.dart";
+import "package:fuzzywuzzy/algorithms/weighted_ratio.dart";
+import "package:fuzzywuzzy/fuzzywuzzy.dart";
+import "package:snacktrack/objectbox.g.dart";
+import "package:snacktrack/src/features/meals/data/data_sources/nutrition_output.dart";
+import "package:snacktrack/src/features/meals/data/data_sources/nutrition_record.dart";
+import "package:snacktrack/src/features/meals/data/models/food_dto.dart";
+import "package:snacktrack/src/features/meals/data/models/token_dto.dart";
+import "package:snacktrack/src/features/meals/domain/food.dart";
+import "package:snacktrack/src/utilities/tokens.dart";
 
 class FoodRepository {
   final Store store;

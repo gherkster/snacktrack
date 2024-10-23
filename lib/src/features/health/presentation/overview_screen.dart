@@ -74,7 +74,7 @@ class OverviewScreen extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Log ${context.watch<SettingsService>().energyUnit.longName}',
+                "Log ${context.watch<SettingsService>().energyUnit.longName}",
               ),
               const SizedBox(width: 16),
               FloatingActionButton.small(
@@ -167,11 +167,11 @@ class OverviewScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          '${settingsService.targetEnergy}',
+                          "${settingsService.targetEnergy}",
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         Text(
-                          'Target ${settingsService.energyUnit.shortName}',
+                          "Target ${settingsService.energyUnit.shortName}",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -189,11 +189,11 @@ class OverviewScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          '${settingsService.targetWeight}',
+                          "${settingsService.targetWeight}",
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         Text(
-                          'Target ${settingsService.weightUnit.shortName}',
+                          "Target ${settingsService.weightUnit.shortName}",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -245,7 +245,7 @@ class OverviewScreen extends StatelessWidget {
                         dashArray: const [6, 16],
                         borderColor: Colors.blue,
                         opacity: 0.5,
-                        text: '${settingsService.targetWeight} ${settingsService.weightUnit.shortName}',
+                        text: "${settingsService.targetWeight} ${settingsService.weightUnit.shortName}",
                         // Default to displaying under the line when there are no recent weights,
                         // as the target line will be positioned at the top of the chart
                         verticalTextAlignment: healthService.maximumRecentWeight != null &&

@@ -1,4 +1,4 @@
-import 'package:snacktrack/src/features/meals/domain/meal_food.dart';
+import "package:snacktrack/src/features/meals/domain/meal_food.dart";
 
 class Meal {
   final int id;

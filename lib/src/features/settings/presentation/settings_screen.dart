@@ -59,7 +59,7 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   ListTile(
                     title: const Text("Target energy intake"),
-                    subtitle: Text('${model.targetEnergy} ${model.energyUnit.shortName}'),
+                    subtitle: Text("${model.targetEnergy} ${model.energyUnit.shortName}"),
                     contentPadding: EdgeInsets.zero,
                     onTap: () => {
                       showDialog(
@@ -70,7 +70,7 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   ListTile(
                     title: const Text("Target weight"),
-                    subtitle: Text('${model.targetWeight} ${model.weightUnit.shortName}'),
+                    subtitle: Text("${model.targetWeight} ${model.weightUnit.shortName}"),
                     contentPadding: EdgeInsets.zero,
                     onTap: () => {
                       showDialog(

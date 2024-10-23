@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 class DeleteMealDialog extends StatelessWidget {
   const DeleteMealDialog({super.key, required this.mealName, required this.onConfirm});
@@ -16,7 +16,7 @@ class DeleteMealDialog extends StatelessWidget {
           style: TextButton.styleFrom(
             textStyle: Theme.of(context).textTheme.labelLarge,
           ),
-          child: Text('Cancel', style: Theme.of(context).textTheme.bodyMedium),
+          child: Text("Cancel", style: Theme.of(context).textTheme.bodyMedium),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -25,7 +25,7 @@ class DeleteMealDialog extends StatelessWidget {
           style: TextButton.styleFrom(
             textStyle: Theme.of(context).textTheme.labelLarge,
           ),
-          child: Text('Delete',
+          child: Text("Delete",
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.error)),
           onPressed: () => onConfirm(),
         ),

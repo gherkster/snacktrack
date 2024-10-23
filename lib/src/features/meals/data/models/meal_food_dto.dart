@@ -1,6 +1,6 @@
-import 'package:objectbox/objectbox.dart';
-import 'package:snacktrack/src/features/meals/data/models/food_dto.dart';
-import 'package:snacktrack/src/features/meals/data/models/meal_dto.dart';
+import "package:objectbox/objectbox.dart";
+import "package:snacktrack/src/features/meals/data/models/food_dto.dart";
+import "package:snacktrack/src/features/meals/data/models/meal_dto.dart";
 
 /// Implements a "join table" for objectbox to allow specifying quantities
 /// when linking a meal to foods

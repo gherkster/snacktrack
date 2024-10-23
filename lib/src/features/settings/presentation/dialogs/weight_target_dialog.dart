@@ -37,7 +37,7 @@ class _WeightTargetDialogState extends State<WeightTargetDialog> {
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: Text('Cancel', style: Theme.of(context).textTheme.bodyMedium),
+              child: Text("Cancel", style: Theme.of(context).textTheme.bodyMedium),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -46,7 +46,7 @@ class _WeightTargetDialogState extends State<WeightTargetDialog> {
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: Text('Confirm', style: Theme.of(context).textTheme.bodyMedium),
+              child: Text("Confirm", style: Theme.of(context).textTheme.bodyMedium),
               onPressed: () {
                 service.targetWeight = targetWeight;
                 Navigator.of(context).pop();

@@ -24,7 +24,7 @@ class MealsScreen extends StatelessWidget {
           AppBarMenu(
             menuItems: [
               MenuItemButton(
-                child: const Text('Manage foods'),
+                child: const Text("Manage foods"),
                 onPressed: () {},
               ),
             ],

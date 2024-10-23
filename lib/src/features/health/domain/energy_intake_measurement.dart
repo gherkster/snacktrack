@@ -1,5 +1,5 @@
-import 'package:snacktrack/src/features/health/domain/energy_unit.dart';
-import 'package:snacktrack/src/utilities/unit_conversion.dart';
+import "package:snacktrack/src/features/health/domain/energy_unit.dart";
+import "package:snacktrack/src/utilities/unit_conversion.dart";
 
 class EnergyIntakeMeasurement {
   int id;

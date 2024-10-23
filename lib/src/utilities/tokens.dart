@@ -1,4 +1,4 @@
-import 'package:snacktrack/src/extensions/iterable.dart';
+import "package:snacktrack/src/extensions/iterable.dart";
 
 List<String> tokenize(String value) {
   return value

@@ -1,13 +1,13 @@
 // ignore_for_file: avoid_print
 
-import 'dart:convert';
-import 'dart:io';
+import "dart:convert";
+import "dart:io";
 
-import 'package:crypto/crypto.dart';
-import 'package:excel/excel.dart';
-import 'package:snacktrack/src/features/meals/data/data_sources/nutrition_record.dart';
-import 'package:snacktrack/src/features/meals/data/data_sources/nutrition_output.dart';
-import 'package:snacktrack/src/utilities/tokens.dart';
+import "package:crypto/crypto.dart";
+import "package:excel/excel.dart";
+import "package:snacktrack/src/features/meals/data/data_sources/nutrition_record.dart";
+import "package:snacktrack/src/features/meals/data/data_sources/nutrition_output.dart";
+import "package:snacktrack/src/utilities/tokens.dart";
 
 void main(List<String> arguments) {
   final dataRows = importDataset();
